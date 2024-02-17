@@ -6,6 +6,14 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.IntakeRun;
+import frc.robot.commands.Shooter.RevShooter;
+import frc.robot.commands.Shooter.RotateShooter;
+import frc.robot.commands.Shooter.RunShooterBelsAndRev;
+import frc.robot.commands.Shooter.RunShooterBelts;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -17,36 +25,47 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  //Controllers
+  private final CommandXboxController io_DriverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  // Subsystems
+  private final IntakeSubsystem s_IntakeSubsystem = new IntakeSubsystem();
+  private final ShooterSubsystem s_ShooterSubsystem = new ShooterSubsystem();
+
+  //Commands
+
+  //Intake Commands
+  private final Command z_IntakeRunForward = new IntakeRun(s_IntakeSubsystem, 0.45);
+  private final Command z_IntakeRunBackward = new IntakeRun(s_IntakeSubsystem, -0.45);
+
+  //Shooter Commands
+  private final Command z_RevShooter = new RevShooter(s_ShooterSubsystem, () -> (0.50)); //Use this command if shooter needs set speed
+  private final Command z_RotateShooterUp = new RotateShooter(s_ShooterSubsystem, 0.20);
+  private final Command z_RotateShooterDown = new RotateShooter(s_ShooterSubsystem, -0.20);
+  private final Command z_RunShooterBeltsForward = new RunShooterBelts(s_ShooterSubsystem, 0.30);
+  private final Command z_RunShooterBeltsBackward = new RunShooterBelts(s_ShooterSubsystem, -0.30);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    CameraServer.startAutomaticCapture();
+    //s_ShooterSubsystem.setDefaultCommand(new RevShooter(s_ShooterSubsystem, () -> io_DriverController.getRightTriggerAxis()));
+    s_ShooterSubsystem.setDefaultCommand(new RunShooterBelsAndRev(s_ShooterSubsystem, () -> io_DriverController.getRightTriggerAxis(), () -> io_DriverController.getLeftTriggerAxis()));
     // Configure the trigger bindings
     configureBindings();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    //new Trigger(m_exampleSubsystem::exampleCondition)
-    //    .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    //Intake Buttons
+    io_DriverController.a().whileTrue(z_IntakeRunBackward);
+    io_DriverController.b().whileTrue(z_IntakeRunForward);
+    //Shooter Buttons
+    io_DriverController.x().whileTrue(z_RunShooterBeltsBackward);
+    io_DriverController.y().whileTrue(z_RunShooterBeltsForward);
+    //Rotate Shooter
+    io_DriverController.rightBumper().whileTrue(z_RotateShooterUp);
+    io_DriverController.leftBumper().whileTrue(z_RotateShooterDown);
+    //Rev Shooter (at set speed)
+    io_DriverController.start().whileTrue(z_RevShooter);
   }
 
   /**
