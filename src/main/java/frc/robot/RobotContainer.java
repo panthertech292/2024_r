@@ -13,7 +13,14 @@ import frc.robot.commands.Shooter.RunShooterBelsAndRev;
 import frc.robot.commands.Shooter.RunShooterBelts;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
+
+import java.io.File;
+
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -31,6 +38,7 @@ public class RobotContainer {
   // Subsystems
   private final IntakeSubsystem s_IntakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem s_ShooterSubsystem = new ShooterSubsystem();
+  private final SwerveSubsystem s_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
   //Commands
 
@@ -52,6 +60,35 @@ public class RobotContainer {
     s_ShooterSubsystem.setDefaultCommand(new RunShooterBelsAndRev(s_ShooterSubsystem, () -> io_DriverController.getRightTriggerAxis(), () -> io_DriverController.getLeftTriggerAxis()));
     // Configure the trigger bindings
     configureBindings();
+
+    // Applies deadbands and inverts controls because joysticks
+    // are back-right positive while robot
+    // controls are front-left positive
+    // left stick controls translation
+    // right stick controls the desired angle NOT angular rotation
+    Command driveFieldOrientedDirectAngle = s_SwerveSubsystem.driveCommand(
+        () -> MathUtil.applyDeadband(io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+        () -> io_DriverController.getRightX(),
+        () -> io_DriverController.getRightY());
+
+    // Applies deadbands and inverts controls because joysticks
+    // are back-right positive while robot
+    // controls are front-left positive
+    // left stick controls translation
+    // right stick controls the angular velocity of the robot
+    Command driveFieldOrientedAnglularVelocity = s_SwerveSubsystem.driveCommand(
+        () -> MathUtil.applyDeadband(io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+        () -> io_DriverController.getRawAxis(2));
+
+    Command driveFieldOrientedDirectAngleSim = s_SwerveSubsystem.simDriveCommand(
+        () -> MathUtil.applyDeadband(io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+        () -> io_DriverController.getRawAxis(2));
+
+    s_SwerveSubsystem.setDefaultCommand(
+        !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
   }
 
   private void configureBindings() {
