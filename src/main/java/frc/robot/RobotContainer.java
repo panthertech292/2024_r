@@ -7,12 +7,14 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeRun;
+import frc.robot.commands.TeleopSwerve;
 import frc.robot.commands.Shooter.RevShooter;
 import frc.robot.commands.Shooter.RotateShooter;
 import frc.robot.commands.Shooter.RunShooterBelsAndRev;
 import frc.robot.commands.Shooter.RunShooterBelts;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -29,6 +31,7 @@ public class RobotContainer {
   private final CommandXboxController io_DriverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   // Subsystems
+  private final SwerveSubsystem s_Swerve = new SwerveSubsystem();
   private final IntakeSubsystem s_IntakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem s_ShooterSubsystem = new ShooterSubsystem();
 
@@ -52,6 +55,17 @@ public class RobotContainer {
     s_ShooterSubsystem.setDefaultCommand(new RunShooterBelsAndRev(s_ShooterSubsystem, () -> io_DriverController.getRightTriggerAxis(), () -> io_DriverController.getLeftTriggerAxis()));
     // Configure the trigger bindings
     configureBindings();
+
+     //Drive
+    s_Swerve.setDefaultCommand(
+        new TeleopSwerve(
+          s_Swerve, 
+          () -> deadZone(-io_DriverController.getLeftY(), OperatorConstants.kDriveControllerDeadZone), 
+          () -> deadZone(-io_DriverController.getLeftX(), OperatorConstants.kDriveControllerDeadZone), 
+          () -> deadZone(-io_DriverController.getRightX(), OperatorConstants.kDriveControllerDeadZone), 
+          () -> false //Robot will always be field centric
+        )
+    );
   }
 
   private void configureBindings() {
@@ -67,7 +81,15 @@ public class RobotContainer {
     //Rev Shooter (at set speed)
     io_DriverController.start().whileTrue(z_RevShooter);
   }
-
+  public static double deadZone(double rawInput, double deadband){
+    if (rawInput > deadband){
+      return rawInput;
+    }
+    if (rawInput < -deadband){
+      return rawInput;
+    }
+    return 0; //We are within the deadband. Return 0.
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
