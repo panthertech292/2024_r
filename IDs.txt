@@ -1,0 +1,27 @@
+1-10 Drive
+1 - Front Left (Rotate)
+2 - Front Left (Drive)
+3 - Front Right (Rotate)
+4 - Front Right (Drive)
+5 - Back Left (Rotate)
+6 - Back Left (Drive)
+7 - Back Right (Rotate)
+8 - Back Right (Drive)
+
+10-20 CAN Sensors
+10 - Pigeon2
+11 - Front Left CANCoder
+13 - Front Right CANCoder
+15 - Back Left CANCoder
+17 - Back Right CANCoder
+
+20-30 Intake
+21 - Lower Intake
+22 - Upper Intake
+
+30-40 Shooter
+31 - Belts Lower
+32 - Belts Upper
+33 - Shooter Rotate
+34 - Shooter Lower
+35 - Shooter Upper

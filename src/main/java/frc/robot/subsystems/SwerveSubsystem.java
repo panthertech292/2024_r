@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.SwerveConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
   public SwerveDriveOdometry swerveOdometry;
@@ -124,6 +125,11 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     swerveOdometry.update(getYaw(), getModulePositions()); 
+    SmartDashboard.putNumber("Drive gear ration", SwerveConstants.driveGearRatio);
+    SmartDashboard.putNumber("Angle gear ration", SwerveConstants.angleGearRatio);
+    SmartDashboard.putNumber("Angle conversion factor", SwerveConstants.angleConversionFactor);
+    SmartDashboard.putNumber("Drive conversion position", SwerveConstants.driveConversionPositionFactor);
+    SmartDashboard.putNumber("Drive conversion velocity", SwerveConstants.driveConversionVelocityFactor);
     for(SwerveModule mod : mSwerveMods){
       SmartDashboard.putNumber(mod.moduleID + "Angle:", mod.getCanCoder().getDegrees());
       //SmartDashboard.putNumber(mod.moduleID + "Distance to Offset", mod.getOffset().getDegrees() - mod.getCanCoder().getDegrees());

@@ -41,6 +41,8 @@ public final class Constants {
     public static final int kRotateMotorID = 33;
     public static final int kShooterLowMotorID = 34;
     public static final int kShooterUpMotorID = 35;
+
+    public static final int kShooterSwitchID = 1;
   }
 
   //TODO: Fix this garbage
