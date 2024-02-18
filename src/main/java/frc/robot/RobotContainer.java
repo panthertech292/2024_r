@@ -7,8 +7,10 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeRun;
+import frc.robot.commands.Shooter.IntakeStore;
 import frc.robot.commands.Shooter.RevShooter;
 import frc.robot.commands.Shooter.RotateShooter;
+import frc.robot.commands.Shooter.RotateShooterToAngle;
 import frc.robot.commands.Shooter.RunShooterBelsAndRev;
 import frc.robot.commands.Shooter.RunShooterBelts;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -44,8 +46,8 @@ public class RobotContainer {
   //Commands
 
   //Intake Commands
-  private final Command z_IntakeRunForward = new IntakeRun(s_IntakeSubsystem, 0.45);
-  private final Command z_IntakeRunBackward = new IntakeRun(s_IntakeSubsystem, -0.45);
+  //private final Command z_IntakeRunForward = new IntakeRun(s_IntakeSubsystem, 0.45);
+  //private final Command z_IntakeRunBackward = new IntakeRun(s_IntakeSubsystem, -0.45);
 
   //Shooter Commands
   private final Command z_RevShooter = new RevShooter(s_ShooterSubsystem, () -> (0.50)); //Use this command if shooter needs set speed
@@ -53,6 +55,10 @@ public class RobotContainer {
   private final Command z_RotateShooterDown = new RotateShooter(s_ShooterSubsystem, -0.20);
   private final Command z_RunShooterBeltsForward = new RunShooterBelts(s_ShooterSubsystem, 0.30);
   private final Command z_RunShooterBeltsBackward = new RunShooterBelts(s_ShooterSubsystem, -0.30);
+  private final Command z_RotateShooterToAngle = new RotateShooterToAngle(s_ShooterSubsystem, 0.244, 5, 0.09);
+
+  //Shooter & Intake Commands
+  private final Command z_IntakeStore = new IntakeStore(s_ShooterSubsystem, s_IntakeSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -95,8 +101,8 @@ public class RobotContainer {
 
   private void configureBindings() {
     //Intake Buttons
-    io_DriverController.a().whileTrue(z_IntakeRunBackward);
-    io_DriverController.b().whileTrue(z_IntakeRunForward);
+    io_DriverController.a().whileTrue(z_IntakeStore);
+    io_DriverController.b().whileTrue(z_RotateShooterToAngle);
     //Shooter Buttons
     io_DriverController.x().whileTrue(z_RunShooterBeltsBackward);
     io_DriverController.y().whileTrue(z_RunShooterBeltsForward);

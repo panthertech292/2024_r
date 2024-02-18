@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
@@ -20,7 +21,11 @@ public class ShooterSubsystem extends SubsystemBase {
   private final CANSparkMax BeltsLowMotor;
   private final CANSparkMax BeltsUpMotor;
 
+  private final DutyCycleEncoder ShooterAngleEncoder;
+
   private final DigitalInput RotateSwitch;
+  private final DigitalInput BeltSwitch;
+
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
     RotateMotor = configSparkMax(ShooterConstants.kRotateMotorID, false, true);
@@ -29,7 +34,10 @@ public class ShooterSubsystem extends SubsystemBase {
     BeltsLowMotor = configSparkMax(ShooterConstants.kBeltsLowMotorID, false, false);
     BeltsUpMotor = configSparkMax(ShooterConstants.kBeltsUpMotorID, false, false);
 
+    ShooterAngleEncoder = new DutyCycleEncoder(ShooterConstants.kShooterAngleEncoderID);
+
     RotateSwitch = new DigitalInput(ShooterConstants.kRotateSwitchID);
+    BeltSwitch = new DigitalInput(ShooterConstants.kBeltSwitchID);
   }
 
   private CANSparkMax configSparkMax(int ID, boolean invert, boolean brakeMode){
@@ -52,9 +60,18 @@ public class ShooterSubsystem extends SubsystemBase {
     ShooterLowMotor.set(speed);
     ShooterUpMotor.set(speed);
   }
+  public boolean getRotateSwitch(){
+    return RotateSwitch.get();
+  }
+  public boolean getBeltSwitch(){
+    return BeltSwitch.get();
+  }
+  public double getShooterAngle(){
+    return ShooterAngleEncoder.get();
+  }
   public void rotateShooter(double speed){
     //Check to make sure we aren't at limit and trying to go down. Let's try not to break the robot.
-    if(!RotateSwitch.get() || speed > 0){ //If the switch is not active or we are going in the positive direction (away)
+    if(!getRotateSwitch() || speed > 0){ //If the switch is not active or we are going in the positive direction (away)
       RotateMotor.set(speed);
     }else{
       RotateMotor.set(0);
@@ -70,5 +87,9 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("ROTATE LIMIT", RotateSwitch.get());
+    if(getRotateSwitch()){
+      ShooterAngleEncoder.setPositionOffset(ShooterAngleEncoder.getAbsolutePosition());
+    }
+    SmartDashboard.putNumber("Shooter Angle DISTANCe", getShooterAngle());
   }
 }

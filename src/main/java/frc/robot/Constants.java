@@ -31,17 +31,28 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
+    //CAN Motors
     public static final int kLowIntakeMotorID = 21;
     public static final int kUpIntakeMotorID = 22;
+    //Speeds
+    public static final double kIntakeSpeed = 0.45;
   }
   public static class ShooterConstants {
+    //CAN Motors
     public static final int kBeltsLowMotorID = 31;
     public static final int kBeltsUpMotorID = 32;
     public static final int kRotateMotorID = 33;
     public static final int kShooterLowMotorID = 34;
     public static final int kShooterUpMotorID = 35;
-
+    //Limit Switches
     public static final int kRotateSwitchID = 2;
+    public static final int kBeltSwitchID = 1;
+    //Encoders
+    public static final int kShooterAngleEncoderID = 0;
+    public static final double kShooterAngleOffset = 0.1706;
+    //Speeds
+    public static final double kRotateSpeed = 0.30;
+    public static final double kIntakeBeltSpeed = 0.05;
   }
   public static final class AutoConstants
   {
