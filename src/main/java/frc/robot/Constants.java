@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.PIDConstants;
+
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -20,7 +22,7 @@ public final class Constants {
 
   public static final double ROBOT_MASS = 46.2664; //kg, not lbs
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
-  public static final double LOOP_TIME  = 0.12; //s, 20ms + 110ms sprk max velocity lag
+  public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
 
 
   public static class OperatorConstants {
@@ -38,5 +40,13 @@ public final class Constants {
     public static final int kRotateMotorID = 33;
     public static final int kShooterLowMotorID = 34;
     public static final int kShooterUpMotorID = 35;
+
+    public static final int kRotateSwitchID = 2;
+  }
+  public static final class AutoConstants
+  {
+
+    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
+    public static final PIDConstants ANGLE_PID   = new PIDConstants(0.4, 0, 0.01);
   }
 }

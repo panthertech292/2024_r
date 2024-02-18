@@ -22,6 +22,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -56,7 +57,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     CameraServer.startAutomaticCapture();
-    //s_ShooterSubsystem.setDefaultCommand(new RevShooter(s_ShooterSubsystem, () -> io_DriverController.getRightTriggerAxis()));
+
     s_ShooterSubsystem.setDefaultCommand(new RunShooterBelsAndRev(s_ShooterSubsystem, () -> io_DriverController.getRightTriggerAxis(), () -> io_DriverController.getLeftTriggerAxis()));
     // Configure the trigger bindings
     configureBindings();
@@ -67,10 +68,10 @@ public class RobotContainer {
     // left stick controls translation
     // right stick controls the desired angle NOT angular rotation
     Command driveFieldOrientedDirectAngle = s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> io_DriverController.getRightX(),
-        () -> io_DriverController.getRightY());
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+        () -> -io_DriverController.getRightX(),
+        () -> -io_DriverController.getRightY());
 
     // Applies deadbands and inverts controls because joysticks
     // are back-right positive while robot
@@ -89,6 +90,7 @@ public class RobotContainer {
 
     s_SwerveSubsystem.setDefaultCommand(
         !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
+
   }
 
   private void configureBindings() {
@@ -103,6 +105,41 @@ public class RobotContainer {
     io_DriverController.leftBumper().whileTrue(z_RotateShooterDown);
     //Rev Shooter (at set speed)
     io_DriverController.start().whileTrue(z_RevShooter);
+    //Reset gyro
+    io_DriverController.back().whileTrue(new InstantCommand(s_SwerveSubsystem::zeroGyro));
+
+    //Turn using AXYB
+    /*
+    io_DriverController.y().whileTrue(s_SwerveSubsystem.driveCommand(
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+        () -> 0,
+        () -> 1));
+    io_DriverController.x().whileTrue(s_SwerveSubsystem.driveCommand(
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+        () -> 1,
+        () -> 0));
+    io_DriverController.b().whileTrue(s_SwerveSubsystem.driveCommand(
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+        () -> -1,
+        () -> 0));
+    io_DriverController.a().whileTrue(s_SwerveSubsystem.driveCommand(
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+        () -> 0,
+        () -> -1));
+    //Triggers
+    io_DriverController.rightTrigger(0.05).whileTrue(s_SwerveSubsystem.driveCommand(
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+        () -> -io_DriverController.getRightTriggerAxis()));
+
+    io_DriverController.leftTrigger(0.05).whileTrue(s_SwerveSubsystem.driveCommand(
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+        () -> io_DriverController.getLeftTriggerAxis())); */
   }
 
   /**
