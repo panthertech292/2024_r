@@ -85,9 +85,9 @@ public class RobotContainer {
     // left stick controls translation
     // right stick controls the angular velocity of the robot
     Command driveFieldOrientedAnglularVelocity = s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> io_DriverController.getRawAxis(2));
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+        () -> -io_DriverController.getRightX());
 
     Command driveFieldOrientedDirectAngleSim = s_SwerveSubsystem.simDriveCommand(
         () -> MathUtil.applyDeadband(io_DriverController.getLeftY(), OperatorConstants.kDeadband),
@@ -95,13 +95,13 @@ public class RobotContainer {
         () -> io_DriverController.getRawAxis(2));
 
     s_SwerveSubsystem.setDefaultCommand(
-        !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
+        !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
 
   }
 
   private void configureBindings() {
     //Intake Buttons
-    io_DriverController.a().whileTrue(z_IntakeStore);
+    io_DriverController.a().toggleOnTrue(z_IntakeStore);
     io_DriverController.b().whileTrue(z_RotateShooterToAngle);
     //Shooter Buttons
     io_DriverController.x().whileTrue(z_RunShooterBeltsBackward);

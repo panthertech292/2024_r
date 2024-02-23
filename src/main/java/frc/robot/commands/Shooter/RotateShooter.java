@@ -5,6 +5,7 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class RotateShooter extends Command {
@@ -25,7 +26,11 @@ public class RotateShooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ShooterSub.rotateShooter(this.speed);
+    if(ShooterSub.getShooterAngle() < 0.009 && speed < 0){
+        ShooterSub.rotateShooter(this.speed/4);
+      }else{
+        ShooterSub.rotateShooter(this.speed);
+      }
   }
 
   // Called once the command ends or is interrupted.

@@ -35,7 +35,7 @@ public final class Constants {
     public static final int kLowIntakeMotorID = 21;
     public static final int kUpIntakeMotorID = 22;
     //Speeds
-    public static final double kIntakeSpeed = 0.45;
+    public static final double kIntakeSpeed = 0.60;
   }
   public static class ShooterConstants {
     //CAN Motors

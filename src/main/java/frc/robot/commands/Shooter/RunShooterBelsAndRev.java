@@ -30,7 +30,12 @@ public class RunShooterBelsAndRev extends Command {
   @Override
   public void execute() {
     ShooterSub.setShooter(this.shooterSpeed.getAsDouble());
-    ShooterSub.setBelts(this.beltSpeed.getAsDouble());
+    //please get rid of this later, this is dumb as hell
+    if (beltSpeed.getAsDouble() > 0.25){
+      ShooterSub.setBelts(100);
+    }else{
+      ShooterSub.setBelts(0);
+    }
   }
 
   // Called once the command ends or is interrupted.

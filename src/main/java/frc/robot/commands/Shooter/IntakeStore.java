@@ -30,11 +30,18 @@ public class IntakeStore extends Command {
   public void execute() {
     //Run the shooter down if not in position
     if (!ShooterSub.getRotateSwitch()){
-      ShooterSub.rotateShooter(-ShooterConstants.kRotateSpeed);
+      if(ShooterSub.getShooterAngle() < 0.009){
+        ShooterSub.rotateShooter(-ShooterConstants.kRotateSpeed/4);
+      }else{
+        ShooterSub.rotateShooter(-ShooterConstants.kRotateSpeed);
+      }
+      
     }else{
       ShooterSub.rotateShooter(0);
+      //System.out.println("IN HERE############");
       IntakeSub.setIntake(IntakeConstants.kIntakeSpeed);
-      ShooterSub.setBelts(ShooterConstants.kIntakeBeltSpeed);
+      //ShooterSub.setBelts(ShooterConstants.kIntakeBeltSpeed);
+      ShooterSub.setBelts(0);
     }
   }
 
@@ -49,6 +56,7 @@ public class IntakeStore extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ShooterSub.getBeltSwitch();
+    //return ShooterSub.getBeltSwitch();
+    return false;
   }
 }
