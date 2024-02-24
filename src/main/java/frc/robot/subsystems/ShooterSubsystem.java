@@ -35,7 +35,11 @@ public class ShooterSubsystem extends SubsystemBase {
     BeltsUpMotor = configSparkMax(ShooterConstants.kBeltsUpMotorID, false, false);
 
     ShooterAngleEncoder = new DutyCycleEncoder(ShooterConstants.kShooterAngleEncoderID);
-
+    //if(getRotateSwitch()){
+      //ShooterAngleEncoder.setPositionOffset(ShooterAngleEncoder.getAbsolutePosition());
+    //}else{
+      ShooterAngleEncoder.setPositionOffset(ShooterConstants.kShooterAngleOffset);
+    //}
     RotateSwitch = new DigitalInput(ShooterConstants.kRotateSwitchID);
     BeltSwitch = new DigitalInput(ShooterConstants.kBeltSwitchID);
   }
@@ -69,14 +73,27 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getShooterAngle(){
     return ShooterAngleEncoder.get();
   }
+  public boolean isShooterDown(){
+    return getRotateSwitch() || (getShooterAngle() < 0.002);
+  }
   public void rotateShooter(double speed){
-    //Check to make sure we aren't at limit and trying to go down. Let's try not to break the robot.
-    if(!getRotateSwitch() || speed > 0){ //If the switch is not active or we are going in the positive direction (away)
-      RotateMotor.set(speed);
-    }else{
-      RotateMotor.set(0);
+    double rotateSpeed = speed;
+    //Saftey checks to try and not destroy the shooter. These checks only need to be performed if going down
+    if(speed < 0){
+      //1. We are on the limit switch, stop!
+      if(isShooterDown()){
+        rotateSpeed = 0;
+        System.out.println("Warning: TRYING TO ROTATE SHOOTER DOWN WHILE ON SWTICH");
+      }
+      //2. We are close to the swtich, slow down
+      if(getShooterAngle() < 0.009){
+        rotateSpeed = rotateSpeed/4;
+      }
+      if(getShooterAngle() < 0.003){
+        rotateSpeed = rotateSpeed/2;
+      }
     }
-    
+    RotateMotor.set(rotateSpeed);
   }
   public void setBelts(double speed){
     BeltsLowMotor.set(speed);
@@ -86,10 +103,11 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("ROTATE LIMIT", RotateSwitch.get());
-    if(getRotateSwitch()){
-      ShooterAngleEncoder.setPositionOffset(ShooterAngleEncoder.getAbsolutePosition());
-    }
-    SmartDashboard.putNumber("Shooter Angle DISTANCe", getShooterAngle());
+    SmartDashboard.putBoolean("ROTATE LIMIT", getRotateSwitch());
+    SmartDashboard.putBoolean("SHOOTER DOWN", isShooterDown());
+    SmartDashboard.putNumber("Shooter Angle DISTANCE", getShooterAngle());
+
+    
+    
   }
 }

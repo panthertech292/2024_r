@@ -17,8 +17,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
@@ -37,27 +41,16 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
-public class SwerveSubsystem extends SubsystemBase
-{
-
-  /**
-   * Swerve drive object.
-   */
+public class SwerveSubsystem extends SubsystemBase{
   private final SwerveDrive swerveDrive;
-  /**
-   * Maximum speed of the robot in meters per second, used to limit acceleration.
-   */
-  public        double      maximumSpeed = Units.feetToMeters(14.5);
+  public double maximumSpeed = Units.feetToMeters(14.5); // Maximum speed of the robot in meters per second, used to limit acceleration.
 
-  /**
-   * Initialize {@link SwerveDrive} with the directory provided.
-   *
-   * @param directory Directory of swerve drive config files.
-   */
-  public SwerveSubsystem(File directory)
-  {
+  NetworkTableEntry v_limeLightX;
+  NetworkTableEntry v_limeLightValidTarget;
+
+  //Initialize {@link SwerveDrive} with the directory provided. @param directory Directory of swerve drive config files.
+  public SwerveSubsystem(File directory){
     double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(150/7);
-    
     double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
 
     System.out.println("\"conversionFactor\": {");
@@ -67,18 +60,20 @@ public class SwerveSubsystem extends SubsystemBase
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
-    try
-    {
+    try{
       swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed);
       // Alternative method if you don't want to supply the conversion factor via JSON files.
       // swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed, angleConversionFactor, driveConversionFactor);
-    } catch (Exception e)
-    {
+    } catch (Exception e){
       throw new RuntimeException(e);
     }
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
     swerveDrive.setCosineCompensator(!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
     setupPathPlanner();
+    //Limelight
+    NetworkTable limeLightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    v_limeLightX = limeLightTable.getEntry("tx");
+    v_limeLightValidTarget = limeLightTable.getEntry("tv");
   }
 
   /**
@@ -92,12 +87,8 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
   }
 
-  /**
-   * Setup AutoBuilder for PathPlanner.
-   */
-  
-  public void setupPathPlanner()
-  {
+  //Setup AutoBuilder for PathPlanner.
+  public void setupPathPlanner(){
     AutoBuilder.configureHolonomic(
         this::getPose, // Robot pose supplier
         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -316,17 +307,6 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive.drive(velocity);
   }
-
-  @Override
-  public void periodic()
-  {
-  }
-
-  @Override
-  public void simulationPeriodic()
-  {
-  }
-
   /**
    * Get the swerve drive kinematics object.
    *
@@ -455,8 +435,7 @@ public class SwerveSubsystem extends SubsystemBase
    *
    * @return A ChassisSpeeds object of the current field-relative velocity
    */
-  public ChassisSpeeds getFieldVelocity()
-  {
+  public ChassisSpeeds getFieldVelocity(){
     return swerveDrive.getFieldVelocity();
   }
 
@@ -465,46 +444,27 @@ public class SwerveSubsystem extends SubsystemBase
    *
    * @return A {@link ChassisSpeeds} object of the current velocity
    */
-  public ChassisSpeeds getRobotVelocity()
-  {
+  public ChassisSpeeds getRobotVelocity(){
     return swerveDrive.getRobotVelocity();
   }
 
-  /**
-   * Get the {@link SwerveController} in the swerve drive.
-   *
-   * @return {@link SwerveController} from the {@link SwerveDrive}.
-   */
-  public SwerveController getSwerveController()
-  {
+  // Get the {@link SwerveController} in the swerve drive. @return {@link SwerveController} from the {@link SwerveDrive}.
+  public SwerveController getSwerveController(){
     return swerveDrive.swerveController;
   }
 
-  /**
-   * Get the {@link SwerveDriveConfiguration} object.
-   *
-   * @return The {@link SwerveDriveConfiguration} fpr the current drive.
-   */
-  public SwerveDriveConfiguration getSwerveDriveConfiguration()
-  {
+  //Get the {@link SwerveDriveConfiguration} object. @return The {@link SwerveDriveConfiguration} fpr the current drive.
+  public SwerveDriveConfiguration getSwerveDriveConfiguration(){
     return swerveDrive.swerveDriveConfiguration;
   }
 
-  /**
-   * Lock the swerve drive to prevent it from moving.
-   */
-  public void lock()
-  {
+  //Lock the swerve drive to prevent it from moving.
+  public void lock(){
     swerveDrive.lockPose();
   }
 
-  /**
-   * Gets the current pitch angle of the robot, as reported by the imu.
-   *
-   * @return The heading as a {@link Rotation2d} angle
-   */
-  public Rotation2d getPitch()
-  {
+  //Gets the current pitch angle of the robot, as reported by the imu. @return The heading as a {@link Rotation2d} angle
+  public Rotation2d getPitch(){
     return swerveDrive.getPitch();
   }
 
@@ -514,5 +474,45 @@ public class SwerveSubsystem extends SubsystemBase
   public void addFakeVisionReading()
   {
     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
+  }
+  //Code written by me
+  public Command aimAtTarget()
+  {
+    return run(() -> {
+      //if (result.hasTargets()){
+        drive(getTargetSpeeds(0,0,Rotation2d.fromDegrees(getVisionAngle())));
+      //}
+    });
+  }
+  public Command driveAimAtTarget(DoubleSupplier translationX, DoubleSupplier translationY)
+  {
+    
+    return run(() -> {
+      if(isValidVisionTarget()){
+        System.out.println("TRYING TO ROTATE WITH: " + -getVisionAngle()/75 * swerveDrive.getMaximumAngularVelocity());
+        swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumVelocity(),
+                                          Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()),
+                                          -getVisionAngle()/100 * swerveDrive.getMaximumAngularVelocity(),
+                        true,
+                        false);
+      }
+    });
+  }
+  //Limelight
+  public double getVisionAngle(){
+    return v_limeLightX.getDouble(0.0);
+  }
+  public boolean isValidVisionTarget(){
+    return (v_limeLightValidTarget.getDouble(0.0) != 0);
+  }
+
+
+  @Override
+  public void periodic(){
+    SmartDashboard.putNumber("Limelight X", getVisionAngle());
+  }
+
+  @Override
+  public void simulationPeriodic(){
   }
 }

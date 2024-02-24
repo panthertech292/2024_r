@@ -47,15 +47,15 @@ public class RobotContainer {
 
   //Intake Commands
   //private final Command z_IntakeRunForward = new IntakeRun(s_IntakeSubsystem, 0.45);
-  //private final Command z_IntakeRunBackward = new IntakeRun(s_IntakeSubsystem, -0.45);
+  private final Command z_IntakeRunBackward = new IntakeRun(s_IntakeSubsystem, -0.45);
 
   //Shooter Commands
   private final Command z_RevShooter = new RevShooter(s_ShooterSubsystem, () -> (0.50)); //Use this command if shooter needs set speed
   private final Command z_RotateShooterUp = new RotateShooter(s_ShooterSubsystem, 0.20);
   private final Command z_RotateShooterDown = new RotateShooter(s_ShooterSubsystem, -0.20);
-  private final Command z_RunShooterBeltsForward = new RunShooterBelts(s_ShooterSubsystem, 0.30);
-  private final Command z_RunShooterBeltsBackward = new RunShooterBelts(s_ShooterSubsystem, -0.30);
-  private final Command z_RotateShooterToAngle = new RotateShooterToAngle(s_ShooterSubsystem, 0.244, 5, 0.09);
+  //private final Command z_RunShooterBeltsForward = new RunShooterBelts(s_ShooterSubsystem, 0.30);
+  private final Command z_RunShooterBeltsBackward = new RunShooterBelts(s_ShooterSubsystem, -1);
+  //private final Command z_RotateShooterToAngle = new RotateShooterToAngle(s_ShooterSubsystem, 0.244, 5, 0.09);
 
   //Shooter & Intake Commands
   private final Command z_IntakeStore = new IntakeStore(s_ShooterSubsystem, s_IntakeSubsystem);
@@ -64,7 +64,7 @@ public class RobotContainer {
   public RobotContainer() {
     CameraServer.startAutomaticCapture();
 
-    s_ShooterSubsystem.setDefaultCommand(new RunShooterBelsAndRev(s_ShooterSubsystem, () -> io_DriverController.getRightTriggerAxis(), () -> io_DriverController.getLeftTriggerAxis()));
+    s_ShooterSubsystem.setDefaultCommand(new RunShooterBelsAndRev(s_ShooterSubsystem, () -> io_DriverController.getLeftTriggerAxis(), () -> io_DriverController.getRightTriggerAxis()));
     // Configure the trigger bindings
     configureBindings();
 
@@ -87,7 +87,7 @@ public class RobotContainer {
     Command driveFieldOrientedAnglularVelocity = s_SwerveSubsystem.driveCommand(
         () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
         () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> -io_DriverController.getRightX());
+        () -> -MathUtil.applyDeadband(io_DriverController.getRightX(), OperatorConstants.kDeadband));
 
     Command driveFieldOrientedDirectAngleSim = s_SwerveSubsystem.simDriveCommand(
         () -> MathUtil.applyDeadband(io_DriverController.getLeftY(), OperatorConstants.kDeadband),
@@ -102,10 +102,13 @@ public class RobotContainer {
   private void configureBindings() {
     //Intake Buttons
     io_DriverController.a().toggleOnTrue(z_IntakeStore);
-    io_DriverController.b().whileTrue(z_RotateShooterToAngle);
+    io_DriverController.x().whileTrue(z_IntakeRunBackward);
+    io_DriverController.b().whileTrue(z_RunShooterBeltsBackward);
     //Shooter Buttons
-    io_DriverController.x().whileTrue(z_RunShooterBeltsBackward);
-    io_DriverController.y().whileTrue(z_RunShooterBeltsForward);
+    
+    //io_DriverController.y().whileTrue(z_RunShooterBeltsForward);
+    io_DriverController.y().whileTrue(s_SwerveSubsystem.driveAimAtTarget(() -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
     //Rotate Shooter
     io_DriverController.rightBumper().whileTrue(z_RotateShooterUp);
     io_DriverController.leftBumper().whileTrue(z_RotateShooterDown);

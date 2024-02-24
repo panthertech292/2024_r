@@ -28,19 +28,14 @@ public class IntakeStore extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //Run the shooter down if not in position
-    if (!ShooterSub.getRotateSwitch()){
-      if(ShooterSub.getShooterAngle() < 0.009){
-        ShooterSub.rotateShooter(-ShooterConstants.kRotateSpeed/4);
-      }else{
-        ShooterSub.rotateShooter(-ShooterConstants.kRotateSpeed);
-      }
-      
-    }else{
+    if(ShooterSub.isShooterDown()){ //The shooter is down, we can intake
       ShooterSub.rotateShooter(0);
-      //System.out.println("IN HERE############");
       IntakeSub.setIntake(IntakeConstants.kIntakeSpeed);
       //ShooterSub.setBelts(ShooterConstants.kIntakeBeltSpeed);
+      ShooterSub.setBelts(0);
+    }else{ //The shooter is up
+      ShooterSub.rotateShooter(-ShooterConstants.kRotateSpeed);
+      IntakeSub.setIntake(0);
       ShooterSub.setBelts(0);
     }
   }
