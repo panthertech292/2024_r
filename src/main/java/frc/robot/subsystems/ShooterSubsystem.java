@@ -31,8 +31,8 @@ public class ShooterSubsystem extends SubsystemBase {
     RotateMotor = configSparkMax(ShooterConstants.kRotateMotorID, false, true);
     ShooterLowMotor = configSparkMax(ShooterConstants.kShooterLowMotorID, false, false);
     ShooterUpMotor = configSparkMax(ShooterConstants.kShooterUpMotorID, false, false);
-    BeltsLowMotor = configSparkMax(ShooterConstants.kBeltsLowMotorID, false, false);
-    BeltsUpMotor = configSparkMax(ShooterConstants.kBeltsUpMotorID, false, false);
+    BeltsLowMotor = configSparkMax(ShooterConstants.kBeltsLowMotorID, false, true);
+    BeltsUpMotor = configSparkMax(ShooterConstants.kBeltsUpMotorID, false, true);
 
     ShooterAngleEncoder = new DutyCycleEncoder(ShooterConstants.kShooterAngleEncoderID);
     //if(getRotateSwitch()){
@@ -65,10 +65,10 @@ public class ShooterSubsystem extends SubsystemBase {
     ShooterUpMotor.set(speed);
   }
   public boolean getRotateSwitch(){
-    return RotateSwitch.get();
+    return !RotateSwitch.get();
   }
   public boolean getBeltSwitch(){
-    return BeltSwitch.get();
+    return !BeltSwitch.get();
   }
   public double getShooterAngle(){
     return ShooterAngleEncoder.get();
@@ -93,6 +93,13 @@ public class ShooterSubsystem extends SubsystemBase {
         rotateSpeed = rotateSpeed/2;
       }
     }
+    //Saftey check for going up
+    if(speed > 0){
+      if(getShooterAngle() > 0.25){
+        rotateSpeed = 0;
+        System.out.println("Warning: TRYING TO ROTATE SHOOTER UP PAST SAFE LIMIT");
+      }
+    }
     RotateMotor.set(rotateSpeed);
   }
   public void setBelts(double speed){
@@ -104,6 +111,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("ROTATE LIMIT", getRotateSwitch());
+    SmartDashboard.putBoolean("BELT LIMIT", getBeltSwitch());
     SmartDashboard.putBoolean("SHOOTER DOWN", isShooterDown());
     SmartDashboard.putNumber("Shooter Angle DISTANCE", getShooterAngle());
 

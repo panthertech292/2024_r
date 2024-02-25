@@ -9,12 +9,12 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class RunShooterBelsAndRev extends Command {
+public class RunShooterBeltsAndRev extends Command {
   private final ShooterSubsystem ShooterSub;
   private DoubleSupplier shooterSpeed;
   private DoubleSupplier beltSpeed;
   /** Creates a new RunShooterBelsAndRev. */
-  public RunShooterBelsAndRev(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier shooterSpeed, DoubleSupplier beltSpeed) {
+  public RunShooterBeltsAndRev(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier shooterSpeed, DoubleSupplier beltSpeed) {
     ShooterSub = s_ShooterSubsystem;
     this.shooterSpeed = shooterSpeed;
     this.beltSpeed = beltSpeed;

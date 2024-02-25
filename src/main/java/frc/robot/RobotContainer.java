@@ -5,13 +5,15 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.IntakeRun;
 import frc.robot.commands.Shooter.IntakeStore;
 import frc.robot.commands.Shooter.RevShooter;
 import frc.robot.commands.Shooter.RotateShooter;
 import frc.robot.commands.Shooter.RotateShooterToAngle;
-import frc.robot.commands.Shooter.RunShooterBelsAndRev;
+import frc.robot.commands.Shooter.RunShooterBeltsAndRev;
+import frc.robot.commands.Shooter.RunShooterBeltsAndRevSwitch;
 import frc.robot.commands.Shooter.RunShooterBelts;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -51,8 +53,8 @@ public class RobotContainer {
 
   //Shooter Commands
   private final Command z_RevShooter = new RevShooter(s_ShooterSubsystem, () -> (0.50)); //Use this command if shooter needs set speed
-  private final Command z_RotateShooterUp = new RotateShooter(s_ShooterSubsystem, 0.20);
-  private final Command z_RotateShooterDown = new RotateShooter(s_ShooterSubsystem, -0.20);
+  private final Command z_RotateShooterUp = new RotateShooter(s_ShooterSubsystem, .45);
+  private final Command z_RotateShooterDown = new RotateShooter(s_ShooterSubsystem, -ShooterConstants.kRotateSpeed);
   //private final Command z_RunShooterBeltsForward = new RunShooterBelts(s_ShooterSubsystem, 0.30);
   private final Command z_RunShooterBeltsBackward = new RunShooterBelts(s_ShooterSubsystem, -1);
   //private final Command z_RotateShooterToAngle = new RotateShooterToAngle(s_ShooterSubsystem, 0.244, 5, 0.09);
@@ -64,7 +66,7 @@ public class RobotContainer {
   public RobotContainer() {
     CameraServer.startAutomaticCapture();
 
-    s_ShooterSubsystem.setDefaultCommand(new RunShooterBelsAndRev(s_ShooterSubsystem, () -> io_DriverController.getLeftTriggerAxis(), () -> io_DriverController.getRightTriggerAxis()));
+    s_ShooterSubsystem.setDefaultCommand(new RunShooterBeltsAndRevSwitch(s_ShooterSubsystem, () -> io_DriverController.getLeftTriggerAxis(), () -> io_DriverController.getRightTriggerAxis()));
     // Configure the trigger bindings
     configureBindings();
 

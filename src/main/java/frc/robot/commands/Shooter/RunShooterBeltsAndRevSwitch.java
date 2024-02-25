@@ -4,21 +4,23 @@
 
 package frc.robot.commands.Shooter;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class IntakeStore extends Command {
+public class RunShooterBeltsAndRevSwitch extends Command {
   private final ShooterSubsystem ShooterSub;
-  private final IntakeSubsystem IntakeSub;
-  /** Creates a new IntakeStore. */
-  public IntakeStore(ShooterSubsystem s_ShooterSubsystem, IntakeSubsystem s_IntakeSubsystem) {
+  private DoubleSupplier shooterSpeed;
+  private DoubleSupplier beltSpeed;
+  /** Creates a new RunShooterBelsAndRev. */
+  public RunShooterBeltsAndRevSwitch(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier shooterSpeed, DoubleSupplier beltSpeed) {
     ShooterSub = s_ShooterSubsystem;
-    IntakeSub = s_IntakeSubsystem;
+    this.shooterSpeed = shooterSpeed;
+    this.beltSpeed = beltSpeed;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(s_ShooterSubsystem, s_IntakeSubsystem);
+    addRequirements(s_ShooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -28,13 +30,16 @@ public class IntakeStore extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(ShooterSub.isShooterDown()){ //The shooter is down, we can intake
-      ShooterSub.rotateShooter(0);
-      IntakeSub.setIntake(IntakeConstants.kIntakeSpeed);
-      ShooterSub.setBelts(ShooterConstants.kIntakeBeltSpeed);
-    }else{ //The shooter is up
-      ShooterSub.rotateShooter(-ShooterConstants.kRotateSpeed);
-      IntakeSub.setIntake(0);
+    if(ShooterSub.getBeltSwitch() && (this.shooterSpeed.getAsDouble() < ShooterConstants.kRevSpeed)){
+      ShooterSub.setShooter(ShooterConstants.kRevSpeed);
+    }else{
+      ShooterSub.setShooter(this.shooterSpeed.getAsDouble());
+    }
+    
+    //please get rid of this later, this is dumb as hell
+    if (beltSpeed.getAsDouble() > 0.25){
+      ShooterSub.setBelts(100);
+    }else{
       ShooterSub.setBelts(0);
     }
   }
@@ -42,14 +47,13 @@ public class IntakeStore extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    IntakeSub.setIntake(0);
+    ShooterSub.setShooter(0);
     ShooterSub.setBelts(0);
-    ShooterSub.rotateShooter(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ShooterSub.getBeltSwitch();
+    return false;
   }
 }

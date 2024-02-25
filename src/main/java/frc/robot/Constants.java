@@ -35,7 +35,7 @@ public final class Constants {
     public static final int kLowIntakeMotorID = 21;
     public static final int kUpIntakeMotorID = 22;
     //Speeds
-    public static final double kIntakeSpeed = 0.60;
+    public static final double kIntakeSpeed = 0.40;
   }
   public static class ShooterConstants {
     //CAN Motors
@@ -51,8 +51,9 @@ public final class Constants {
     public static final int kShooterAngleEncoderID = 0;
     public static final double kShooterAngleOffset = 0.1706;
     //Speeds
-    public static final double kRotateSpeed = 0.30;
+    public static final double kRotateSpeed = 0.40;
     public static final double kIntakeBeltSpeed = 0.05;
+    public static final double kRevSpeed = .30;
   }
   public static final class AutoConstants
   {
