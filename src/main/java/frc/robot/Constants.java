@@ -29,6 +29,13 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final double kDeadband = 0.05;
   }
+  public static class ClimbConstants {
+    //CAN Motors
+    public static final int kLeftClimbMotorID = 41;
+    public static final int kRightClimbMotorID = 42;
+    //Speeds
+    public static final double kClimbSpeed = 0.80;
+  }
 
   public static class IntakeConstants {
     //CAN Motors
@@ -49,7 +56,7 @@ public final class Constants {
     public static final int kBeltSwitchID = 1;
     //Encoders
     public static final int kShooterAngleEncoderID = 0;
-    public static final double kShooterAngleOffset = 0.1706;
+    public static final double kShooterAngleOffset = 0.1726;
     //Speeds
     public static final double kRotateSpeed = 0.40;
     public static final double kIntakeBeltSpeed = 0.05;

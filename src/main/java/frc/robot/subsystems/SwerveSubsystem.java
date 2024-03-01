@@ -484,19 +484,18 @@ public class SwerveSubsystem extends SubsystemBase{
       //}
     });
   }
-  public Command driveAimAtTarget(DoubleSupplier translationX, DoubleSupplier translationY)
-  {
-    
+  public Command driveAimAtTarget(DoubleSupplier translationX, DoubleSupplier translationY){
     return run(() -> {
       if(isValidVisionTarget()){
         System.out.println("TRYING TO ROTATE WITH: " + -getVisionAngle()/75 * swerveDrive.getMaximumAngularVelocity());
         swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumVelocity(),
                                           Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()),
-                                          -getVisionAngle()/100 * swerveDrive.getMaximumAngularVelocity(),
-                        true,
-                        false);
+                                          -getVisionAngle()/75 * swerveDrive.getMaximumAngularVelocity(),true,false);
       }
     });
+  }
+  public SwerveDrive getSwerve(){
+    return swerveDrive;
   }
   //Limelight
   public double getVisionAngle(){

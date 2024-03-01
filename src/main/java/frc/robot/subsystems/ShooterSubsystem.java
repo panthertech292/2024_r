@@ -74,6 +74,10 @@ public class ShooterSubsystem extends SubsystemBase {
     return ShooterAngleEncoder.get();
   }
   public boolean isShooterDown(){
+    return getRotateSwitch() || (getShooterAngle() < 0.001);
+  }
+  //TODO: Not yet implemented, please test with Intake Store!
+  public boolean isShooterReadyToShoot(){
     return getRotateSwitch() || (getShooterAngle() < 0.002);
   }
   public void rotateShooter(double speed){
@@ -95,7 +99,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
     //Saftey check for going up
     if(speed > 0){
-      if(getShooterAngle() > 0.25){
+      if(getShooterAngle() > 0.233){
         rotateSpeed = 0;
         System.out.println("Warning: TRYING TO ROTATE SHOOTER UP PAST SAFE LIMIT");
       }
@@ -113,8 +117,8 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("ROTATE LIMIT", getRotateSwitch());
     SmartDashboard.putBoolean("BELT LIMIT", getBeltSwitch());
     SmartDashboard.putBoolean("SHOOTER DOWN", isShooterDown());
-    SmartDashboard.putNumber("Shooter Angle DISTANCE", getShooterAngle());
-
+    SmartDashboard.putNumber("Shooter Angle:", getShooterAngle());
+    SmartDashboard.putNumber("Shooter Angle RAW:", ShooterAngleEncoder.getAbsolutePosition());
     
     
   }

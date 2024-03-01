@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ClimberRun;
 import frc.robot.commands.IntakeRun;
 import frc.robot.commands.Shooter.IntakeStore;
 import frc.robot.commands.Shooter.RevShooter;
@@ -14,7 +16,9 @@ import frc.robot.commands.Shooter.RotateShooter;
 import frc.robot.commands.Shooter.RotateShooterToAngle;
 import frc.robot.commands.Shooter.RunShooterBeltsAndRev;
 import frc.robot.commands.Shooter.RunShooterBeltsAndRevSwitch;
+import frc.robot.commands.Swerve.driveAimAtTarget;
 import frc.robot.commands.Shooter.RunShooterBelts;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -24,6 +28,7 @@ import java.io.File;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,14 +43,19 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   //Controllers
-  private final CommandXboxController io_DriverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final static CommandXboxController io_DriverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   // Subsystems
+  private final ClimbSubsystem s_ClimbSubsystem = new ClimbSubsystem();
   private final IntakeSubsystem s_IntakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem s_ShooterSubsystem = new ShooterSubsystem();
   private final SwerveSubsystem s_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
   //Commands
+
+  //Climb commands
+  private final Command z_ClimbUp = new ClimberRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed);
+  private final Command z_ClimdDown = new ClimberRun(s_ClimbSubsystem, -ClimbConstants.kClimbSpeed);
 
   //Intake Commands
   //private final Command z_IntakeRunForward = new IntakeRun(s_IntakeSubsystem, 0.45);
@@ -100,17 +110,27 @@ public class RobotContainer {
         !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
 
   }
+  public static void setRightRumbleDriver(double rumble){
+    io_DriverController.getHID().setRumble(RumbleType.kRightRumble, rumble);
+  }
 
   private void configureBindings() {
     //Intake Buttons
     io_DriverController.a().toggleOnTrue(z_IntakeStore);
-    io_DriverController.x().whileTrue(z_IntakeRunBackward);
-    io_DriverController.b().whileTrue(z_RunShooterBeltsBackward);
+    //io_DriverController.x().whileTrue(z_IntakeRunBackward);
+    //io_DriverController.b().whileTrue(z_RunShooterBeltsBackward);
+    io_DriverController.b().whileTrue(new RotateShooterToAngle(s_ShooterSubsystem, 0.12, 17, 0.01));
+    io_DriverController.x().whileTrue(new RunShooterBeltsAndRev(s_ShooterSubsystem, ()->0.60, ()->1));
+    //Climb buttons
+    io_DriverController.povUp().whileTrue(z_ClimbUp);
+    io_DriverController.povDown().whileTrue(z_ClimdDown);
     //Shooter Buttons
     
     //io_DriverController.y().whileTrue(z_RunShooterBeltsForward);
-    io_DriverController.y().whileTrue(s_SwerveSubsystem.driveAimAtTarget(() -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
+    //io_DriverController.y().whileTrue(s_SwerveSubsystem.driveAimAtTarget(() -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+    //    () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
+    io_DriverController.y().whileTrue(new driveAimAtTarget(s_SwerveSubsystem, ()->MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband), ()->MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
+    
     //Rotate Shooter
     io_DriverController.rightBumper().whileTrue(z_RotateShooterUp);
     io_DriverController.leftBumper().whileTrue(z_RotateShooterDown);

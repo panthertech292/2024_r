@@ -52,6 +52,6 @@ public class RotateShooterToAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(target - ShooterSub.getShooterAngle()) < 0.005);
+    return false;//return (Math.abs(target - ShooterSub.getShooterAngle()) < 0.005);
   }
 }
