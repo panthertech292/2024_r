@@ -23,7 +23,7 @@ public final class Constants {
   public static final double ROBOT_MASS = 46.2664; //kg, not lbs
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-
+  //gear ratio for drive is 5.902781
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
