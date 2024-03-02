@@ -4,35 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ClimberRun;
-import frc.robot.commands.IntakeRun;
-import frc.robot.commands.Shooter.IntakeStore;
-import frc.robot.commands.Shooter.RevShooter;
-import frc.robot.commands.Shooter.RotateShooter;
-import frc.robot.commands.Shooter.RotateShooterToAngle;
-import frc.robot.commands.Shooter.RunShooterBeltsAndRev;
-import frc.robot.commands.Shooter.RunShooterBeltsAndRevSwitch;
-import frc.robot.commands.Shooter.ShooterRPMBelts;
-import frc.robot.commands.Swerve.driveAimAtTarget;
-import frc.robot.commands.Shooter.RunShooterBelts;
-import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.SwerveSubsystem;
-
-import java.io.File;
-
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -43,135 +19,36 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  //Controllers
-  private final static CommandXboxController io_DriverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  // The robot's subsystems and commands are defined here...
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  // Subsystems
-  private final ClimbSubsystem s_ClimbSubsystem = new ClimbSubsystem();
-  private final IntakeSubsystem s_IntakeSubsystem = new IntakeSubsystem();
-  private final ShooterSubsystem s_ShooterSubsystem = new ShooterSubsystem();
-  private final SwerveSubsystem s_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-
-  //Commands
-
-  //Climb commands
-  private final Command z_ClimbUp = new ClimberRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed);
-  private final Command z_ClimdDown = new ClimberRun(s_ClimbSubsystem, -ClimbConstants.kClimbSpeed);
-
-  //Intake Commands
-  //private final Command z_IntakeRunForward = new IntakeRun(s_IntakeSubsystem, 0.45);
-  private final Command z_IntakeRunBackward = new IntakeRun(s_IntakeSubsystem, -0.45);
-
-  //Shooter Commands
-  private final Command z_RevShooter = new RevShooter(s_ShooterSubsystem, () -> (0.50)); //Use this command if shooter needs set speed
-  private final Command z_RotateShooterUp = new RotateShooter(s_ShooterSubsystem, .45);
-  private final Command z_RotateShooterDown = new RotateShooter(s_ShooterSubsystem, -ShooterConstants.kRotateSpeed);
-  //private final Command z_RunShooterBeltsForward = new RunShooterBelts(s_ShooterSubsystem, 0.30);
-  private final Command z_RunShooterBeltsBackward = new RunShooterBelts(s_ShooterSubsystem, -1);
-  //private final Command z_RotateShooterToAngle = new RotateShooterToAngle(s_ShooterSubsystem, 0.244, 5, 0.09);
-
-  //Shooter & Intake Commands
-  private final Command z_IntakeStore = new IntakeStore(s_ShooterSubsystem, s_IntakeSubsystem);
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandXboxController m_driverController =
+      new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    CameraServer.startAutomaticCapture();
-
-    s_ShooterSubsystem.setDefaultCommand(new RunShooterBeltsAndRevSwitch(s_ShooterSubsystem, () -> io_DriverController.getLeftTriggerAxis(), () -> io_DriverController.getRightTriggerAxis()));
     // Configure the trigger bindings
     configureBindings();
-
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the desired angle NOT angular rotation
-    Command driveFieldOrientedDirectAngle = s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> -io_DriverController.getRightX(),
-        () -> -io_DriverController.getRightY());
-
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the angular velocity of the robot
-    Command driveFieldOrientedAnglularVelocity = s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> -MathUtil.applyDeadband(io_DriverController.getRightX(), OperatorConstants.kDeadband));
-
-    Command driveFieldOrientedDirectAngleSim = s_SwerveSubsystem.simDriveCommand(
-        () -> MathUtil.applyDeadband(io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> io_DriverController.getRawAxis(2));
-
-    s_SwerveSubsystem.setDefaultCommand(
-        !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
-
-  }
-  public static void setRightRumbleDriver(double rumble){
-    io_DriverController.getHID().setRumble(RumbleType.kRightRumble, rumble);
   }
 
+  /**
+   * Use this method to define your trigger->command mappings. Triggers can be created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * predicate, or via the named factories in {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * joysticks}.
+   */
   private void configureBindings() {
-    //Intake Buttons
-    io_DriverController.a().toggleOnTrue(z_IntakeStore);
-    //io_DriverController.x().whileTrue(z_IntakeRunBackward);
-    //io_DriverController.b().whileTrue(z_RunShooterBeltsBackward);
-    io_DriverController.b().whileTrue(new RotateShooterToAngle(s_ShooterSubsystem, 0.12, 17, 0.01));
-    io_DriverController.x().whileTrue(new RunShooterBeltsAndRev(s_ShooterSubsystem, ()->0.60, ()->1));
-    //Climb buttons
-    io_DriverController.povUp().whileTrue(z_ClimbUp);
-    io_DriverController.povDown().whileTrue(z_ClimdDown);
-    //Shooter Buttons
-    
-    //io_DriverController.y().whileTrue(z_RunShooterBeltsForward);
-    //io_DriverController.y().whileTrue(s_SwerveSubsystem.driveAimAtTarget(() -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-    //    () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
-    io_DriverController.y().whileTrue(new driveAimAtTarget(s_SwerveSubsystem, ()->MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband), ()->MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
-    
-    //Rotate Shooter
-    io_DriverController.rightBumper().whileTrue(z_RotateShooterUp);
-    io_DriverController.leftBumper().whileTrue(z_RotateShooterDown);
-    //Rev Shooter (at set speed)
-    io_DriverController.start().whileTrue(new ShooterRPMBelts(s_ShooterSubsystem, 1500, 0.05, 1));
-    //Reset gyro
-    io_DriverController.back().whileTrue(new InstantCommand(s_SwerveSubsystem::zeroGyro));
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    new Trigger(m_exampleSubsystem::exampleCondition)
+        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    //Turn using AXYB
-    /*
-    io_DriverController.y().whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> 0,
-        () -> 1));
-    io_DriverController.x().whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> 1,
-        () -> 0));
-    io_DriverController.b().whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> -1,
-        () -> 0));
-    io_DriverController.a().whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> 0,
-        () -> -1));
-    //Triggers
-    io_DriverController.rightTrigger(0.05).whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> -io_DriverController.getRightTriggerAxis()));
-
-    io_DriverController.leftTrigger(0.05).whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> io_DriverController.getLeftTriggerAxis())); */
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
@@ -181,7 +58,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    //return Autos.exampleAuto(m_exampleSubsystem);
-    return null;
+    return Autos.exampleAuto(m_exampleSubsystem);
   }
 }
