@@ -28,12 +28,28 @@ public class IntakeStore extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    /* 
     if(ShooterSub.isShooterDown()){ //The shooter is down, we can intake
       ShooterSub.rotateShooter(0);
       IntakeSub.setIntake(IntakeConstants.kIntakeSpeed);
       ShooterSub.setBelts(ShooterConstants.kIntakeBeltSpeed);
     }else{ //The shooter is up
       ShooterSub.rotateShooter(-ShooterConstants.kRotateSpeed);
+      IntakeSub.setIntake(0);
+      ShooterSub.setBelts(0);
+    }*/
+    
+    //If the shooter is not down, run it down, else stop
+    if(!ShooterSub.isShooterDown()){
+      ShooterSub.rotateShooter(-ShooterConstants.kRotateSpeed);
+    }else{
+      ShooterSub.rotateShooter(0);
+    }
+    //If the shooter is down enough to intake, run
+    if(ShooterSub.isShooterReadyToIntake()){
+      IntakeSub.setIntake(IntakeConstants.kIntakeSpeed);
+      ShooterSub.setBelts(ShooterConstants.kIntakeBeltSpeed);
+    }else{
       IntakeSub.setIntake(0);
       ShooterSub.setBelts(0);
     }

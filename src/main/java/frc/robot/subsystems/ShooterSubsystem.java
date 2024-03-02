@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -23,6 +25,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private final DutyCycleEncoder ShooterAngleEncoder;
 
+  private RelativeEncoder ShooterLowMotorEncoder;
+  private RelativeEncoder ShooterUpMotorEncoder;
+  private SparkPIDController ShooterLowMotorPID;
+  private SparkPIDController ShooterUpMotorPID;
+
   private final DigitalInput RotateSwitch;
   private final DigitalInput BeltSwitch;
 
@@ -33,6 +40,14 @@ public class ShooterSubsystem extends SubsystemBase {
     ShooterUpMotor = configSparkMax(ShooterConstants.kShooterUpMotorID, false, false);
     BeltsLowMotor = configSparkMax(ShooterConstants.kBeltsLowMotorID, false, true);
     BeltsUpMotor = configSparkMax(ShooterConstants.kBeltsUpMotorID, false, true);
+
+    ShooterLowMotorEncoder = ShooterLowMotor.getEncoder();
+    ShooterUpMotorEncoder = ShooterUpMotor.getEncoder();
+    ShooterLowMotorPID = ShooterLowMotor.getPIDController();
+    ShooterUpMotorPID = ShooterUpMotor.getPIDController();
+
+    ShooterLowMotorPID.setOutputRange(0, 1);
+    ShooterUpMotorPID.setOutputRange(0, 1);
 
     ShooterAngleEncoder = new DutyCycleEncoder(ShooterConstants.kShooterAngleEncoderID);
     //if(getRotateSwitch()){
@@ -59,6 +74,21 @@ public class ShooterSubsystem extends SubsystemBase {
     newSpark.burnFlash();
     return newSpark;
   }
+  public double getShooterLowEncoderSpeed(){
+    return ShooterLowMotorEncoder.getVelocity();
+  }
+  public double getShooterUpEncoderSpeed(){
+    return ShooterUpMotorEncoder.getVelocity();
+  }
+  public void setShooterPID(double p, double feedforward, double targetRPM){
+    ShooterLowMotorPID.setReference(targetRPM, CANSparkMax.ControlType.kVelocity);
+    ShooterUpMotorPID.setReference(targetRPM, CANSparkMax.ControlType.kVelocity);
+    ShooterLowMotorPID.setP(p);
+    ShooterUpMotorPID.setP(p);
+    ShooterLowMotorPID.setFF(feedforward);
+    ShooterUpMotorPID.setFF(feedforward);
+    
+  }
 
   public void setShooter(double speed){
     ShooterLowMotor.set(speed);
@@ -76,8 +106,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public boolean isShooterDown(){
     return getRotateSwitch() || (getShooterAngle() < 0.001);
   }
-  //TODO: Not yet implemented, please test with Intake Store!
-  public boolean isShooterReadyToShoot(){
+  public boolean isShooterReadyToIntake(){
     return getRotateSwitch() || (getShooterAngle() < 0.002);
   }
   public void rotateShooter(double speed){
@@ -119,7 +148,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("SHOOTER DOWN", isShooterDown());
     SmartDashboard.putNumber("Shooter Angle:", getShooterAngle());
     SmartDashboard.putNumber("Shooter Angle RAW:", ShooterAngleEncoder.getAbsolutePosition());
-    
+    SmartDashboard.putNumber("Shooter LOW RPM:", getShooterLowEncoderSpeed());
     
   }
 }

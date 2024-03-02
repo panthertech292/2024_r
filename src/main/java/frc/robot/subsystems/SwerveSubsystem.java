@@ -4,12 +4,16 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.LimelightHelpers;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -47,11 +51,15 @@ public class SwerveSubsystem extends SubsystemBase{
 
   NetworkTableEntry v_limeLightX;
   NetworkTableEntry v_limeLightValidTarget;
+  NetworkTableEntry v_limeLightTargetID;
+  public final Translation2d SPEAKER_POSITION = new Translation2d(0, 5.547868);
 
   //Initialize {@link SwerveDrive} with the directory provided. @param directory Directory of swerve drive config files.
   public SwerveSubsystem(File directory){
     double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(150/7);
     double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
+
+    //SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
 
     System.out.println("\"conversionFactor\": {");
     System.out.println("\t\"angle\": " + angleConversionFactor + ",");
@@ -74,6 +82,7 @@ public class SwerveSubsystem extends SubsystemBase{
     NetworkTable limeLightTable = NetworkTableInstance.getDefault().getTable("limelight");
     v_limeLightX = limeLightTable.getEntry("tx");
     v_limeLightValidTarget = limeLightTable.getEntry("tv");
+    v_limeLightTargetID = limeLightTable.getEntry("priorityid");
   }
 
   /**
@@ -502,13 +511,28 @@ public class SwerveSubsystem extends SubsystemBase{
     return v_limeLightX.getDouble(0.0);
   }
   public boolean isValidVisionTarget(){
-    return (v_limeLightValidTarget.getDouble(0.0) != 0);
+    return (v_limeLightValidTarget.getDouble(0.0) != 0); 
+  }
+  public void setVisionTargetID(int id){
+    v_limeLightTargetID.setInteger(id);
   }
 
+  
+  public void updateVisionOdometry(){
+    LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+    //System.out.println("TAG COUNT: " + limelightMeasurement.tagCount);
+    if(limelightMeasurement.tagCount >= 2)
+    {
+      //System.out.println("UPDATING ODOMETRY!");
+      SmartDashboard.putNumber("DISTANCE TO SPEAKER (INCHES)" , 39.37*SPEAKER_POSITION.getDistance(swerveDrive.getPose().getTranslation()));
+      swerveDrive.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
+    }
+  }
 
   @Override
   public void periodic(){
     SmartDashboard.putNumber("Limelight X", getVisionAngle());
+    updateVisionOdometry();
   }
 
   @Override

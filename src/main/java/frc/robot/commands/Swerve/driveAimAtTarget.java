@@ -30,6 +30,7 @@ public class driveAimAtTarget extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SwerveSub.setVisionTargetID(7);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,13 +41,13 @@ public class driveAimAtTarget extends Command {
       heading = -SwerveSub.getVisionAngle()/70;
       RobotContainer.setRightRumbleDriver(0);
     }else{
-      System.out.println("Warning: Swerve Aim: Lost Target! Using last known heading!");
+      System.out.println("Warning: Swerve Aim: Lost Target!");
       RobotContainer.setRightRumbleDriver(1);
       heading = 0;
     }
     lastGoodHeading = heading;
 
-    System.out.println("Target is: " + heading);
+    //System.out.println("Target is: " + heading);
     //SwerveSub.driveCommand(translationX, translationY, heading);
 
 
