@@ -9,27 +9,57 @@ import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.utilities.MotorUtil;
 
 public class ShooterSubsystem extends SubsystemBase {
   //Motors
-  //private final CANSparkMax ShooterLowMotor;
-  //private final CANSparkMax ShooterUpMotor;
-  //private final CANSparkMax FeedBeltLowMotor;
-  //private final CANSparkMax FeedBeltUpMotor;
+  private final CANSparkMax ShooterLowMotor;
+  private final CANSparkMax ShooterUpMotor;
+  private final CANSparkMax FeedBeltLowMotor;
+  private final CANSparkMax FeedBeltUpMotor;
 
-  //Encoders
-  //private RelativeEncoder ShooterLowMotorEncoder;
-  //private RelativeEncoder ShooterUpMotorEncoder;
+  //Encoders (We only use the encoder from the low motor, but we can add the high one if we need to)
+  private RelativeEncoder ShooterLowMotorEncoder;
 
   //Limit Switches
-  //private final DigitalInput FeedBeltSwitch;
+  private final DigitalInput FeedBeltSwitch;
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
-    //ShooterLowMotor = 
-    //ShooterUpMotor = 
-    //FeedBeltLowMotor = 
-    //FeedBeltUpMotor = 
+    //Motors
+    ShooterLowMotor = MotorUtil.initSparkMax(ShooterConstants.kShooterLowMotorID, false, false, 12);//might need to lower this vComp
+    ShooterUpMotor = MotorUtil.initSparkMax(ShooterConstants.kShooterUpMotorID, false, false, 12);
+    FeedBeltLowMotor = MotorUtil.initSparkMax(ShooterConstants.kFeedBeltsLowMotorID, false, true); //might want to enable vComp?
+    FeedBeltUpMotor = MotorUtil.initSparkMax(ShooterConstants.kFeedBeltsUpMotorID, false, true);
+
+    //Encoders
+    ShooterLowMotorEncoder = ShooterLowMotor.getEncoder();
+
+    //Limit Switches
+    FeedBeltSwitch = new DigitalInput(ShooterConstants.kFeedBeltSwitchID); //This switch activates when a note is just before the shooter
+  }
+
+  /** @return Returns the RPM of the lower shooter motor */
+  public double getShooterLowEncoderVelocity(){
+    return ShooterLowMotorEncoder.getVelocity();
+  }
+
+  /** @return True: There is a note(or something) in the belts before the shooter. NOTE: Due to robot wiring, this is inverted! */
+  public boolean getFeedBeltSwitch(){
+    return !FeedBeltSwitch.get();
+  }
+
+  /** @param speed The speed to set the shooter to*/
+  public void setShooter(double speed){
+    ShooterLowMotor.set(speed);
+    ShooterUpMotor.set(speed);
+  }
+
+  /** @param speed The speed to set the belts to*/
+  public void setFeedBelts(double speed){
+    FeedBeltLowMotor.set(speed);
+    FeedBeltUpMotor.set(speed);
   }
 
   @Override
