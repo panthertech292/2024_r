@@ -13,7 +13,20 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-
+    //CAN Motor IDs
+    public static final int kRotationMotorID = 33;
+    //DIO Sensor IDs
+    public static final int kRotationDownSwitchID = 2;
+    public static final int kRotationAngleEncoder = 0; //This is a REV through bore encoder
+    //Speeds
+    public static final double kRotationSpeed = 0.40;
+    //Encoder Positions
+    public static final double kRotationZeroAngleOffset = 0.1726;
+    public static final double kRotationMinAngle = 0.001;
+    public static final double kRotationIntakeAngle = 0.002;
+    public static final double kRotationMaxAngle = 0.233;
+    public static final double kRotationQuarterSpeedAngle = 0.009;
+    public static final double kRotationEighthSpeedAngle = 0.003;
   }
 
   public static class ClimbConstants {
