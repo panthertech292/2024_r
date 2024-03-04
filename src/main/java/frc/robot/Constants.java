@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+
 public final class Constants {
 
   public static class OperatorConstants {
@@ -58,7 +60,8 @@ public final class Constants {
     public static final double kRevSpeed = .30;
   }
   public static class SwerveConstants {
-
+    //Speeds
+    public static final double kMaxSpeed = Units.feetToMeters(17.2); // Maximum speed of the robot in meters per second, used to limit acceleration.
   }
   public static class AutoConstants {
 
