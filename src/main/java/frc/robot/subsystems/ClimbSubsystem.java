@@ -15,10 +15,9 @@ public class ClimbSubsystem extends SubsystemBase {
   private final CANSparkMax LeftClimbMotor;
   private final CANSparkMax RightClimbMotor;
   
-  /** Creates a new ClimbSubsystem. */
   public ClimbSubsystem() {
-    LeftClimbMotor = MotorUtil.initSparkMax(ClimbConstants.kLeftClimbMotorID, true, true, false);
-    RightClimbMotor = MotorUtil.initSparkMax(ClimbConstants.kRightClimbMotorID, false, true, false);
+    LeftClimbMotor = MotorUtil.initSparkMax(ClimbConstants.kLeftClimbMotorID, true, true);
+    RightClimbMotor = MotorUtil.initSparkMax(ClimbConstants.kRightClimbMotorID, false, true);
   }
 
   public void setClimbMotors(double speed){

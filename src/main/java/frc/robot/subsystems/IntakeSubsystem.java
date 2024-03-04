@@ -17,14 +17,16 @@ public class IntakeSubsystem extends SubsystemBase {
   
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
-    LowIntakeMotor = MotorUtil.initSparkMax(IntakeConstants.kLowIntakeMotorID, true, false, false);
-    UpIntakeMotor = MotorUtil.initSparkMax(IntakeConstants.kUpIntakeMotorID, true, false, false);
+    LowIntakeMotor = MotorUtil.initSparkMax(IntakeConstants.kLowIntakeMotorID, true, false);
+    UpIntakeMotor = MotorUtil.initSparkMax(IntakeConstants.kUpIntakeMotorID, true, false);
   }
 
+  /** @param speed Value to set Intake rollers to */
   public void setIntake(double speed){
     LowIntakeMotor.set(speed);
     UpIntakeMotor.set(speed);
   }
+  
 
   @Override
   public void periodic() {
