@@ -17,6 +17,7 @@ import frc.robot.commands.Shooter.RotateShooterToAngle;
 import frc.robot.commands.Shooter.RunShooterBeltsAndRev;
 import frc.robot.commands.Shooter.RunShooterBeltsAndRevSwitch;
 import frc.robot.commands.Shooter.ShooterRPMBelts;
+import frc.robot.commands.Shooter.ShooterRPMBeltsRotate;
 import frc.robot.commands.Swerve.driveAimAtTarget;
 import frc.robot.commands.Shooter.RunShooterBelts;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -121,7 +122,7 @@ public class RobotContainer {
     //io_DriverController.x().whileTrue(z_IntakeRunBackward);
     //io_DriverController.b().whileTrue(z_RunShooterBeltsBackward);
     io_DriverController.b().whileTrue(new RotateShooterToAngle(s_ShooterSubsystem, 0.12, 17, 0.01));
-    io_DriverController.x().whileTrue(new RunShooterBeltsAndRev(s_ShooterSubsystem, ()->0.60, ()->1));
+    io_DriverController.x().whileTrue(new ShooterRPMBeltsRotate(s_ShooterSubsystem, 0.35, 1, 0.12, 17, 0.01));
     //Climb buttons
     io_DriverController.povUp().whileTrue(z_ClimbUp);
     io_DriverController.povDown().whileTrue(z_ClimdDown);
@@ -136,7 +137,7 @@ public class RobotContainer {
     io_DriverController.rightBumper().whileTrue(z_RotateShooterUp);
     io_DriverController.leftBumper().whileTrue(z_RotateShooterDown);
     //Rev Shooter (at set speed)
-    io_DriverController.start().whileTrue(new ShooterRPMBelts(s_ShooterSubsystem, 1500, 0.05, 1));
+    //io_DriverController.start().whileTrue(new ShooterRPMBelts(s_ShooterSubsystem, 0.35, 1));
     //Reset gyro
     io_DriverController.back().whileTrue(new InstantCommand(s_SwerveSubsystem::zeroGyro));
 

@@ -27,8 +27,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private RelativeEncoder ShooterLowMotorEncoder;
   private RelativeEncoder ShooterUpMotorEncoder;
-  private SparkPIDController ShooterLowMotorPID;
-  private SparkPIDController ShooterUpMotorPID;
+  //private SparkPIDController ShooterLowMotorPID;
+  //private SparkPIDController ShooterUpMotorPID;
 
   private final DigitalInput RotateSwitch;
   private final DigitalInput BeltSwitch;
@@ -43,11 +43,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
     ShooterLowMotorEncoder = ShooterLowMotor.getEncoder();
     ShooterUpMotorEncoder = ShooterUpMotor.getEncoder();
-    ShooterLowMotorPID = ShooterLowMotor.getPIDController();
-    ShooterUpMotorPID = ShooterUpMotor.getPIDController();
+    //ShooterLowMotorPID = ShooterLowMotor.getPIDController();
+    //ShooterUpMotorPID = ShooterUpMotor.getPIDController();
 
-    ShooterLowMotorPID.setOutputRange(0, 1);
-    ShooterUpMotorPID.setOutputRange(0, 1);
+    //ShooterLowMotorPID.setOutputRange(0, 1);
+    //ShooterUpMotorPID.setOutputRange(0, 1);
 
     ShooterAngleEncoder = new DutyCycleEncoder(ShooterConstants.kShooterAngleEncoderID);
     //if(getRotateSwitch()){
@@ -80,6 +80,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public double getShooterUpEncoderSpeed(){
     return ShooterUpMotorEncoder.getVelocity();
   }
+  /* 
   public void setShooterPID(double p, double feedforward, double targetRPM){
     ShooterLowMotorPID.setReference(targetRPM, CANSparkMax.ControlType.kVelocity);
     ShooterUpMotorPID.setReference(targetRPM, CANSparkMax.ControlType.kVelocity);
@@ -88,7 +89,7 @@ public class ShooterSubsystem extends SubsystemBase {
     ShooterLowMotorPID.setFF(feedforward);
     ShooterUpMotorPID.setFF(feedforward);
     
-  }
+  }*/
 
   public void setShooter(double speed){
     ShooterLowMotor.set(speed);

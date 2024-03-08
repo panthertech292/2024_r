@@ -47,7 +47,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase{
   private final SwerveDrive swerveDrive;
-  public double maximumSpeed = Units.feetToMeters(14.5); // Maximum speed of the robot in meters per second, used to limit acceleration.
+  public double maximumSpeed = Units.feetToMeters(17.2); // Maximum speed of the robot in meters per second, used to limit acceleration.
 
   NetworkTableEntry v_limeLightX;
   NetworkTableEntry v_limeLightValidTarget;
@@ -57,7 +57,7 @@ public class SwerveSubsystem extends SubsystemBase{
   //Initialize {@link SwerveDrive} with the directory provided. @param directory Directory of swerve drive config files.
   public SwerveSubsystem(File directory){
     double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(150/7);
-    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
+    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 5.90);
 
     //SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
 
@@ -267,8 +267,8 @@ public class SwerveSubsystem extends SubsystemBase{
   {
     return run(() -> {
       // Make the robot move
-      swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumVelocity(),
-                                          Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumVelocity()),
+      swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 1) * swerveDrive.getMaximumVelocity(),
+                                          Math.pow(translationY.getAsDouble(), 1) * swerveDrive.getMaximumVelocity()),
                         Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
                         true,
                         false);
