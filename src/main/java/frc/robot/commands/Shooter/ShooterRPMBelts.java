@@ -47,6 +47,10 @@ public class ShooterRPMBelts extends Command {
         readyToFire = false;
       }
     }
+    //dumbass check here
+    if(ShooterSub.getShooterLowEncoderSpeed() < 1000 & shooterSpeed > 0.50){
+      readyToFire = false;
+    }
 
     if(readyToFire){
       ShooterSub.setBelts(beltSpeed);

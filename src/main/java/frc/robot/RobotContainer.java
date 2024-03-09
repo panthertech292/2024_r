@@ -27,6 +27,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -76,6 +78,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    NamedCommands.registerCommand("IntakeStore", z_IntakeStore);
+    NamedCommands.registerCommand("RevFullPower", new RevShooter(s_ShooterSubsystem, 1));
+    NamedCommands.registerCommand("ShootFullPower", new ShooterRPMBelts(s_ShooterSubsystem, 1, 1));
     CameraServer.startAutomaticCapture();
 
     s_ShooterSubsystem.setDefaultCommand(new RunShooterBeltsAndRevSwitch(s_ShooterSubsystem, () -> io_DriverController.getLeftTriggerAxis(), () -> io_DriverController.getRightTriggerAxis()));
@@ -183,6 +188,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return Autos.exampleAuto(m_exampleSubsystem);
-    return s_SwerveSubsystem.getAutonomousCommand("New Auto");
+    return s_SwerveSubsystem.getAutonomousCommand("scoreCloseMidThenFar");
   }
 }

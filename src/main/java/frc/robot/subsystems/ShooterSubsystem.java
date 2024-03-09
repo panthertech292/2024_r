@@ -70,7 +70,7 @@ public class ShooterSubsystem extends SubsystemBase {
     
     newSpark.setSmartCurrentLimit(60);
     newSpark.setInverted(invert);
-    newSpark.enableVoltageCompensation(12);
+    newSpark.enableVoltageCompensation(11);
     newSpark.burnFlash();
     return newSpark;
   }

@@ -19,6 +19,12 @@ public class RevShooter extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_ShooterSubsystem);
   }
+  public RevShooter(ShooterSubsystem s_ShooterSubsystem, double speed) {
+    ShooterSub = s_ShooterSubsystem;
+    this.speed = ()-> speed;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(s_ShooterSubsystem);
+  }
 
   // Called when the command is initially scheduled.
   @Override
