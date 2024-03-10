@@ -48,7 +48,7 @@ public class ShooterRPMBelts extends Command {
       }
     }
     //dumbass check here
-    if(ShooterSub.getShooterLowEncoderSpeed() < 1000 & shooterSpeed > 0.50){
+    if(ShooterSub.getShooterLowEncoderSpeed() < 1000 & shooterSpeed > 0.49){
       readyToFire = false;
     }
 

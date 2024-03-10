@@ -80,7 +80,9 @@ public class RobotContainer {
   public RobotContainer() {
     NamedCommands.registerCommand("IntakeStore", z_IntakeStore);
     NamedCommands.registerCommand("RevFullPower", new RevShooter(s_ShooterSubsystem, 1));
+    NamedCommands.registerCommand("Rev75Power", new RevShooter(s_ShooterSubsystem, 0.75));
     NamedCommands.registerCommand("ShootFullPower", new ShooterRPMBelts(s_ShooterSubsystem, 1, 1));
+    NamedCommands.registerCommand("Shoot75Power", new ShooterRPMBelts(s_ShooterSubsystem, 0.75, 1));
     CameraServer.startAutomaticCapture();
 
     s_ShooterSubsystem.setDefaultCommand(new RunShooterBeltsAndRevSwitch(s_ShooterSubsystem, () -> io_DriverController.getLeftTriggerAxis(), () -> io_DriverController.getRightTriggerAxis()));
@@ -188,6 +190,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return Autos.exampleAuto(m_exampleSubsystem);
-    return s_SwerveSubsystem.getAutonomousCommand("scoreCloseMidThenFar");
+    //return s_SwerveSubsystem.getAutonomousCommand("scoreCloseMidThenFar");
+    return s_SwerveSubsystem.getAutonomousCommand("score2BottomMid");
   }
 }
