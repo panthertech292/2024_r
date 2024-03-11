@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 public class RobotContainer {
   //Controllers
@@ -37,6 +38,10 @@ public class RobotContainer {
     //Configure the USB camera here
     UsbCamera intakeCam = CameraServer.startAutomaticCapture();
     //intakeCam.getActualDataRate(); <--Test this to see bandwidth usage
+  }
+
+  public static void setRightRumbleDriver(double rumble){
+    io_DriverController.getHID().setRumble(RumbleType.kRightRumble, rumble);
   }
 
   private void configureBindings() {
