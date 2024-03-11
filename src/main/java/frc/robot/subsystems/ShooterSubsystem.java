@@ -28,8 +28,8 @@ public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
     //Motors
-    ShooterLowMotor = MotorUtil.initSparkMax(ShooterConstants.kShooterLowMotorID, false, false, 12);//might need to lower this vComp
-    ShooterUpMotor = MotorUtil.initSparkMax(ShooterConstants.kShooterUpMotorID, false, false, 12);
+    ShooterLowMotor = MotorUtil.initSparkMax(ShooterConstants.kShooterLowMotorID, false, false, 11);
+    ShooterUpMotor = MotorUtil.initSparkMax(ShooterConstants.kShooterUpMotorID, false, false, 11);
     FeedBeltLowMotor = MotorUtil.initSparkMax(ShooterConstants.kFeedBeltsLowMotorID, false, true); //might want to enable vComp?
     FeedBeltUpMotor = MotorUtil.initSparkMax(ShooterConstants.kFeedBeltsUpMotorID, false, true);
 
