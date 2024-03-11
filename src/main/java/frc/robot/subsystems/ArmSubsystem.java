@@ -57,7 +57,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   /** Rotates the arm WITH saftey checks to stop the arm from destroying itself.
    *  @param speed The speed to set the arm to rotate at */
-  public void rotateArm(double speed){
+  public void setArmRotate(double speed){
     double rotationSpeed = speed;
     //Saftey checks for going down
     if(speed < 0){
