@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class RunShooterRev extends Command {
+public class ShooterRunRev extends Command {
   private final ShooterSubsystem ShooterSub;
   private DoubleSupplier shooterSpeed;
   private DoubleSupplier beltSpeed;
   /** Creates a new RunShooterRev. */
-  public RunShooterRev(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier shooterSpeed, DoubleSupplier beltSpeed) {
+  public ShooterRunRev(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier shooterSpeed, DoubleSupplier beltSpeed) {
     ShooterSub = s_ShooterSubsystem;
     this.shooterSpeed = shooterSpeed;
     this.beltSpeed = beltSpeed;

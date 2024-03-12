@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class RunShooterRPMRotate extends Command {
+public class ShooterRunRPMRotate extends Command {
   //Shooting
   private final ShooterSubsystem ShooterSub;
   private double shooterSpeed;
@@ -26,7 +26,7 @@ public class RunShooterRPMRotate extends Command {
   private double p;
   private double minSpeed;
   /** Creates a new RunShooterRPM. */
-  public RunShooterRPMRotate(ShooterSubsystem s_ShooterSubsystem, ArmSubsystem s_ArmSubsystem, double shooterSpeed, double beltSpeed, double target, double p, double minSpeed) {
+  public ShooterRunRPMRotate(ShooterSubsystem s_ShooterSubsystem, ArmSubsystem s_ArmSubsystem, double shooterSpeed, double beltSpeed, double target, double p, double minSpeed) {
     ShooterSub = s_ShooterSubsystem;
     ArmSub = s_ArmSubsystem;
     this.shooterSpeed = shooterSpeed;

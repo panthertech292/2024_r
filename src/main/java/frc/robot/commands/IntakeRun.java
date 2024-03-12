@@ -4,26 +4,20 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.subsystems.ArmSubsystem;
+import java.util.function.DoubleSupplier;
 
-public class ArmRotate extends Command {
-  private final ArmSubsystem ArmSub;
-  private double speed;
-  /** Creates a new ArmRotate. */
-  public ArmRotate(ArmSubsystem s_ArmSubsystem, double speed) {
-    ArmSub = s_ArmSubsystem;
-    this.speed = speed;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.IntakeSubsystem;
+
+public class IntakeRun extends Command {
+  /** Creates a new IntakeRun. */
+  public IntakeRun(IntakeSubsystem s_IntakeSubsystem, DoubleSupplier speed) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(s_ArmSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    ArmSub.setArmRotate(speed);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -31,9 +25,7 @@ public class ArmRotate extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    ArmSub.setArmRotate(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

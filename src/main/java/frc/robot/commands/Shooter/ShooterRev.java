@@ -9,18 +9,18 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class RevShooter extends Command {
+public class ShooterRev extends Command {
   private final ShooterSubsystem ShooterSub;
   private DoubleSupplier speed;
   /** Creates a new RevShooter. */
-  public RevShooter(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier speed) {
+  public ShooterRev(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier speed) {
     ShooterSub = s_ShooterSubsystem;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_ShooterSubsystem);
   }
   //Constructor if we want to use a double
-  public RevShooter(ShooterSubsystem s_ShooterSubsystem, double speed) {
+  public ShooterRev(ShooterSubsystem s_ShooterSubsystem, double speed) {
     ShooterSub = s_ShooterSubsystem;
     this.speed = ()-> speed;
     // Use addRequirements() here to declare subsystem dependencies.

@@ -7,7 +7,7 @@ package frc.robot.commands.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class RunShooterRPM extends Command {
+public class ShooterRunRPM extends Command {
   private final ShooterSubsystem ShooterSub;
   private double shooterSpeed;
   private double beltSpeed;
@@ -17,7 +17,7 @@ public class RunShooterRPM extends Command {
   private boolean readyToFire;
   private boolean setInitalMovingAt; //Used for debug, can be removed if needed
   /** Creates a new RunShooterRPM. */
-  public RunShooterRPM(ShooterSubsystem s_ShooterSubsystem, double shooterSpeed, double beltSpeed) {
+  public ShooterRunRPM(ShooterSubsystem s_ShooterSubsystem, double shooterSpeed, double beltSpeed) {
     ShooterSub = s_ShooterSubsystem;
     this.shooterSpeed = shooterSpeed;
     this.beltSpeed = beltSpeed;

@@ -5,8 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ArmHoldAngle;
-import frc.robot.commands.Autos;
+import frc.robot.commands.Arm.ArmHoldAngle;
 import frc.robot.subsystems.*;
 
 import java.io.File;
