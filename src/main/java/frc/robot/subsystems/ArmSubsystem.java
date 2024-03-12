@@ -19,6 +19,8 @@ public class ArmSubsystem extends SubsystemBase {
   private final DutyCycleEncoder RotationAngleEncoder;
   //Limit Switches
   private final DigitalInput RotationDownSwitch;
+  //Distance
+  private double LastCommandedLocation; //Last position we were at
   
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
@@ -29,6 +31,8 @@ public class ArmSubsystem extends SubsystemBase {
     RotationAngleEncoder.setPositionOffset(ArmConstants.kRotationZeroAngleOffset);
     //Limit Switches
     RotationDownSwitch = new DigitalInput(ArmConstants.kRotationDownSwitchID);
+    //Distances
+    LastCommandedLocation = 0;
   }
 
   /** @return True: The down limit switch is activated. NOTE: This value is inverted, due to current robot wiring. */
@@ -80,6 +84,10 @@ public class ArmSubsystem extends SubsystemBase {
       }
     }
     RotationMotor.set(rotationSpeed);
+    LastCommandedLocation = getRotationAngle();
+  }
+  public double getLastCommandedLocation(){
+    return LastCommandedLocation;
   }
 
   @Override

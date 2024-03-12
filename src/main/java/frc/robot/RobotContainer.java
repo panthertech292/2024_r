@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ArmHoldAngle;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.*;
 
@@ -30,7 +31,7 @@ public class RobotContainer {
   
   /* The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
+    s_ArmSubsystem.setDefaultCommand(new ArmHoldAngle(s_ArmSubsystem, 17, 0.01));
     configureCamera();
     configureBindings();
   }
