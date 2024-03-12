@@ -14,11 +14,13 @@ public class ShooterRunRev extends Command {
   private final ShooterSubsystem ShooterSub;
   private DoubleSupplier shooterSpeed;
   private DoubleSupplier beltSpeed;
+  private DoubleSupplier manualBeltSpeed;
   /** Creates a new RunShooterRev. */
-  public ShooterRunRev(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier shooterSpeed, DoubleSupplier beltSpeed) {
+  public ShooterRunRev(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier shooterSpeed, DoubleSupplier beltSpeed, DoubleSupplier manualBeltSpeed) {
     ShooterSub = s_ShooterSubsystem;
     this.shooterSpeed = shooterSpeed;
     this.beltSpeed = beltSpeed;
+    this.manualBeltSpeed = manualBeltSpeed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_ShooterSubsystem);
   }
@@ -37,11 +39,19 @@ public class ShooterRunRev extends Command {
       ShooterSub.setShooter(this.shooterSpeed.getAsDouble());
     }
     
-    if (beltSpeed.getAsDouble() > 0.25){
-      ShooterSub.setFeedBelts(1);
+    //If the override for manual speed operation is greater than the toggle speed
+    if(manualBeltSpeed.getAsDouble() > beltSpeed.getAsDouble()){
+      ShooterSub.setFeedBelts(manualBeltSpeed.getAsDouble());
     }else{
-      ShooterSub.setFeedBelts(0);
+      //If the trigger is held down enough, full send belts
+      if (beltSpeed.getAsDouble() > 0.25){
+        ShooterSub.setFeedBelts(1);
+      }else{
+        ShooterSub.setFeedBelts(0);
+      }
     }
+
+    
   }
 
   // Called once the command ends or is interrupted.

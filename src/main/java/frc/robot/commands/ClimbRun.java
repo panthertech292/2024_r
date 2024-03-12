@@ -4,36 +4,34 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 
-public class IntakeRun extends Command {
-  private final IntakeSubsystem IntakeSub;
-  private DoubleSupplier speed;
-  /** Creates a new IntakeRun. */
-  public IntakeRun(IntakeSubsystem s_IntakeSubsystem, DoubleSupplier speed) {
-    IntakeSub = s_IntakeSubsystem;
+public class ClimbRun extends Command {
+  private final ClimbSubsystem ClimbSub;
+  private double speed;
+  /** Creates a new ClimberRun. */
+  public ClimbRun(ClimbSubsystem s_ClimbSubsystem, double speed) {
+    this.ClimbSub = s_ClimbSubsystem;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(s_IntakeSubsystem);
+    addRequirements(s_ClimbSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    ClimbSub.setClimbMotors(speed);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    IntakeSub.setIntake(speed.getAsDouble());
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    IntakeSub.setIntake(0);
+    ClimbSub.setClimbMotors(0);
   }
 
   // Returns true when the command should end.
