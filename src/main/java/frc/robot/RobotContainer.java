@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 public class RobotContainer {
   //Controllers
   private final static CommandXboxController io_DriverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final static CommandXboxController io_OperatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
 
   // Subsystems
   private final ArmSubsystem s_ArmSubsystem = new ArmSubsystem();
