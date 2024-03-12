@@ -40,7 +40,7 @@ public class ShooterRunRev extends Command {
     }
     
     //If the override for manual speed operation is greater than the toggle speed
-    if(manualBeltSpeed.getAsDouble() > beltSpeed.getAsDouble()){
+    if(Math.abs(manualBeltSpeed.getAsDouble()) > beltSpeed.getAsDouble()){
       ShooterSub.setFeedBelts(manualBeltSpeed.getAsDouble());
     }else{
       //If the trigger is held down enough, full send belts

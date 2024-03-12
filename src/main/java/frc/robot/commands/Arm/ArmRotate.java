@@ -5,6 +5,7 @@
 package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmRotate extends Command {
@@ -21,12 +22,18 @@ public class ArmRotate extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    ArmSub.setArmRotate(speed);
+    //ArmSub.setArmRotate(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if(ArmSub.getRotationAngle() < ArmConstants.kRotationQuarterSpeedAngle && speed < 0){
+      ArmSub.setArmRotate(this.speed/4);
+    }else{
+      ArmSub.setArmRotate(this.speed);
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

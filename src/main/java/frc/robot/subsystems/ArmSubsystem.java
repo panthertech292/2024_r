@@ -32,7 +32,7 @@ public class ArmSubsystem extends SubsystemBase {
     //Limit Switches
     RotationDownSwitch = new DigitalInput(ArmConstants.kRotationDownSwitchID);
     //Distances
-    LastCommandedLocation = 0;
+    //LastCommandedLocation = ArmConstants.kRotationMinAngle;
   }
 
   /** @return True: The down limit switch is activated. NOTE: This value is inverted, due to current robot wiring. */
@@ -83,8 +83,8 @@ public class ArmSubsystem extends SubsystemBase {
         System.out.println("Warning: Trying to rotate arm past safe UP limit!");
       }
     }
-    RotationMotor.set(rotationSpeed);
     LastCommandedLocation = getRotationAngle();
+    RotationMotor.set(rotationSpeed);
   }
   public double getLastCommandedLocation(){
     return LastCommandedLocation;

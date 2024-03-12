@@ -5,6 +5,7 @@
 package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmRotateToAngle extends Command {
@@ -52,6 +53,11 @@ public class ArmRotateToAngle extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    //return false;
+    if ((target <= ArmConstants.kRotationIntakeAngle) && (ArmSub.isArmDown())){
+      return true;
+    }else{
+      return false;
+    }
   }
 }

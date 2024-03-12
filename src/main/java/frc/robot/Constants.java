@@ -62,15 +62,18 @@ public final class Constants {
     public static final double kIntakeBeltSpeed = 0.05;
     public static final double kRevSpeed = .30;
   }
+
   public static class SwerveConstants {
     //Speeds
     public static final double kMaxSpeed = Units.feetToMeters(17.2); // Maximum speed of the robot in meters per second, used to limit acceleration.
   }
+
   public static class AutoConstants {
     //PIDs
     public static final PIDConstants kTranslationPID = new PIDConstants(0.7, 0, 0);
     public static final PIDConstants kAnglePID   = new PIDConstants(0.4, 0, 0.01);
   } 
+  
   public static class FieldConstants {
     public static final Translation2d kSpeakerPosition = new Translation2d(0, 5.547868);
   }
