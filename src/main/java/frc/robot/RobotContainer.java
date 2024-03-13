@@ -64,7 +64,7 @@ public class RobotContainer {
   }
 
   private void setDefaultCommands(){
-    //s_ArmSubsystem.setDefaultCommand(new ArmHoldAngle(s_ArmSubsystem, 17, 0.01));
+    s_ArmSubsystem.setDefaultCommand(new ArmHoldAngle(s_ArmSubsystem, 17, 0.01));
     //Run intake on operator's right stick
     s_IntakeSubsystem.setDefaultCommand(new IntakeRun(s_IntakeSubsystem, ()-> MathUtil.applyDeadband(-io_OperatorController.getRightY(), OperatorConstants.kDeadband)));
     s_ShooterSubsystem.setDefaultCommand(new ShooterRunRev(s_ShooterSubsystem, 
@@ -81,6 +81,7 @@ public class RobotContainer {
 
   private void configureCamera(){
     //Configure the USB camera here
+    CameraServer.startAutomaticCapture();
     //UsbCamera intakeCam = CameraServer.startAutomaticCapture();
     //intakeCam.getActualDataRate(); <--Test this to see bandwidth usage
   }

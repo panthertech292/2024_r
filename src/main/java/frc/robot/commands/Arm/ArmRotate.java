@@ -29,16 +29,16 @@ public class ArmRotate extends Command {
   @Override
   public void execute() {
     if(ArmSub.getRotationAngle() < ArmConstants.kRotationQuarterSpeedAngle && speed < 0){
-      ArmSub.setArmRotate(this.speed/4);
+      ArmSub.setArmRotate(this.speed/4, true);
     }else{
-      ArmSub.setArmRotate(this.speed);
+      ArmSub.setArmRotate(this.speed, true);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    ArmSub.setArmRotate(0);
+    ArmSub.setArmRotate(0, true);
   }
 
   // Returns true when the command should end.

@@ -32,7 +32,7 @@ public class ArmSubsystem extends SubsystemBase {
     //Limit Switches
     RotationDownSwitch = new DigitalInput(ArmConstants.kRotationDownSwitchID);
     //Distances
-    //LastCommandedLocation = ArmConstants.kRotationMinAngle;
+    LastCommandedLocation = getRotationAngle();
   }
 
   /** @return True: The down limit switch is activated. NOTE: This value is inverted, due to current robot wiring. */
@@ -61,7 +61,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   /** Rotates the arm WITH saftey checks to stop the arm from destroying itself.
    *  @param speed The speed to set the arm to rotate at */
-  public void setArmRotate(double speed){
+  public void setArmRotate(double speed, boolean setLocation){
     double rotationSpeed = speed;
     //Saftey checks for going down
     if(speed < 0){
@@ -83,7 +83,10 @@ public class ArmSubsystem extends SubsystemBase {
         System.out.println("Warning: Trying to rotate arm past safe UP limit!");
       }
     }
-    LastCommandedLocation = getRotationAngle();
+    if(setLocation){
+      LastCommandedLocation = getRotationAngle();
+    }
+    
     RotationMotor.set(rotationSpeed);
   }
   public double getLastCommandedLocation(){

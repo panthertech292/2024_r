@@ -39,7 +39,7 @@ public class ArmRotateToAngle extends Command {
         error = -minSpeed;
       }
     }
-    ArmSub.setArmRotate(error);
+    ArmSub.setArmRotate(error, true);
     //System.out.println("Error: " + error);
     //System.out.println("Distance to Target: " + (target - ArmSub.getRotationAngle()));
   }
@@ -47,7 +47,7 @@ public class ArmRotateToAngle extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    ArmSub.setArmRotate(0);
+    ArmSub.setArmRotate(0, true);
   }
 
   // Returns true when the command should end.

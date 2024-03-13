@@ -63,7 +63,7 @@ public class ShooterRunRPMRotate extends Command {
         error = -minSpeed;
       }
     }
-    ArmSub.setArmRotate(error);
+    ArmSub.setArmRotate(error, true);
 
     //Only run below if arm is in position
     if(Math.abs(error) < 0.02){

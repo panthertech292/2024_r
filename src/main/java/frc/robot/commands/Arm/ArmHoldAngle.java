@@ -5,6 +5,7 @@
 package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmHoldAngle extends Command {
@@ -36,13 +37,18 @@ public class ArmHoldAngle extends Command {
         error = -minSpeed;
       }
     }
-    ArmSub.setArmRotate(error);
+    //Check in case arm is below or at down
+    if (!((ArmSub.getRotationAngle() < ArmConstants.kRotationIntakeAngle) || ArmSub.isArmDown())){
+      ArmSub.setArmRotate(error, false);
+    }
+    //System.out.println("ERROR IS " + error);
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    ArmSub.setArmRotate(0);
+    ArmSub.setArmRotate(0, false);
   }
 
   // Returns true when the command should end.
