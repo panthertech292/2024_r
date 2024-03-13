@@ -61,7 +61,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   /** Rotates the arm WITH saftey checks to stop the arm from destroying itself.
    *  @param speed The speed to set the arm to rotate at */
-  public void setArmRotate(double speed, boolean setLocation){
+  public void setArmRotate(double speed){
     double rotationSpeed = speed;
     //Saftey checks for going down
     if(speed < 0){
@@ -83,8 +83,33 @@ public class ArmSubsystem extends SubsystemBase {
         System.out.println("Warning: Trying to rotate arm past safe UP limit!");
       }
     }
-    if(setLocation){
-      LastCommandedLocation = getRotationAngle();
+    LastCommandedLocation = getRotationAngle();
+    RotationMotor.set(rotationSpeed);
+  }
+
+  /** Rotates the arm WITH saftey checks to stop the arm from destroying itself. Use this method to run the arm, but not log what the last commanded input was.
+   *  @param speed The speed to set the arm to rotate at */
+  public void setArmRotateWithoutSavingLocation(double speed){
+    double rotationSpeed = speed;
+    //Saftey checks for going down
+    if(speed < 0){
+      if(isArmDown()){ //Arm is down, stop.
+        rotationSpeed = 0;
+        System.out.println("Warning: Trying to rotate arm while arm is down!");
+      }
+      if(getRotationAngle() < ArmConstants.kRotationQuarterSpeedAngle){ //Arm is close to down, slow down
+        rotationSpeed = rotationSpeed/4;
+      }
+      if(getRotationAngle() < ArmConstants.kRotationEighthSpeedAngle){ //Slow down even more, to 1/8 the given speed
+        rotationSpeed = rotationSpeed/2;
+      }
+    }
+    //Saftey check for going up
+    if(speed > 0){
+      if(getRotationAngle() > ArmConstants.kRotationMaxAngle){
+        rotationSpeed = 0;
+        System.out.println("Warning: Trying to rotate arm past safe UP limit!");
+      }
     }
     
     RotationMotor.set(rotationSpeed);

@@ -34,9 +34,9 @@ public class IntakeStore extends Command {
   public void execute() {
     //If the arm is not down, run it down, else stop
     if(!ArmSub.isArmDown()){
-      ArmSub.setArmRotate(-ArmConstants.kRotationSpeed, true);
+      ArmSub.setArmRotate(-ArmConstants.kRotationSpeed);
     }else{
-      ArmSub.setArmRotate(0, true);
+      ArmSub.setArmRotate(0);
     }
     //The arm is down enough to intake into the shooter, run
     if(ArmSub.isArmReadyToIntake()){
@@ -53,7 +53,7 @@ public class IntakeStore extends Command {
   public void end(boolean interrupted) {
     IntakeSub.setIntake(0);
     ShooterSub.setFeedBelts(0);
-    ArmSub.setArmRotate(0, true);
+    ArmSub.setArmRotate(0);
   }
 
   // Returns true when the command should end. Stops when a note is detected in the shooter.
