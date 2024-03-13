@@ -244,6 +244,6 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     updateVisionOdometry();
-    SmartDashboard.putNumber("DISTANCE TO SPEAKER (INCHES)" , 39.37*FieldConstants.kSpeakerPosition.getDistance(RobotSwerve.getPose().getTranslation()));
+    SmartDashboard.putNumber("DISTANCE TO SPEAKER (METERS)" , FieldConstants.kSpeakerPositionBLUE.getDistance(RobotSwerve.getPose().getTranslation()));
   }
 }

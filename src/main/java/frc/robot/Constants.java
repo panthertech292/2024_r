@@ -4,12 +4,10 @@
 
 package frc.robot;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -78,12 +76,13 @@ public final class Constants {
   } 
   
   public static class FieldConstants {
-    public static final Translation2d kSpeakerPosition = new Translation2d(0, 5.547868);
+    public static final Translation2d kSpeakerPositionBLUE = new Translation2d(0, 5.547868); //TODO: Confirm these
+    public static final Translation2d kSpeakerPositionRED = new Translation2d(16.5410642, 5.547868);
   }
 
   public static class InterpolationConstants {
-    public static final Map<Double, Double> angleMap = new HashMap<Double, Double>();
-    //Values for Shooter Distance. Key is distance in inches, value is shooter angle
+    public static final InterpolatingDoubleTreeMap angleMap = new InterpolatingDoubleTreeMap();
+    //Values for Shooter Distance. Key is distance in meters, value is shooter angle
     static {
       angleMap.put(0.0, 0.0); //Example!
     }

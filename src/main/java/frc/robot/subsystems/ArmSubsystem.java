@@ -4,16 +4,12 @@
 
 package frc.robot.subsystems;
 
-import java.util.Map;
-
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.InterpolationConstants;
 import frc.robot.utilities.MotorUtil;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -25,10 +21,7 @@ public class ArmSubsystem extends SubsystemBase {
   private final DigitalInput RotationDownSwitch;
   //Distance
   private double LastCommandedLocation; //Last position we were at
-  //Interpolation Map
-  InterpolatingDoubleTreeMap angleMap;
 
-  
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
     //Motors
@@ -41,13 +34,6 @@ public class ArmSubsystem extends SubsystemBase {
     //Distances
     LastCommandedLocation = getRotationAngle();
 
-    
-    //Interpolation Map
-    angleMap = new InterpolatingDoubleTreeMap();
-    //Input constants map into interpolation map.
-    for (Map.Entry<Double, Double> entry : InterpolationConstants.angleMap.entrySet()){
-      angleMap.put(entry.getKey(), entry.getValue()); //TODO: Is this too much voodoo for what we are doing?
-    }
   }
 
   /** @return True: The down limit switch is activated. NOTE: This value is inverted, due to current robot wiring. */
@@ -133,15 +119,7 @@ public class ArmSubsystem extends SubsystemBase {
     return LastCommandedLocation;
   }
 
-  /**
-   * Gets the angle to set the arm to based off the distance of the robot from the speaker.
-   * Uses interpolation to get values that are not directly defined in {@link InterpolationConstants}
-   * @param distance The distance in INCHES from the Speaker to the Robot
-   * @return The angle to set the arm to make the shot
-   */
-  public double getAngleFromDistance(double distance){
-    return angleMap.get(distance);
-  }
+
 
   @Override
   public void periodic() {
