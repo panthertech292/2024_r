@@ -125,6 +125,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return null; //Autos.exampleAuto(m_exampleSubsystem);
+    return s_SwerveSubsystem.getAutonomousCommand("scoreClose3");
   }
 }
