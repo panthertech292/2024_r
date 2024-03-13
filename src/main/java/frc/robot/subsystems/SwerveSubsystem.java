@@ -137,6 +137,13 @@ public class SwerveSubsystem extends SubsystemBase {
     RobotSwerve.drive(translation, rotation, fieldRelative,false); // Open loop is disabled since it shouldn't be used most of the time.
   }
 
+  public void headingDrive(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX, DoubleSupplier headingY){
+    double xInput = translationX.getAsDouble();
+    double yInput = translationY.getAsDouble();
+    // Make the robot move
+    driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(xInput, yInput, headingX.getAsDouble(), headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
+  }
+
   /**
    * Drive the robot given a chassis field oriented velocity.
    * @param velocity Velocity according to the field.

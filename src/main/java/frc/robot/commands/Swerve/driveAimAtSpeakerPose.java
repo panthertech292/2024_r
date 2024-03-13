@@ -19,6 +19,7 @@ public class driveAimAtSpeakerPose extends Command {
   private DoubleSupplier translationX;
   private DoubleSupplier translationY;
   private Translation2d targetSpeaker;
+  private double absoluteHeading;
   /** Creates a new driveAimmAtTarget. */
   public driveAimAtSpeakerPose(SwerveSubsystem s_SwerveSubsystem, DoubleSupplier translationX, DoubleSupplier translationY) {
     this.SwerveSub = s_SwerveSubsystem;
@@ -42,15 +43,22 @@ public class driveAimAtSpeakerPose extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //SwerveSub.getPose().
-    //targetSpeaker.
+    //no clue if this works, hell if I know
     double distanceX = SwerveSub.getPose().getX() - targetSpeaker.getX();
-    double distanceY = SwerveSub.getPose().getY() - targetSpeaker.getY();
-
-    Math.atan2(distanceY, distanceX);
-    //add 90 degrees?
-    //SwerveSub.driveCommand(translationX, translationY);
-    //SwerveSub.drive(new Translation2d(translationX.getAsDouble() * SwerveSub.getMaxVelocity(), translationY.getAsDouble() * SwerveSub.getMaxVelocity()), headingVelocity * SwerveSub.getMaxAngularVelocity(), true);
+    double distanceY =  - targetSpeaker.getY();
+    double relativeHeading = Math.toDegrees(Math.atan2(distanceY, distanceX)); 
+    
+    if((distanceX > 0 && distanceY > 0) || (distanceX < 0 && distanceY < 0) ){
+      absoluteHeading = relativeHeading + 90;
+    }else{
+      absoluteHeading = relativeHeading - 90;
+    }
+    if (absoluteHeading < 0){
+      absoluteHeading = absoluteHeading + 360;
+    }
+    absoluteHeading = Math.toRadians(absoluteHeading);
+    SwerveSub.headingDrive(translationX, translationY, ()-> Math.cos(absoluteHeading), ()-> Math.sin(absoluteHeading));
+    
 
   }
 
