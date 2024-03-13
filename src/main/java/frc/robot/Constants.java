@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -76,6 +79,14 @@ public final class Constants {
   
   public static class FieldConstants {
     public static final Translation2d kSpeakerPosition = new Translation2d(0, 5.547868);
+  }
+
+  public static class InterpolationConstants {
+    public static final Map<Double, Double> angleMap = new HashMap<Double, Double>();
+    //Values for Shooter Distance. Key is distance in inches, value is shooter angle
+    static {
+      angleMap.put(0.0, 0.0); //Example!
+    }
   }
 
 }
