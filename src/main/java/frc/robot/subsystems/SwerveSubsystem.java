@@ -246,6 +246,16 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   }
 
+  public double getDistanceFromSpeaker(){
+    Translation2d target;
+    if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
+      target = FieldConstants.kSpeakerPositionBLUE;
+    }else{
+      target = FieldConstants.kSpeakerPositionRED;
+    }
+    return target.getDistance(RobotSwerve.getPose().getTranslation());
+  }
+
 
   @Override
   public void periodic() {
