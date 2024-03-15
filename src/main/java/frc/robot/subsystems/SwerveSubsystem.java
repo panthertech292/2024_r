@@ -37,7 +37,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   //Initialize {@link SwerveDrive} with the directory provided. @param directory Directory of swerve drive config files.
   public SwerveSubsystem(File directory) {
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH; // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW; // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
 
     //Create RobotSwerve
     try{
@@ -248,11 +248,18 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public double getDistanceFromSpeaker(){
     Translation2d target;
-    if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
-      target = FieldConstants.kSpeakerPositionBLUE;
+    var alliance = DriverStation.getAlliance();
+    if(alliance.isPresent()){
+      if(alliance.get() == DriverStation.Alliance.Blue){
+        target = FieldConstants.kSpeakerPositionBLUE;
+      }else{
+        target = FieldConstants.kSpeakerPositionRED;
+      }
     }else{
-      target = FieldConstants.kSpeakerPositionRED;
+      System.out.println("Warning: Swerve Subsystem: Cannot get alliance from FMS/Driverstation!");
+      return 0;
     }
+    
     return target.getDistance(RobotSwerve.getPose().getTranslation());
   }
 
@@ -261,6 +268,10 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     updateVisionOdometry();
-    SmartDashboard.putNumber("DISTANCE TO SPEAKER (METERS)" , FieldConstants.kSpeakerPositionBLUE.getDistance(RobotSwerve.getPose().getTranslation()));
+    SmartDashboard.putNumber("DISTANCE TO SPEAKER (METERS)" , getDistanceFromSpeaker());
+    SmartDashboard.putNumber("Raw Encoder (Back Left): " , RobotSwerve.getModules()[0].getRawAbsolutePosition());
+    SmartDashboard.putNumber("Raw Encoder (Back Right): " , RobotSwerve.getModules()[1].getRawAbsolutePosition());
+    SmartDashboard.putNumber("Raw Encoder (Front Left): " , RobotSwerve.getModules()[2].getRawAbsolutePosition());
+    SmartDashboard.putNumber("Raw Encoder (Front Right): " , RobotSwerve.getModules()[3].getRawAbsolutePosition());
   }
 }

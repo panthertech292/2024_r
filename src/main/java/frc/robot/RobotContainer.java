@@ -14,6 +14,7 @@ import frc.robot.subsystems.*;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,6 +26,8 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotContainer {
   //Controllers
@@ -46,10 +49,16 @@ public class RobotContainer {
   //Shooter Commands
   private final Command z_ShootFullPower = new ShooterRunRPM(s_ShooterSubsystem, 1, 1);
   private final Command z_Shoot75Power = new ShooterRunRPM(s_ShooterSubsystem, 0.75, 1);
+
+  //Auto
+  private final SendableChooser<Command> autoChooser;
   
   /* The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     registerCommands();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto", autoChooser);
+    
     setDefaultCommands();
     configureCamera();
     configureBindings();
@@ -128,6 +137,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return s_SwerveSubsystem.getAutonomousCommand("scoreClose3");
+    //return s_SwerveSubsystem.getAutonomousCommand("scoreClose3");
+    return autoChooser.getSelected();
   }
 }

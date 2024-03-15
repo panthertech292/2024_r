@@ -31,10 +31,16 @@ public class driveAimAtSpeakerPose extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
-      targetSpeaker = FieldConstants.kSpeakerPositionBLUE; //Set to aim at blue speaker
+    var alliance = DriverStation.getAlliance();
+    if(alliance.isPresent()){
+      if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
+        targetSpeaker = FieldConstants.kSpeakerPositionBLUE; //Set to aim at blue speaker
+      }else{
+        targetSpeaker = FieldConstants.kSpeakerPositionRED; //Set to aim at red speaker
+      }
     }else{
-      targetSpeaker = FieldConstants.kSpeakerPositionRED; //Set to aim at red speaker
+      targetSpeaker = FieldConstants.kSpeakerPositionBLUE; //default to blue
+      System.out.println("Warning: driveAimAtSpeakerPose: Cannot get alliance from FMS/Driverstation!");
     }
   }
 
