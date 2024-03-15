@@ -27,7 +27,7 @@ public final class Constants {
     //Speeds
     public static final double kRotationSpeed = 0.40;
     //Encoder Positions
-    public static final double kRotationZeroAngleOffset = 0.1726;
+    public static final double kRotationZeroAngleOffset = 0.3298;
     public static final double kRotationMinAngle = 0.001;
     public static final double kRotationIntakeAngle = 0.002;
     public static final double kRotationMaxAngle = 0.233;

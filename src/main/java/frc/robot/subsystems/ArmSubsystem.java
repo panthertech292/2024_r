@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.utilities.MotorUtil;
@@ -124,5 +125,7 @@ public class ArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    //SmartDashboard.putNumber("RAW Arm Position: ", RotationAngleEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Arm Position", getRotationAngle());
   }
 }
