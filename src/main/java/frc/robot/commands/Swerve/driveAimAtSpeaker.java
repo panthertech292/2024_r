@@ -7,22 +7,22 @@ package frc.robot.commands.Swerve;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utilities.LimelightHelpers;
 
-public class driveAimAtTarget extends Command {
+public class driveAimAtSpeaker extends Command {
   private final SwerveSubsystem SwerveSub;
   private DoubleSupplier translationX;
   private DoubleSupplier translationY;
-  private double heading;
-  private double lastGoodHeading;
-  /** Creates a new driveAimAtTarget. */
-  public driveAimAtTarget(SwerveSubsystem s_SwerveSubsystem, DoubleSupplier translationX, DoubleSupplier translationY) {
+  private double headingVelocity;
+  /** Creates a new driveAimmAtTarget. */
+  public driveAimAtSpeaker(SwerveSubsystem s_SwerveSubsystem, DoubleSupplier translationX, DoubleSupplier translationY) {
     this.SwerveSub = s_SwerveSubsystem;
     this.translationX = translationX;
     this.translationY = translationY;
-    lastGoodHeading = 0;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_SwerveSubsystem);
   }
@@ -30,45 +30,38 @@ public class driveAimAtTarget extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SwerveSub.setVisionTargetID(7);
+    if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
+      LimelightHelpers.setPriorityID("limelight", 7); //Set to aim at blue speaker
+    }else{
+      LimelightHelpers.setPriorityID("limelight", 4); //Set to aim at red speaker
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(SwerveSub.isValidVisionTarget()){
-      //heading = Math.pow(-SwerveSub.getVisionAngle()/30,3);
-      heading = -SwerveSub.getVisionAngle()/70;
+    //Get the heading velocity to turn to
+    if(LimelightHelpers.getTV("limelight")){
+      headingVelocity = -LimelightHelpers.getTX("limelight")/70;
       RobotContainer.setRightRumbleDriver(0);
-    }else{
+    }else{ //We don't have a target
       System.out.println("Warning: Swerve Aim: Lost Target!");
       RobotContainer.setRightRumbleDriver(1);
-      heading = 0;
+      headingVelocity = 0;
     }
-    lastGoodHeading = heading;
+    SwerveSub.drive(new Translation2d(translationX.getAsDouble() * SwerveSub.getMaxVelocity(), translationY.getAsDouble() * SwerveSub.getMaxVelocity()), headingVelocity * SwerveSub.getMaxAngularVelocity(), true);
 
-    //System.out.println("Target is: " + heading);
-    //SwerveSub.driveCommand(translationX, translationY, heading);
-
-
-    SwerveSub.getSwerve().drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * SwerveSub.getSwerve().getMaximumVelocity(),
-    Math.pow(translationY.getAsDouble(), 3) * SwerveSub.getSwerve().getMaximumVelocity()),
-    heading * SwerveSub.getSwerve().getMaximumAngularVelocity(),
-true,
-false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     RobotContainer.setRightRumbleDriver(0);
-    //System.out.println("Warning: Swerve Aim: Target Lost!");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return !SwerveSub.isValidVisionTarget();
     return false;
   }
 }

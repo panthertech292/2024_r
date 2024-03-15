@@ -4,152 +4,66 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.utilities.MotorUtil;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private final CANSparkMax RotateMotor;
+  //Motors
   private final CANSparkMax ShooterLowMotor;
   private final CANSparkMax ShooterUpMotor;
-  private final CANSparkMax BeltsLowMotor;
-  private final CANSparkMax BeltsUpMotor;
+  private final CANSparkMax FeedBeltLowMotor;
+  private final CANSparkMax FeedBeltUpMotor;
 
-  private final DutyCycleEncoder ShooterAngleEncoder;
-
+  //Encoders (We only use the encoder from the low motor, but we can add the high one if we need to)
   private RelativeEncoder ShooterLowMotorEncoder;
-  private RelativeEncoder ShooterUpMotorEncoder;
-  //private SparkPIDController ShooterLowMotorPID;
-  //private SparkPIDController ShooterUpMotorPID;
 
-  private final DigitalInput RotateSwitch;
-  private final DigitalInput BeltSwitch;
+  //Limit Switches
+  private final DigitalInput FeedBeltSwitch;
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
-    RotateMotor = configSparkMax(ShooterConstants.kRotateMotorID, false, true);
-    ShooterLowMotor = configSparkMax(ShooterConstants.kShooterLowMotorID, false, false);
-    ShooterUpMotor = configSparkMax(ShooterConstants.kShooterUpMotorID, false, false);
-    BeltsLowMotor = configSparkMax(ShooterConstants.kBeltsLowMotorID, false, true);
-    BeltsUpMotor = configSparkMax(ShooterConstants.kBeltsUpMotorID, false, true);
+    //Motors
+    ShooterLowMotor = MotorUtil.initSparkMax(ShooterConstants.kShooterLowMotorID, false, false, 11);
+    ShooterUpMotor = MotorUtil.initSparkMax(ShooterConstants.kShooterUpMotorID, false, false, 11);
+    FeedBeltLowMotor = MotorUtil.initSparkMax(ShooterConstants.kFeedBeltsLowMotorID, false, true); //might want to enable vComp?
+    FeedBeltUpMotor = MotorUtil.initSparkMax(ShooterConstants.kFeedBeltsUpMotorID, false, true);
 
+    //Encoders
     ShooterLowMotorEncoder = ShooterLowMotor.getEncoder();
-    ShooterUpMotorEncoder = ShooterUpMotor.getEncoder();
-    //ShooterLowMotorPID = ShooterLowMotor.getPIDController();
-    //ShooterUpMotorPID = ShooterUpMotor.getPIDController();
 
-    //ShooterLowMotorPID.setOutputRange(0, 1);
-    //ShooterUpMotorPID.setOutputRange(0, 1);
-
-    ShooterAngleEncoder = new DutyCycleEncoder(ShooterConstants.kShooterAngleEncoderID);
-    //if(getRotateSwitch()){
-      //ShooterAngleEncoder.setPositionOffset(ShooterAngleEncoder.getAbsolutePosition());
-    //}else{
-      ShooterAngleEncoder.setPositionOffset(ShooterConstants.kShooterAngleOffset);
-    //}
-    RotateSwitch = new DigitalInput(ShooterConstants.kRotateSwitchID);
-    BeltSwitch = new DigitalInput(ShooterConstants.kBeltSwitchID);
+    //Limit Switches
+    FeedBeltSwitch = new DigitalInput(ShooterConstants.kFeedBeltSwitchID); //This switch activates when a note is just before the shooter
   }
 
-  private CANSparkMax configSparkMax(int ID, boolean invert, boolean brakeMode){
-    final CANSparkMax newSpark = new CANSparkMax(ID, MotorType.kBrushless);
-    newSpark.restoreFactoryDefaults();
-    if(brakeMode){
-      newSpark.setIdleMode(IdleMode.kBrake);
-    }else{
-      newSpark.setIdleMode(IdleMode.kCoast);
-    }
-    
-    newSpark.setSmartCurrentLimit(60);
-    newSpark.setInverted(invert);
-    newSpark.enableVoltageCompensation(11);
-    newSpark.burnFlash();
-    return newSpark;
-  }
-  public double getShooterLowEncoderSpeed(){
+  /** @return Returns the RPM of the lower shooter motor */
+  public double getShooterLowEncoderVelocity(){
     return ShooterLowMotorEncoder.getVelocity();
   }
-  public double getShooterUpEncoderSpeed(){
-    return ShooterUpMotorEncoder.getVelocity();
-  }
-  /* 
-  public void setShooterPID(double p, double feedforward, double targetRPM){
-    ShooterLowMotorPID.setReference(targetRPM, CANSparkMax.ControlType.kVelocity);
-    ShooterUpMotorPID.setReference(targetRPM, CANSparkMax.ControlType.kVelocity);
-    ShooterLowMotorPID.setP(p);
-    ShooterUpMotorPID.setP(p);
-    ShooterLowMotorPID.setFF(feedforward);
-    ShooterUpMotorPID.setFF(feedforward);
-    
-  }*/
 
+  /** @return True: There is a note(or something) in the belts before the shooter. NOTE: Due to robot wiring, this is inverted! */
+  public boolean getFeedBeltSwitch(){
+    return !FeedBeltSwitch.get();
+  }
+
+  /** @param speed The speed to set the shooter to*/
   public void setShooter(double speed){
     ShooterLowMotor.set(speed);
     ShooterUpMotor.set(speed);
   }
-  public boolean getRotateSwitch(){
-    return !RotateSwitch.get();
-  }
-  public boolean getBeltSwitch(){
-    return !BeltSwitch.get();
-  }
-  public double getShooterAngle(){
-    return ShooterAngleEncoder.get();
-  }
-  public boolean isShooterDown(){
-    return getRotateSwitch() || (getShooterAngle() < 0.001);
-  }
-  public boolean isShooterReadyToIntake(){
-    return getRotateSwitch() || (getShooterAngle() < 0.002);
-  }
-  public void rotateShooter(double speed){
-    double rotateSpeed = speed;
-    //Saftey checks to try and not destroy the shooter. These checks only need to be performed if going down
-    if(speed < 0){
-      //1. We are on the limit switch, stop!
-      if(isShooterDown()){
-        rotateSpeed = 0;
-        System.out.println("Warning: TRYING TO ROTATE SHOOTER DOWN WHILE ON SWTICH");
-      }
-      //2. We are close to the swtich, slow down
-      if(getShooterAngle() < 0.009){
-        rotateSpeed = rotateSpeed/4;
-      }
-      if(getShooterAngle() < 0.003){
-        rotateSpeed = rotateSpeed/2;
-      }
-    }
-    //Saftey check for going up
-    if(speed > 0){
-      if(getShooterAngle() > 0.233){
-        rotateSpeed = 0;
-        System.out.println("Warning: TRYING TO ROTATE SHOOTER UP PAST SAFE LIMIT");
-      }
-    }
-    RotateMotor.set(rotateSpeed);
-  }
-  public void setBelts(double speed){
-    BeltsLowMotor.set(speed);
-    BeltsUpMotor.set(speed);
+
+  /** @param speed The speed to set the belts to*/
+  public void setFeedBelts(double speed){
+    FeedBeltLowMotor.set(speed);
+    FeedBeltUpMotor.set(speed);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("ROTATE LIMIT", getRotateSwitch());
-    SmartDashboard.putBoolean("BELT LIMIT", getBeltSwitch());
-    SmartDashboard.putBoolean("SHOOTER DOWN", isShooterDown());
-    SmartDashboard.putNumber("Shooter Angle:", getShooterAngle());
-    SmartDashboard.putNumber("Shooter Angle RAW:", ShooterAngleEncoder.getAbsolutePosition());
-    SmartDashboard.putNumber("Shooter LOW RPM:", getShooterLowEncoderSpeed());
-    
   }
 }

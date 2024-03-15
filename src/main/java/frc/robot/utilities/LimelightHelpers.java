@@ -1,7 +1,7 @@
 //LimelightHelpers v1.3.0 (Feb 24, 2024)
 //TODO: Update this???
 
-package frc.robot;
+package frc.robot.utilities;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -512,6 +512,14 @@ public class LimelightHelpers {
         return getLimelightNTDouble(limelightName, "tx");
     }
 
+    /*Added by 292 */
+    public static double getPriorityID(String limelightName) {
+        return getLimelightNTDouble(limelightName, "priorityid");
+    }
+    public static void setPriorityID(String limelightName, int ID){
+        setLimelightNTDouble(limelightName, "priorityid", ID);
+    }
+
     public static double getTY(String limelightName) {
         return getLimelightNTDouble(limelightName, "ty");
     }
@@ -714,6 +722,8 @@ public class LimelightHelpers {
 
     }
 
+    /**
+     * Returns true if limelight has a valid target*/
     public static boolean getTV(String limelightName) {
         return 1.0 == getLimelightNTDouble(limelightName, "tv");
     }

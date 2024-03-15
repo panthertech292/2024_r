@@ -6,66 +6,86 @@ package frc.robot;
 
 import com.pathplanner.lib.util.PIDConstants;
 
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.util.Units;
-import swervelib.math.Matter;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
-
-  public static final double ROBOT_MASS = 46.2664; //kg, not lbs
-  public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
-  public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  //gear ratio for drive is 5.902781
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
     public static final double kDeadband = 0.05;
   }
+
+  public static class ArmConstants {
+    //CAN Motor IDs
+    public static final int kRotationMotorID = 33;
+    //DIO Sensor IDs
+    public static final int kRotationDownSwitchID = 2;
+    public static final int kRotationAngleEncoder = 0; //This is a REV through bore encoder
+    //Speeds
+    public static final double kRotationSpeed = 0.40;
+    //Encoder Positions
+    public static final double kRotationZeroAngleOffset = 0.1726;
+    public static final double kRotationMinAngle = 0.001;
+    public static final double kRotationIntakeAngle = 0.002;
+    public static final double kRotationMaxAngle = 0.233;
+    public static final double kRotationQuarterSpeedAngle = 0.009;
+    public static final double kRotationEighthSpeedAngle = 0.003;
+  }
+
   public static class ClimbConstants {
-    //CAN Motors
-    public static final int kLeftClimbMotorID = 41;
+    //CAN Motor IDs
+    public static final int kLeftClimbMotorID = 41; //might need to lower these
     public static final int kRightClimbMotorID = 42;
     //Speeds
     public static final double kClimbSpeed = 0.80;
   }
 
   public static class IntakeConstants {
-    //CAN Motors
+    //CAN Motor IDs
     public static final int kLowIntakeMotorID = 21;
     public static final int kUpIntakeMotorID = 22;
     //Speeds
     public static final double kIntakeSpeed = 0.40;
   }
+
   public static class ShooterConstants {
-    //CAN Motors
-    public static final int kBeltsLowMotorID = 31;
-    public static final int kBeltsUpMotorID = 32;
-    public static final int kRotateMotorID = 33;
+    //CAN Motor IDs
+    public static final int kFeedBeltsLowMotorID = 31;
+    public static final int kFeedBeltsUpMotorID = 32;
     public static final int kShooterLowMotorID = 34;
     public static final int kShooterUpMotorID = 35;
     //Limit Switches
-    public static final int kRotateSwitchID = 2;
-    public static final int kBeltSwitchID = 1;
-    //Encoders
-    public static final int kShooterAngleEncoderID = 0;
-    public static final double kShooterAngleOffset = 0.1726;
+    public static final int kFeedBeltSwitchID = 1;
     //Speeds
-    public static final double kRotateSpeed = 0.40;
     public static final double kIntakeBeltSpeed = 0.05;
     public static final double kRevSpeed = .30;
   }
-  public static final class AutoConstants
-  {
 
-    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-    public static final PIDConstants ANGLE_PID   = new PIDConstants(0.4, 0, 0.01);
+  public static class SwerveConstants {
+    //Speeds
+    public static final double kMaxSpeed = Units.feetToMeters(17.2); // Maximum speed of the robot in meters per second, used to limit acceleration.
   }
+
+  public static class AutoConstants {
+    //PIDs
+    public static final PIDConstants kTranslationPID = new PIDConstants(0.7, 0, 0);
+    public static final PIDConstants kAnglePID   = new PIDConstants(0.4, 0, 0.01);
+  } 
+  
+  public static class FieldConstants {
+    public static final Translation2d kSpeakerPositionBLUE = new Translation2d(0, 5.547868); //TODO: Confirm these
+    public static final Translation2d kSpeakerPositionRED = new Translation2d(16.5410642, 5.547868);
+  }
+
+  public static class InterpolationConstants {
+    public static final InterpolatingDoubleTreeMap angleMap = new InterpolatingDoubleTreeMap();
+    //Values for Shooter Distance. Key is distance in meters, value is shooter angle
+    static {
+      angleMap.put(0.0, 0.0); //Example!
+    }
+  }
+
 }

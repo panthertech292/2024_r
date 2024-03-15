@@ -2,36 +2,43 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.subsystems.ArmSubsystem;
 
-public class ClimberRun extends Command {
-  private final ClimbSubsystem ClimbSub;
+public class ArmRotate extends Command {
+  private final ArmSubsystem ArmSub;
   private double speed;
-  /** Creates a new ClimberRun. */
-  public ClimberRun(ClimbSubsystem s_ClimbSubsystem, double speed) {
-    this.ClimbSub = s_ClimbSubsystem;
+  /** Creates a new ArmRotate. */
+  public ArmRotate(ArmSubsystem s_ArmSubsystem, double speed) {
+    ArmSub = s_ArmSubsystem;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(s_ClimbSubsystem);
+    addRequirements(s_ArmSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    ClimbSub.setClimbMotors(speed);
+    //ArmSub.setArmRotate(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if(ArmSub.getRotationAngle() < ArmConstants.kRotationQuarterSpeedAngle && speed < 0){
+      ArmSub.setArmRotate(this.speed/4);
+    }else{
+      ArmSub.setArmRotate(this.speed);
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    ClimbSub.setClimbMotors(0);
+    ArmSub.setArmRotate(0);
   }
 
   // Returns true when the command should end.

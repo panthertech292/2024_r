@@ -2,21 +2,25 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class IntakeStore extends Command {
   private final ShooterSubsystem ShooterSub;
   private final IntakeSubsystem IntakeSub;
+  private final ArmSubsystem ArmSub;
   /** Creates a new IntakeStore. */
-  public IntakeStore(ShooterSubsystem s_ShooterSubsystem, IntakeSubsystem s_IntakeSubsystem) {
+  public IntakeStore(ShooterSubsystem s_ShooterSubsystem, IntakeSubsystem s_IntakeSubsystem, ArmSubsystem s_ArmSubsystem) {
     ShooterSub = s_ShooterSubsystem;
     IntakeSub = s_IntakeSubsystem;
+    ArmSub = s_ArmSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_ShooterSubsystem, s_IntakeSubsystem);
   }
@@ -28,30 +32,19 @@ public class IntakeStore extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    /* 
-    if(ShooterSub.isShooterDown()){ //The shooter is down, we can intake
-      ShooterSub.rotateShooter(0);
-      IntakeSub.setIntake(IntakeConstants.kIntakeSpeed);
-      ShooterSub.setBelts(ShooterConstants.kIntakeBeltSpeed);
-    }else{ //The shooter is up
-      ShooterSub.rotateShooter(-ShooterConstants.kRotateSpeed);
-      IntakeSub.setIntake(0);
-      ShooterSub.setBelts(0);
-    }*/
-    
-    //If the shooter is not down, run it down, else stop
-    if(!ShooterSub.isShooterDown()){
-      ShooterSub.rotateShooter(-ShooterConstants.kRotateSpeed);
+    //If the arm is not down, run it down, else stop
+    if(!ArmSub.isArmDown()){
+      ArmSub.setArmRotate(-ArmConstants.kRotationSpeed);
     }else{
-      ShooterSub.rotateShooter(0);
+      ArmSub.setArmRotate(0);
     }
-    //If the shooter is down enough to intake, run
-    if(ShooterSub.isShooterReadyToIntake()){
+    //The arm is down enough to intake into the shooter, run
+    if(ArmSub.isArmReadyToIntake()){
       IntakeSub.setIntake(IntakeConstants.kIntakeSpeed);
-      ShooterSub.setBelts(ShooterConstants.kIntakeBeltSpeed);
+      ShooterSub.setFeedBelts(ShooterConstants.kIntakeBeltSpeed);
     }else{
       IntakeSub.setIntake(0);
-      ShooterSub.setBelts(0);
+      ShooterSub.setFeedBelts(0);
     }
   }
 
@@ -59,13 +52,13 @@ public class IntakeStore extends Command {
   @Override
   public void end(boolean interrupted) {
     IntakeSub.setIntake(0);
-    ShooterSub.setBelts(0);
-    ShooterSub.rotateShooter(0);
+    ShooterSub.setFeedBelts(0);
+    ArmSub.setArmRotate(0);
   }
 
-  // Returns true when the command should end.
+  // Returns true when the command should end. Stops when a note is detected in the shooter.
   @Override
   public boolean isFinished() {
-    return ShooterSub.getBeltSwitch();
+    return ShooterSub.getFeedBeltSwitch();
   }
 }

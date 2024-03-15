@@ -7,22 +7,22 @@ package frc.robot.commands.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShooterRPMBelts extends Command {
+public class ShooterRunRPM extends Command {
   private final ShooterSubsystem ShooterSub;
   private double shooterSpeed;
   private double beltSpeed;
+  private double shooterRPM;
   private double [] last10Values;
   private int index;
   private boolean readyToFire;
-  private boolean setInitalMovingAt; //debug
-  /** Creates a new ShooterRPMBelts. */
-  public ShooterRPMBelts(ShooterSubsystem s_ShooterSubsystem, double shooterSpeed, double beltSpeed) {
+  private boolean setInitalMovingAt; //Used for debug, can be removed if needed
+  /** Creates a new RunShooterRPM. */
+  public ShooterRunRPM(ShooterSubsystem s_ShooterSubsystem, double shooterSpeed, double beltSpeed) {
     ShooterSub = s_ShooterSubsystem;
     this.shooterSpeed = shooterSpeed;
     this.beltSpeed = beltSpeed;
     last10Values = new double[10];
     index = 0;
-    
     
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_ShooterSubsystem);
@@ -40,23 +40,29 @@ public class ShooterRPMBelts extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    last10Values[index] = ShooterSub.getShooterLowEncoderSpeed();
+    /* Basically this creates an array of the last 10 recorded shooter RPMS
+       It will only shoot the note once RPMs have stabilized.
+       Stabilized means the 10 recorded values are within 25 RPMs of the current shooter RPM
+       This really could be acomplished with a PID, but I'm lazy.
+    */
+    shooterRPM = ShooterSub.getShooterLowEncoderVelocity();
+    last10Values[index] = shooterRPM;
     readyToFire = true;
     for (int i = 0; i < 10; i++){
-      if(Math.abs(ShooterSub.getShooterLowEncoderSpeed() - last10Values[i]) > 25){
+      if(Math.abs(shooterRPM - last10Values[i]) > 25){
         readyToFire = false;
       }
     }
-    //dumbass check here
-    if(ShooterSub.getShooterLowEncoderSpeed() < 1000 & shooterSpeed > 0.49){
+    //Make sure we don't fire early
+    if(shooterRPM < 1000 & shooterSpeed > 0.49){
       readyToFire = false;
     }
 
     if(readyToFire){
-      ShooterSub.setBelts(beltSpeed);
+      ShooterSub.setFeedBelts(beltSpeed);
       if(!setInitalMovingAt){//debug
         setInitalMovingAt = true;
-        System.out.println("Started advancing belts forward @: " + ShooterSub.getShooterLowEncoderSpeed());
+        System.out.println("RunShooterRPM: Started advancing belts forward @: " + shooterRPM);
       }
       
     }
@@ -67,7 +73,7 @@ public class ShooterRPMBelts extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    ShooterSub.setBelts(0);
+    ShooterSub.setFeedBelts(0);
     ShooterSub.setShooter(0);
   }
 

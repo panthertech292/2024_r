@@ -4,17 +4,25 @@
 
 package frc.robot.commands.Shooter;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class RotateShooter extends Command {
+public class ShooterRev extends Command {
   private final ShooterSubsystem ShooterSub;
-  private double speed;
-  /** Creates a new RotateShooter. */
-  public RotateShooter(ShooterSubsystem s_ShooterSubsystem, double speed) {
+  private DoubleSupplier speed;
+  /** Creates a new RevShooter. */
+  public ShooterRev(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier speed) {
     ShooterSub = s_ShooterSubsystem;
     this.speed = speed;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(s_ShooterSubsystem);
+  }
+  //Constructor if we want to use a double
+  public ShooterRev(ShooterSubsystem s_ShooterSubsystem, double speed) {
+    ShooterSub = s_ShooterSubsystem;
+    this.speed = ()-> speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_ShooterSubsystem);
   }
@@ -26,17 +34,13 @@ public class RotateShooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(ShooterSub.getShooterAngle() < 0.009 && speed < 0){
-        ShooterSub.rotateShooter(this.speed/4);
-      }else{
-        ShooterSub.rotateShooter(this.speed);
-      }
+    ShooterSub.setShooter(this.speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    ShooterSub.rotateShooter(0);
+    ShooterSub.setShooter(0);
   }
 
   // Returns true when the command should end.

@@ -4,193 +4,130 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ClimberRun;
-import frc.robot.commands.IntakeRun;
-import frc.robot.commands.Shooter.IntakeStore;
-import frc.robot.commands.Shooter.RevShooter;
-import frc.robot.commands.Shooter.RotateShooter;
-import frc.robot.commands.Shooter.RotateShooterToAngle;
-import frc.robot.commands.Shooter.RunShooterBeltsAndRev;
-import frc.robot.commands.Shooter.RunShooterBeltsAndRevSwitch;
-import frc.robot.commands.Shooter.ShooterRPMBelts;
-import frc.robot.commands.Shooter.ShooterRPMBeltsRotate;
-import frc.robot.commands.Swerve.driveAimAtTarget;
-import frc.robot.commands.Shooter.RunShooterBelts;
-import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.commands.*;
+import frc.robot.commands.Arm.*;
+import frc.robot.commands.Shooter.*;
+import frc.robot.subsystems.*;
 
 import java.io.File;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+//import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.cameraserver.CameraServer;
+//import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
   //Controllers
   private final static CommandXboxController io_DriverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final static CommandXboxController io_OperatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
 
   // Subsystems
+  private final ArmSubsystem s_ArmSubsystem = new ArmSubsystem();
   private final ClimbSubsystem s_ClimbSubsystem = new ClimbSubsystem();
   private final IntakeSubsystem s_IntakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem s_ShooterSubsystem = new ShooterSubsystem();
-  private final SwerveSubsystem s_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
+  private final SwerveSubsystem  s_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
   //Commands
 
-  //Climb commands
-  private final Command z_ClimbUp = new ClimberRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed);
-  private final Command z_ClimdDown = new ClimberRun(s_ClimbSubsystem, -ClimbConstants.kClimbSpeed);
-
   //Intake Commands
-  //private final Command z_IntakeRunForward = new IntakeRun(s_IntakeSubsystem, 0.45);
-  private final Command z_IntakeRunBackward = new IntakeRun(s_IntakeSubsystem, -0.45);
+  private final Command z_IntakeStore = new IntakeStore(s_ShooterSubsystem, s_IntakeSubsystem, s_ArmSubsystem);
 
   //Shooter Commands
-  private final Command z_RevShooter = new RevShooter(s_ShooterSubsystem, () -> (0.50)); //Use this command if shooter needs set speed
-  private final Command z_RotateShooterUp = new RotateShooter(s_ShooterSubsystem, .45);
-  private final Command z_RotateShooterDown = new RotateShooter(s_ShooterSubsystem, -ShooterConstants.kRotateSpeed);
-  //private final Command z_RunShooterBeltsForward = new RunShooterBelts(s_ShooterSubsystem, 0.30);
-  private final Command z_RunShooterBeltsBackward = new RunShooterBelts(s_ShooterSubsystem, -1);
-  //private final Command z_RotateShooterToAngle = new RotateShooterToAngle(s_ShooterSubsystem, 0.244, 5, 0.09);
-
-  //Shooter & Intake Commands
-  private final Command z_IntakeStore = new IntakeStore(s_ShooterSubsystem, s_IntakeSubsystem);
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  private final Command z_ShootFullPower = new ShooterRunRPM(s_ShooterSubsystem, 1, 1);
+  private final Command z_Shoot75Power = new ShooterRunRPM(s_ShooterSubsystem, 0.75, 1);
+  
+  /* The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    NamedCommands.registerCommand("IntakeStore", z_IntakeStore);
-    NamedCommands.registerCommand("RevFullPower", new RevShooter(s_ShooterSubsystem, 1));
-    NamedCommands.registerCommand("Rev75Power", new RevShooter(s_ShooterSubsystem, 0.75));
-    NamedCommands.registerCommand("ShootFullPower", new ShooterRPMBelts(s_ShooterSubsystem, 1, 1));
-    NamedCommands.registerCommand("Shoot75Power", new ShooterRPMBelts(s_ShooterSubsystem, 0.75, 1));
-    CameraServer.startAutomaticCapture();
-
-    s_ShooterSubsystem.setDefaultCommand(new RunShooterBeltsAndRevSwitch(s_ShooterSubsystem, () -> io_DriverController.getLeftTriggerAxis(), () -> io_DriverController.getRightTriggerAxis()));
-    // Configure the trigger bindings
+    registerCommands();
+    setDefaultCommands();
+    configureCamera();
     configureBindings();
+  }
 
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the desired angle NOT angular rotation
-    Command driveFieldOrientedDirectAngle = s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> -io_DriverController.getRightX(),
-        () -> -io_DriverController.getRightY());
+  private void registerCommands(){
+    NamedCommands.registerCommand("IntakeStore", z_IntakeStore);
+    NamedCommands.registerCommand("RevFullPower", new ShooterRev(s_ShooterSubsystem, 1));
+    NamedCommands.registerCommand("Rev75Power", new ShooterRev(s_ShooterSubsystem, 0.75));
+    NamedCommands.registerCommand("ShootFullPower", z_ShootFullPower);
+    NamedCommands.registerCommand("Shoot75Power", z_Shoot75Power);
+  }
 
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the angular velocity of the robot
+  private void setDefaultCommands(){
+    s_ArmSubsystem.setDefaultCommand(new ArmHoldAngle(s_ArmSubsystem, s_SwerveSubsystem, 17, 0.01));
+    //Run intake on operator's right stick
+    s_IntakeSubsystem.setDefaultCommand(new IntakeRun(s_IntakeSubsystem, ()-> MathUtil.applyDeadband(-io_OperatorController.getRightY(), OperatorConstants.kDeadband)));
+    s_ShooterSubsystem.setDefaultCommand(new ShooterRunRev(s_ShooterSubsystem, 
+    ()-> getGreaterAxis(io_OperatorController.getLeftTriggerAxis(), io_DriverController.getLeftTriggerAxis()),
+    ()-> getGreaterAxis(io_OperatorController.getRightTriggerAxis(), io_DriverController.getRightTriggerAxis()), 
+    ()-> MathUtil.applyDeadband(-io_OperatorController.getLeftY(), OperatorConstants.kDeadband)));
+
     Command driveFieldOrientedAnglularVelocity = s_SwerveSubsystem.driveCommand(
         () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
         () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
         () -> -MathUtil.applyDeadband(io_DriverController.getRightX(), OperatorConstants.kDeadband));
-
-    Command driveFieldOrientedDirectAngleSim = s_SwerveSubsystem.simDriveCommand(
-        () -> MathUtil.applyDeadband(io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> io_DriverController.getRawAxis(2));
-
-    s_SwerveSubsystem.setDefaultCommand(
-        !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
-
+    s_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAnglularVelocity);
   }
+
+  private void configureCamera(){
+    //Configure the USB camera here
+    CameraServer.startAutomaticCapture();
+    //UsbCamera intakeCam = CameraServer.startAutomaticCapture();
+    //intakeCam.getActualDataRate(); <--Test this to see bandwidth usage
+  }
+
   public static void setRightRumbleDriver(double rumble){
     io_DriverController.getHID().setRumble(RumbleType.kRightRumble, rumble);
   }
 
   private void configureBindings() {
-    //Intake Buttons
+    //Driver Controller
     io_DriverController.a().toggleOnTrue(z_IntakeStore);
-    //io_DriverController.x().whileTrue(z_IntakeRunBackward);
-    //io_DriverController.b().whileTrue(z_RunShooterBeltsBackward);
-    io_DriverController.b().whileTrue(new RotateShooterToAngle(s_ShooterSubsystem, 0.12, 17, 0.01));
-    io_DriverController.x().whileTrue(new ShooterRPMBeltsRotate(s_ShooterSubsystem, 0.35, 1, 0.12, 17, 0.01));
-    //Climb buttons
-    io_DriverController.povUp().whileTrue(z_ClimbUp);
-    io_DriverController.povDown().whileTrue(z_ClimdDown);
-    //Shooter Buttons
-    
-    //io_DriverController.y().whileTrue(z_RunShooterBeltsForward);
-    //io_DriverController.y().whileTrue(s_SwerveSubsystem.driveAimAtTarget(() -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-    //    () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
-    io_DriverController.y().whileTrue(new driveAimAtTarget(s_SwerveSubsystem, ()->MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband), ()->MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
-    
-    //Rotate Shooter
-    io_DriverController.rightBumper().whileTrue(z_RotateShooterUp);
-    io_DriverController.leftBumper().whileTrue(z_RotateShooterDown);
-    //Rev Shooter (at set speed)
-    //io_DriverController.start().whileTrue(new ShooterRPMBelts(s_ShooterSubsystem, 0.35, 1));
-    //Reset gyro
+    io_DriverController.rightBumper().whileTrue(z_ShootFullPower);
+    io_DriverController.leftBumper().whileTrue(z_Shoot75Power);
+    io_DriverController.b().whileTrue(new AutoShoot(s_SwerveSubsystem, s_ShooterSubsystem, s_ArmSubsystem, 
+    () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+    () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
+
+    /*for(int povAngle = 0; povAngle < 360; povAngle = povAngle + 45){ //TODO: God please test this, no clue if this will work, at all.
+      double povAngleRadians = Math.toRadians(povAngle+90);
+      io_DriverController.pov(povAngle).whileTrue(s_SwerveSubsystem.driveCommand(() -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband), () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
+      () -> Math.cos(povAngleRadians), () -> Math.sin(povAngleRadians))); //TODO: This feels super sketchy
+    }*/
     io_DriverController.back().whileTrue(new InstantCommand(s_SwerveSubsystem::zeroGyro));
+    
 
-    //Turn using AXYB
-    /*
-    io_DriverController.y().whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> 0,
-        () -> 1));
-    io_DriverController.x().whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> 1,
-        () -> 0));
-    io_DriverController.b().whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> -1,
-        () -> 0));
-    io_DriverController.a().whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> 0,
-        () -> -1));
-    //Triggers
-    io_DriverController.rightTrigger(0.05).whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> -io_DriverController.getRightTriggerAxis()));
+    ///Operator Controller
+    io_OperatorController.a().whileTrue(new ArmRotate(s_ArmSubsystem, -ArmConstants.kRotationSpeed)); //Rotate arm down
+    io_OperatorController.x().whileTrue(new ArmRotate(s_ArmSubsystem, ArmConstants.kRotationSpeed)); //Rotate arm up
+    //io_OperatorController.b().whileTrue(new ClimbRun(s_ClimbSubsystem, -ClimbConstants.kClimbSpeed)); //Have robot climb down
+    //io_OperatorController.y().whileTrue(new ClimbRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed)); //Have robot climb up
 
-    io_DriverController.leftTrigger(0.05).whileTrue(s_SwerveSubsystem.driveCommand(
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> io_DriverController.getLeftTriggerAxis())); */
+    io_OperatorController.leftBumper().onTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMaxAngle, 17, 0.01)); //Bring arm to max
+    io_OperatorController.rightBumper().onTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationIntakeAngle, 17, 0.01)); //Bring arm home
+    
+    io_OperatorController.start().whileTrue(z_ShootFullPower);
+    io_OperatorController.back().whileTrue(z_Shoot75Power);
+  }
+  private double getGreaterAxis(double axisOne, double axisTwo){
+    if(Math.abs(axisOne) > Math.abs(axisTwo)){
+      return axisOne;
+    }else{
+      return axisTwo;
+    }
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    //return Autos.exampleAuto(m_exampleSubsystem);
-    //return s_SwerveSubsystem.getAutonomousCommand("scoreCloseMidThenFar");
-    return s_SwerveSubsystem.getAutonomousCommand("score2BottomMid");
+    return s_SwerveSubsystem.getAutonomousCommand("scoreClose3");
   }
 }

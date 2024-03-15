@@ -10,15 +10,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class RunShooterBeltsAndRevSwitch extends Command {
+public class ShooterRunRev extends Command {
   private final ShooterSubsystem ShooterSub;
   private DoubleSupplier shooterSpeed;
   private DoubleSupplier beltSpeed;
-  /** Creates a new RunShooterBelsAndRev. */
-  public RunShooterBeltsAndRevSwitch(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier shooterSpeed, DoubleSupplier beltSpeed) {
+  private DoubleSupplier manualBeltSpeed;
+  /** Creates a new RunShooterRev. */
+  public ShooterRunRev(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier shooterSpeed, DoubleSupplier beltSpeed, DoubleSupplier manualBeltSpeed) {
     ShooterSub = s_ShooterSubsystem;
     this.shooterSpeed = shooterSpeed;
     this.beltSpeed = beltSpeed;
+    this.manualBeltSpeed = manualBeltSpeed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_ShooterSubsystem);
   }
@@ -30,25 +32,33 @@ public class RunShooterBeltsAndRevSwitch extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(ShooterSub.getBeltSwitch() && (this.shooterSpeed.getAsDouble() < ShooterConstants.kRevSpeed)){
+    //If there is a note loaded and our rev speed is greater than the input speed, run at rev speed
+    if(ShooterSub.getFeedBeltSwitch() && (this.shooterSpeed.getAsDouble() < ShooterConstants.kRevSpeed)){
       ShooterSub.setShooter(ShooterConstants.kRevSpeed);
     }else{
       ShooterSub.setShooter(this.shooterSpeed.getAsDouble());
     }
     
-    //please get rid of this later, this is dumb as hell
-    if (beltSpeed.getAsDouble() > 0.25){
-      ShooterSub.setBelts(100);
+    //If the override for manual speed operation is greater than the toggle speed
+    if(Math.abs(manualBeltSpeed.getAsDouble()) > beltSpeed.getAsDouble()){
+      ShooterSub.setFeedBelts(manualBeltSpeed.getAsDouble());
     }else{
-      ShooterSub.setBelts(0);
+      //If the trigger is held down enough, full send belts
+      if (beltSpeed.getAsDouble() > 0.25){
+        ShooterSub.setFeedBelts(1);
+      }else{
+        ShooterSub.setFeedBelts(0);
+      }
     }
+
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     ShooterSub.setShooter(0);
-    ShooterSub.setBelts(0);
+    ShooterSub.setFeedBelts(0);
   }
 
   // Returns true when the command should end.
