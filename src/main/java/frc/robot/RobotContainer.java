@@ -102,6 +102,7 @@ public class RobotContainer {
   private void configureBindings() {
     //Driver Controller
     io_DriverController.a().toggleOnTrue(z_IntakeStore);
+    //io_DriverController.y().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationClimbAngle, 17, 0.01));
     io_DriverController.rightBumper().whileTrue(z_ShootFullPower);
     io_DriverController.leftBumper().whileTrue(z_Shoot75Power);
     //io_DriverController.b().whileTrue(new AutoShoot(s_SwerveSubsystem, s_ShooterSubsystem, s_ArmSubsystem, 

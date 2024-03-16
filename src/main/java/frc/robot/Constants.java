@@ -33,6 +33,7 @@ public final class Constants {
     public static final double kRotationMaxAngle = 0.233;
     public static final double kRotationQuarterSpeedAngle = 0.009;
     public static final double kRotationEighthSpeedAngle = 0.003;
+    public static final double kRotationClimbAngle = 0.1665;
   }
 
   public static class ClimbConstants {
