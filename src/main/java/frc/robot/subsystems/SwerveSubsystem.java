@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 
+//import com.ctre.phoenix6.Orchestra;
+//import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
@@ -48,6 +50,19 @@ public class SwerveSubsystem extends SubsystemBase {
     RobotSwerve.setHeadingCorrection(true);
     RobotSwerve.setCosineCompensator(!SwerveDriveTelemetry.isSimulation);
     setupPathPlanner();
+    /*
+    TalonFX driveMotor = (TalonFX)RobotSwerve.getModules()[0].configuration.driveMotor.getMotor();
+    
+    try (Orchestra m_orchestra = new Orchestra()) {
+      m_orchestra.addInstrument(driveMotor);
+      var status = m_orchestra.loadMusic("output.chrp"); 
+      if(!status.isOK()){
+        System.out.println("ERROR ######################");
+      }else{
+        System.out.println("STATUS ##################:  " + status.getName());
+      }
+      m_orchestra.play();
+    }*/
   }
 
   //Setup AutoBuilder for PathPlanner.
@@ -269,9 +284,9 @@ public class SwerveSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     updateVisionOdometry();
     SmartDashboard.putNumber("DISTANCE TO SPEAKER (METERS)" , getDistanceFromSpeaker());
-    SmartDashboard.putNumber("Raw Encoder (Back Left): " , RobotSwerve.getModules()[0].getRawAbsolutePosition());
-    SmartDashboard.putNumber("Raw Encoder (Back Right): " , RobotSwerve.getModules()[1].getRawAbsolutePosition());
-    SmartDashboard.putNumber("Raw Encoder (Front Left): " , RobotSwerve.getModules()[2].getRawAbsolutePosition());
-    SmartDashboard.putNumber("Raw Encoder (Front Right): " , RobotSwerve.getModules()[3].getRawAbsolutePosition());
+    SmartDashboard.putNumber("Raw Encoder (Back Left): " , RobotSwerve.getModuleMap().get("backleft").getAbsoluteEncoder().getAbsolutePosition());
+    SmartDashboard.putNumber("Raw Encoder (Back Right): " , RobotSwerve.getModuleMap().get("backright").getAbsoluteEncoder().getAbsolutePosition());
+    SmartDashboard.putNumber("Raw Encoder (Front Left): " , RobotSwerve.getModuleMap().get("frontleft").getAbsoluteEncoder().getAbsolutePosition());
+    SmartDashboard.putNumber("Raw Encoder (Front Right): " , RobotSwerve.getModuleMap().get("frontright").getAbsoluteEncoder().getAbsolutePosition());
   }
 }

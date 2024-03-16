@@ -53,10 +53,10 @@ public final class Constants {
 
   public static class ShooterConstants {
     //CAN Motor IDs
-    public static final int kFeedBeltsLowMotorID = 31;
-    public static final int kFeedBeltsUpMotorID = 32;
-    public static final int kShooterLowMotorID = 34;
-    public static final int kShooterUpMotorID = 35;
+    public static final int kFeedBeltsLowMotorID = 34;
+    public static final int kFeedBeltsUpMotorID = 35;
+    public static final int kShooterLowMotorID = 31;
+    public static final int kShooterUpMotorID = 32;
     //Limit Switches
     public static final int kFeedBeltSwitchID = 1;
     //Speeds

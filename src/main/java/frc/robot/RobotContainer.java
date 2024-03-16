@@ -73,7 +73,7 @@ public class RobotContainer {
   }
 
   private void setDefaultCommands(){
-    s_ArmSubsystem.setDefaultCommand(new ArmHoldAngle(s_ArmSubsystem, s_SwerveSubsystem, 17, 0.01));
+    //s_ArmSubsystem.setDefaultCommand(new ArmHoldAngle(s_ArmSubsystem, s_SwerveSubsystem, 17, 0.01)); TODO: Figure out if we want this
     //Run intake on operator's right stick
     s_IntakeSubsystem.setDefaultCommand(new IntakeRun(s_IntakeSubsystem, ()-> MathUtil.applyDeadband(-io_OperatorController.getRightY(), OperatorConstants.kDeadband)));
     s_ShooterSubsystem.setDefaultCommand(new ShooterRunRev(s_ShooterSubsystem, 
@@ -104,9 +104,9 @@ public class RobotContainer {
     io_DriverController.a().toggleOnTrue(z_IntakeStore);
     io_DriverController.rightBumper().whileTrue(z_ShootFullPower);
     io_DriverController.leftBumper().whileTrue(z_Shoot75Power);
-    io_DriverController.b().whileTrue(new AutoShoot(s_SwerveSubsystem, s_ShooterSubsystem, s_ArmSubsystem, 
-    () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-    () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
+    //io_DriverController.b().whileTrue(new AutoShoot(s_SwerveSubsystem, s_ShooterSubsystem, s_ArmSubsystem, 
+    //() -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+    //() -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
 
     /*for(int povAngle = 0; povAngle < 360; povAngle = povAngle + 45){ //TODO: God please test this, no clue if this will work, at all.
       double povAngleRadians = Math.toRadians(povAngle+90);

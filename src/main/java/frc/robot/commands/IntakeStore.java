@@ -54,6 +54,7 @@ public class IntakeStore extends Command {
     IntakeSub.setIntake(0);
     ShooterSub.setFeedBelts(0);
     ArmSub.setArmRotate(0);
+    System.out.println("INFO: IntakeStore ended.");
   }
 
   // Returns true when the command should end. Stops when a note is detected in the shooter.
