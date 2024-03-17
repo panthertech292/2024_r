@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.5
+                  "waitTime": 1.75
                 }
               },
               {
@@ -50,9 +50,41 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "IntakeStore"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeStore"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "driveToMidBottomP2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeStore"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              }
+            ]
           }
         },
         {
@@ -81,7 +113,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.25
+                  "waitTime": 0.5
                 }
               },
               {
@@ -94,13 +126,32 @@
           }
         },
         {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeStore"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "driveToMid2ndBottom"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "driveToMid2ndBottom"
+                  "pathName": "driveToMid2ndBottomP2"
                 }
               },
               {
@@ -144,7 +195,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.25
+                  "waitTime": 0.5
                 }
               },
               {

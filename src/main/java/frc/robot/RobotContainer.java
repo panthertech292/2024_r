@@ -84,7 +84,7 @@ public class RobotContainer {
     Command driveFieldOrientedAnglularVelocity = s_SwerveSubsystem.driveCommand(
         () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
         () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-        () -> -MathUtil.applyDeadband(io_DriverController.getRightX(), OperatorConstants.kDeadband));
+        () -> -MathUtil.applyDeadband(io_DriverController.getRightX(), OperatorConstants.kDeadband+0.05));
     s_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAnglularVelocity);
   }
 
@@ -120,6 +120,7 @@ public class RobotContainer {
     ///Operator Controller
     io_OperatorController.a().whileTrue(new ArmRotate(s_ArmSubsystem, -ArmConstants.kRotationSpeed)); //Rotate arm down
     io_OperatorController.x().whileTrue(new ArmRotate(s_ArmSubsystem, ArmConstants.kRotationSpeed)); //Rotate arm up
+    io_OperatorController.y().whileTrue(new ShooterRunRPM(s_ShooterSubsystem, 0.50, 1));
     //io_OperatorController.b().whileTrue(new ClimbRun(s_ClimbSubsystem, -ClimbConstants.kClimbSpeed)); //Have robot climb down
     //io_OperatorController.y().whileTrue(new ClimbRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed)); //Have robot climb up
 

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.01,
-        "y": 0.82
+        "x": 8.133759925477097,
+        "y": 0.7897304155653457
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.706070129481785,
-        "y": 0.5849854930092623
+        "x": 5.829830054958882,
+        "y": 0.5547159085746081
       },
       "isLocked": false,
       "linkedName": null
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "2Midfield",
   "previewStartingState": {
-    "rotation": -179.8831337696987,
+    "rotation": -179.9021963893119,
     "velocity": 0
   },
   "useDefaultConstraints": false
