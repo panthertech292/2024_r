@@ -127,6 +127,7 @@ public class ArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //SmartDashboard.putNumber("RAW Arm Position: ", RotationAngleEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("Arm Position", getRotationAngle());
+    SmartDashboard.putBoolean("Arm ready to Intake:", isArmReadyToIntake());
     SmartDashboard.putBoolean("Arm sensor active", getRotationDownSwitch());
   }
 }
