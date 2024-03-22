@@ -13,13 +13,13 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utilities.LimelightHelpers;
 
-public class driveAimAtSpeaker extends Command {
+public class driveAimAtSpeakerLL extends Command {
   private final SwerveSubsystem SwerveSub;
   private DoubleSupplier translationX;
   private DoubleSupplier translationY;
   private double headingVelocity;
   /** Creates a new driveAimmAtTarget. */
-  public driveAimAtSpeaker(SwerveSubsystem s_SwerveSubsystem, DoubleSupplier translationX, DoubleSupplier translationY) {
+  public driveAimAtSpeakerLL(SwerveSubsystem s_SwerveSubsystem, DoubleSupplier translationX, DoubleSupplier translationY) {
     this.SwerveSub = s_SwerveSubsystem;
     this.translationX = translationX;
     this.translationY = translationY;
