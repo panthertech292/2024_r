@@ -7,9 +7,7 @@ package frc.robot.commands.Swerve;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class driveAimAtSpeakerPose extends Command {
@@ -31,31 +29,20 @@ public class driveAimAtSpeakerPose extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    var alliance = DriverStation.getAlliance();
-    if(alliance.isPresent()){
-      if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
-        targetSpeaker = FieldConstants.kSpeakerPositionBLUE; //Set to aim at blue speaker
-      }else{
-        System.out.println("Target is red!");
-        targetSpeaker = FieldConstants.kSpeakerPositionRED; //Set to aim at red speaker
-      }
-    }else{
-      targetSpeaker = FieldConstants.kSpeakerPositionBLUE; //default to blue
-      System.out.println("Warning: driveAimAtSpeakerPose: Cannot get alliance from FMS/Driverstation!");
-    }
+    targetSpeaker = SwerveSub.getTargetSpeaker();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     //no clue if this works, hell if I know
+    //this somehow works actually, no clue how tbh
     double distanceX = SwerveSub.getPose().getX() - targetSpeaker.getX();
     double distanceY = SwerveSub.getPose().getY() - targetSpeaker.getY();
     double relativeHeading = Math.toDegrees(Math.atan2(distanceY, distanceX)); 
 
-    absoluteHeading = Math.toRadians(-relativeHeading+270);
+    absoluteHeading = Math.toRadians(-relativeHeading+270); //the magic sauce
     SwerveSub.headingDrive(translationX, translationY, ()-> Math.cos(absoluteHeading), ()-> Math.sin(absoluteHeading));
-    //SwerveSub.headingDrive(translationX, translationY, ()-> 1, ()-> 0);
 
   }
 
