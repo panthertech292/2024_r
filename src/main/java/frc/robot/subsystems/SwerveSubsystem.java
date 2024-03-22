@@ -7,8 +7,6 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 
-//import com.ctre.phoenix6.Orchestra;
-//import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
@@ -50,19 +48,7 @@ public class SwerveSubsystem extends SubsystemBase {
     RobotSwerve.setHeadingCorrection(false);
     RobotSwerve.setCosineCompensator(!SwerveDriveTelemetry.isSimulation);
     setupPathPlanner();
-    /*
-    TalonFX driveMotor = (TalonFX)RobotSwerve.getModules()[0].configuration.driveMotor.getMotor();
-    
-    try (Orchestra m_orchestra = new Orchestra()) {
-      m_orchestra.addInstrument(driveMotor);
-      var status = m_orchestra.loadMusic("output.chrp"); 
-      if(!status.isOK()){
-        System.out.println("ERROR ######################");
-      }else{
-        System.out.println("STATUS ##################:  " + status.getName());
-      }
-      m_orchestra.play();
-    }*/
+
   }
 
   //Setup AutoBuilder for PathPlanner.
@@ -322,11 +308,26 @@ public class SwerveSubsystem extends SubsystemBase {
     return target.getDistance(RobotSwerve.getPose().getTranslation());
   }
 
+  public boolean isAllianceBlue(){
+    var alliance = DriverStation.getAlliance();
+    if(alliance.isPresent()){
+      if(alliance.get() == DriverStation.Alliance.Blue){
+        return true;
+      }else{
+        return false;
+      }
+    }else{
+      System.out.println("Warning: Swerve Subsystem: Cannot get alliance from FMS/Driverstation! Defaulting to blue!");
+      return true;
+    }
+  }
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     updateVisionOdometry();
+    isAllianceBlue();
     SmartDashboard.putNumber("DISTANCE TO SPEAKER (METERS)" , getDistanceFromSpeaker());
     SmartDashboard.putNumber("Raw Encoder (Back Left): " , RobotSwerve.getModuleMap().get("backleft").getAbsoluteEncoder().getAbsolutePosition());
     SmartDashboard.putNumber("Raw Encoder (Back Right): " , RobotSwerve.getModuleMap().get("backright").getAbsoluteEncoder().getAbsolutePosition());

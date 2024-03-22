@@ -101,36 +101,35 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+
     //Driver Controller
-    io_DriverController.a().toggleOnTrue(z_IntakeStore);
-    //io_DriverController.y().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationClimbAngle, 17, 0.01));
-    io_DriverController.y().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kShotAnglePodium, 17, 0.01));
+    io_DriverController.a().toggleOnTrue(z_IntakeStore); //Intake
 
-    
-
-    //io_DriverController.x().whileTrue(new driveAimAtSpeakerPose(s_SwerveSubsystem, () -> MathUtil.applyDeadband(-io_DriverController.getLeftY()*.5, OperatorConstants.kDeadband), () -> MathUtil.applyDeadband(-io_DriverController.getLeftX()*.5, OperatorConstants.kDeadband)));
-
-    io_DriverController.b().whileTrue(
+    io_DriverController.b().whileTrue( //Drive Slow button
     s_SwerveSubsystem.driveCommand(
         () -> MathUtil.applyDeadband(-io_DriverController.getLeftY()*.5, OperatorConstants.kDeadband),
         () -> MathUtil.applyDeadband(-io_DriverController.getLeftX()*.5, OperatorConstants.kDeadband),
         () -> -MathUtil.applyDeadband(io_DriverController.getRightX(), OperatorConstants.kDeadband+0.05))
     );
-
-    io_DriverController.rightBumper().whileTrue(z_ShootFullPower);
-    io_DriverController.leftBumper().whileTrue(z_Shoot75Power);
-
+    //Aim at speaker button
+    io_DriverController.y().whileTrue(new driveAimAtSpeakerPose(s_SwerveSubsystem, () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband), () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
+    //Aim at speaker and shoot button (auto shoot)
     io_DriverController.x().whileTrue(new AutoShoot(s_SwerveSubsystem, s_ShooterSubsystem, s_ArmSubsystem, 
     () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
     () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
 
-    for(int povAngle = 0; povAngle < 360; povAngle = povAngle + 45){ //TODO: God please test this, no clue if this will work, at all.
+    //Align robot based off dpad
+    for(int povAngle = 0; povAngle < 360; povAngle = povAngle + 45){
       double povAngleRadians = Math.toRadians(povAngle+90);
       io_DriverController.pov(povAngle).whileTrue(s_SwerveSubsystem.driveCommand(() -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband), () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-      () -> -Math.cos(povAngleRadians), () -> -Math.sin(povAngleRadians))); //TODO: This feels super sketchy
+      () -> -Math.cos(povAngleRadians), () -> -Math.sin(povAngleRadians)));
     }
 
-    io_DriverController.back().whileTrue(new InstantCommand(s_SwerveSubsystem::zeroGyro));
+    io_DriverController.rightBumper().whileTrue(z_ShootFullPower);
+    io_DriverController.leftBumper().whileTrue(z_Shoot75Power);
+
+    io_DriverController.start().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kShotAnglePodium, 17, 0.01)); //Podium Shot
+    io_DriverController.back().whileTrue(new InstantCommand(s_SwerveSubsystem::zeroGyro)); //Reset gyro
     
 
     ///Operator Controller

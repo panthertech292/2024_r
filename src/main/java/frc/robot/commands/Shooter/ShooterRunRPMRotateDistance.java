@@ -23,11 +23,11 @@ public class ShooterRunRPMRotateDistance extends Command {
 
   //Rotation
   private final ArmSubsystem ArmSub;
-  //private double target;
   private double error;
   private double p;
   private double minSpeed;
 
+  //Distance
   private SwerveSubsystem SwerveSub;
   private double distance;
   private double angle;
@@ -35,18 +35,15 @@ public class ShooterRunRPMRotateDistance extends Command {
   public ShooterRunRPMRotateDistance(ShooterSubsystem s_ShooterSubsystem, ArmSubsystem s_ArmSubsystem, SwerveSubsystem s_SwerveSubsystem, double shooterSpeed, double beltSpeed, double p, double minSpeed) {
     ShooterSub = s_ShooterSubsystem;
     ArmSub = s_ArmSubsystem;
+    SwerveSub = s_SwerveSubsystem;
     this.shooterSpeed = shooterSpeed;
     this.beltSpeed = beltSpeed;
     last10Values = new double[10];
     index = 0;
-
-    SwerveSub = s_SwerveSubsystem;
     distance = SwerveSub.getDistanceFromSpeaker();
     angle = InterpolationConstants.angleMap.get(distance);
-    System.out.println("Interpolated Angle: " + angle);
-
+    
     //Rotation
-    //this.target = target;
     this.p = p;
     this.minSpeed = minSpeed;
     
@@ -104,7 +101,7 @@ public class ShooterRunRPMRotateDistance extends Command {
         ShooterSub.setFeedBelts(beltSpeed);
         if(!setInitalMovingAt){//debug
           setInitalMovingAt = true;
-          System.out.println("RunShooterRPM: Started advancing belts forward @: " + shooterRPM);
+          System.out.println("ShooterRunRPMRotateDistance: Started advancing belts forward @: " + shooterRPM + " With: Interpolated Angle: " + angle);
         }
         
       }

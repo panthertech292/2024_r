@@ -35,12 +35,12 @@ public final class Constants {
     public static final double kRotationEighthSpeedAngle = 0.003;
     public static final double kRotationClimbAngle = 0.1665;
     //
-    public static final double kShotAnglePodium = 0.068;
+    public static final double kShotAnglePodium = 0.068; // might need to double check?
   }
 
   public static class ClimbConstants {
     //CAN Motor IDs
-    public static final int kClimbMotorID = 36; //might need to lower these
+    public static final int kClimbMotorID = 36;
     //Speeds
     public static final double kClimbSpeed = 0.40;
   }
@@ -85,12 +85,12 @@ public final class Constants {
   public static class InterpolationConstants {
     public static final InterpolatingDoubleTreeMap angleMap = new InterpolatingDoubleTreeMap();
     //Values for Shooter Distance. Key is distance in meters, value is shooter angle
-    static {
+    static {       //Distance //Angle
       angleMap.put(1.44, 0.0);
       angleMap.put(2.27, 0.0438);
       angleMap.put(3.18, ArmConstants.kShotAnglePodium);
       angleMap.put(4.05, 0.085);
-       angleMap.put(4.25, 0.087);
+      angleMap.put(4.25, 0.087);
       angleMap.put(5.00, 0.095);
     }
   }
