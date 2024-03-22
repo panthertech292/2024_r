@@ -327,7 +327,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     updateVisionOdometry();
-    isAllianceBlue();
+    //isAllianceBlue();
     SmartDashboard.putNumber("DISTANCE TO SPEAKER (METERS)" , getDistanceFromSpeaker());
     SmartDashboard.putNumber("Raw Encoder (Back Left): " , RobotSwerve.getModuleMap().get("backleft").getAbsoluteEncoder().getAbsolutePosition());
     SmartDashboard.putNumber("Raw Encoder (Back Right): " , RobotSwerve.getModuleMap().get("backright").getAbsoluteEncoder().getAbsolutePosition());
