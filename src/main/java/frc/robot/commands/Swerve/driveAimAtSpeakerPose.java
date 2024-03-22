@@ -36,6 +36,7 @@ public class driveAimAtSpeakerPose extends Command {
       if(DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
         targetSpeaker = FieldConstants.kSpeakerPositionBLUE; //Set to aim at blue speaker
       }else{
+        System.out.println("Target is red!");
         targetSpeaker = FieldConstants.kSpeakerPositionRED; //Set to aim at red speaker
       }
     }else{
@@ -49,20 +50,12 @@ public class driveAimAtSpeakerPose extends Command {
   public void execute() {
     //no clue if this works, hell if I know
     double distanceX = SwerveSub.getPose().getX() - targetSpeaker.getX();
-    double distanceY =  - targetSpeaker.getY();
+    double distanceY = SwerveSub.getPose().getY() - targetSpeaker.getY();
     double relativeHeading = Math.toDegrees(Math.atan2(distanceY, distanceX)); 
-    
-    if((distanceX > 0 && distanceY > 0) || (distanceX < 0 && distanceY < 0) ){
-      absoluteHeading = relativeHeading + 90;
-    }else{
-      absoluteHeading = relativeHeading - 90;
-    }
-    if (absoluteHeading < 0){
-      absoluteHeading = absoluteHeading + 360;
-    }
-    absoluteHeading = Math.toRadians(absoluteHeading);
+
+    absoluteHeading = Math.toRadians(-relativeHeading+270);
     SwerveSub.headingDrive(translationX, translationY, ()-> Math.cos(absoluteHeading), ()-> Math.sin(absoluteHeading));
-    
+    //SwerveSub.headingDrive(translationX, translationY, ()-> 1, ()-> 0);
 
   }
 

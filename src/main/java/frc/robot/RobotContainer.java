@@ -5,11 +5,12 @@
 package frc.robot;
 
 import frc.robot.Constants.ArmConstants;
-//import frc.robot.Constants.ClimbConstants;
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.Arm.*;
 import frc.robot.commands.Shooter.*;
+import frc.robot.commands.Swerve.driveAimAtSpeakerPose;
 import frc.robot.subsystems.*;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public class RobotContainer {
 
   // Subsystems
   private final ArmSubsystem s_ArmSubsystem = new ArmSubsystem();
-  //private final ClimbSubsystem s_ClimbSubsystem = new ClimbSubsystem();
+  private final ClimbSubsystem s_ClimbSubsystem = new ClimbSubsystem();
   private final IntakeSubsystem s_IntakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem s_ShooterSubsystem = new ShooterSubsystem();
   private final SwerveSubsystem  s_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
@@ -103,32 +104,52 @@ public class RobotContainer {
     //Driver Controller
     io_DriverController.a().toggleOnTrue(z_IntakeStore);
     //io_DriverController.y().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationClimbAngle, 17, 0.01));
+    io_DriverController.y().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kShotAnglePodium, 17, 0.01));
+
+    
+
+    //io_DriverController.x().whileTrue(new driveAimAtSpeakerPose(s_SwerveSubsystem, () -> MathUtil.applyDeadband(-io_DriverController.getLeftY()*.5, OperatorConstants.kDeadband), () -> MathUtil.applyDeadband(-io_DriverController.getLeftX()*.5, OperatorConstants.kDeadband)));
+
+    io_DriverController.b().whileTrue(
+    s_SwerveSubsystem.driveCommand(
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftY()*.5, OperatorConstants.kDeadband),
+        () -> MathUtil.applyDeadband(-io_DriverController.getLeftX()*.5, OperatorConstants.kDeadband),
+        () -> -MathUtil.applyDeadband(io_DriverController.getRightX(), OperatorConstants.kDeadband+0.05))
+    );
+
     io_DriverController.rightBumper().whileTrue(z_ShootFullPower);
     io_DriverController.leftBumper().whileTrue(z_Shoot75Power);
-    //io_DriverController.b().whileTrue(new AutoShoot(s_SwerveSubsystem, s_ShooterSubsystem, s_ArmSubsystem, 
-    //() -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
-    //() -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
 
-    /*for(int povAngle = 0; povAngle < 360; povAngle = povAngle + 45){ //TODO: God please test this, no clue if this will work, at all.
+    io_DriverController.x().whileTrue(new AutoShoot(s_SwerveSubsystem, s_ShooterSubsystem, s_ArmSubsystem, 
+    () -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband),
+    () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband)));
+
+    for(int povAngle = 0; povAngle < 360; povAngle = povAngle + 45){ //TODO: God please test this, no clue if this will work, at all.
       double povAngleRadians = Math.toRadians(povAngle+90);
       io_DriverController.pov(povAngle).whileTrue(s_SwerveSubsystem.driveCommand(() -> MathUtil.applyDeadband(-io_DriverController.getLeftY(), OperatorConstants.kDeadband), () -> MathUtil.applyDeadband(-io_DriverController.getLeftX(), OperatorConstants.kDeadband),
-      () -> Math.cos(povAngleRadians), () -> Math.sin(povAngleRadians))); //TODO: This feels super sketchy
-    }*/
+      () -> -Math.cos(povAngleRadians), () -> -Math.sin(povAngleRadians))); //TODO: This feels super sketchy
+    }
+
     io_DriverController.back().whileTrue(new InstantCommand(s_SwerveSubsystem::zeroGyro));
     
 
     ///Operator Controller
     io_OperatorController.a().whileTrue(new ArmRotate(s_ArmSubsystem, -ArmConstants.kRotationSpeed)); //Rotate arm down
     io_OperatorController.x().whileTrue(new ArmRotate(s_ArmSubsystem, ArmConstants.kRotationSpeed)); //Rotate arm up
-    io_OperatorController.y().whileTrue(new ShooterRunRPM(s_ShooterSubsystem, 0.50, 1));
-    //io_OperatorController.b().whileTrue(new ClimbRun(s_ClimbSubsystem, -ClimbConstants.kClimbSpeed)); //Have robot climb down
-    //io_OperatorController.y().whileTrue(new ClimbRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed)); //Have robot climb up
+    io_OperatorController.b().whileTrue(new ClimbRun(s_ClimbSubsystem, -ClimbConstants.kClimbSpeed)); //Have robot climb down
+    io_OperatorController.y().whileTrue(new ClimbRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed)); //Have robot climb up
 
     io_OperatorController.leftBumper().onTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMaxAngle, 17, 0.01)); //Bring arm to max
     io_OperatorController.rightBumper().onTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationIntakeAngle, 17, 0.01)); //Bring arm home
     
     io_OperatorController.start().whileTrue(z_ShootFullPower);
     io_OperatorController.back().whileTrue(z_Shoot75Power);
+
+    io_OperatorController.povUp().whileTrue(new ShooterRunRPM(s_ShooterSubsystem, 1.00, 1));
+    io_OperatorController.povRight().whileTrue(new ShooterRunRPM(s_ShooterSubsystem, 0.75, 1));
+    io_OperatorController.povDown().whileTrue(new ShooterRunRPM(s_ShooterSubsystem, 0.50, 1));
+    io_OperatorController.povLeft().whileTrue(new ShooterRunRPM(s_ShooterSubsystem, 0.25, 1));
+    
   }
   private double getGreaterAxis(double axisOne, double axisTwo){
     if(Math.abs(axisOne) > Math.abs(axisTwo)){

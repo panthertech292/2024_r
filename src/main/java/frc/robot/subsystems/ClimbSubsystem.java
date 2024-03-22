@@ -12,17 +12,14 @@ import frc.robot.utilities.MotorUtil;
 
 public class ClimbSubsystem extends SubsystemBase {
   //Motors
-  private final CANSparkMax LeftClimbMotor;
-  private final CANSparkMax RightClimbMotor;
+  private final CANSparkMax ClimbMotor;
   
   public ClimbSubsystem() {
-    LeftClimbMotor = MotorUtil.initSparkMax(ClimbConstants.kLeftClimbMotorID, true, true);
-    RightClimbMotor = MotorUtil.initSparkMax(ClimbConstants.kRightClimbMotorID, false, true);
+    ClimbMotor = MotorUtil.initSparkMax(ClimbConstants.kClimbMotorID, true, true);
   }
 
-  public void setClimbMotors(double speed){
-    LeftClimbMotor.set(speed);
-    RightClimbMotor.set(speed);
+  public void setClimbMotor(double speed){
+    ClimbMotor.set(speed);
   }
 
   @Override

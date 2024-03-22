@@ -34,14 +34,15 @@ public final class Constants {
     public static final double kRotationQuarterSpeedAngle = 0.009;
     public static final double kRotationEighthSpeedAngle = 0.003;
     public static final double kRotationClimbAngle = 0.1665;
+    //
+    public static final double kShotAnglePodium = 0.068;
   }
 
   public static class ClimbConstants {
     //CAN Motor IDs
-    public static final int kLeftClimbMotorID = 41; //might need to lower these
-    public static final int kRightClimbMotorID = 42;
+    public static final int kClimbMotorID = 36; //might need to lower these
     //Speeds
-    public static final double kClimbSpeed = 0.80;
+    public static final double kClimbSpeed = 0.40;
   }
 
   public static class IntakeConstants {
@@ -49,7 +50,7 @@ public final class Constants {
     public static final int kLowIntakeMotorID = 21;
     public static final int kUpIntakeMotorID = 22;
     //Speeds
-    public static final double kIntakeSpeed = 0.40;
+    public static final double kIntakeSpeed = 0.50;
   }
 
   public static class ShooterConstants {
@@ -77,7 +78,7 @@ public final class Constants {
   } 
   
   public static class FieldConstants {
-    public static final Translation2d kSpeakerPositionBLUE = new Translation2d(0, 5.547868); //TODO: Confirm these
+    public static final Translation2d kSpeakerPositionBLUE = new Translation2d(0.076, 5.547868); //TODO: Confirm these
     public static final Translation2d kSpeakerPositionRED = new Translation2d(16.5410642, 5.547868);
   }
 
@@ -85,7 +86,12 @@ public final class Constants {
     public static final InterpolatingDoubleTreeMap angleMap = new InterpolatingDoubleTreeMap();
     //Values for Shooter Distance. Key is distance in meters, value is shooter angle
     static {
-      angleMap.put(0.0, 0.0); //Example!
+      angleMap.put(1.44, 0.0);
+      angleMap.put(2.27, 0.0438);
+      angleMap.put(3.18, ArmConstants.kShotAnglePodium);
+      angleMap.put(4.05, 0.085);
+       angleMap.put(4.25, 0.087);
+      angleMap.put(5.00, 0.095);
     }
   }
 
