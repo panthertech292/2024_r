@@ -69,7 +69,7 @@ public class ArmSubsystem extends SubsystemBase {
     if(speed < 0){
       if(isArmDown()){ //Arm is down, stop.
         rotationSpeed = 0;
-        System.out.println("Warning: Trying to rotate arm while arm is down!");
+        //System.out.println("Warning: Trying to rotate arm while arm is down!");
       }
       if(getRotationAngle() < ArmConstants.kRotationQuarterSpeedAngle){ //Arm is close to down, slow down
         rotationSpeed = rotationSpeed/4;
@@ -82,7 +82,7 @@ public class ArmSubsystem extends SubsystemBase {
     if(speed > 0){
       if(getRotationAngle() > ArmConstants.kRotationMaxAngle){
         rotationSpeed = 0;
-        System.out.println("Warning: Trying to rotate arm past safe UP limit!");
+        //System.out.println("Warning: Trying to rotate arm past safe UP limit!");
       }
     }
     LastCommandedLocation = getRotationAngle();
