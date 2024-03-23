@@ -6,7 +6,9 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeRun extends Command {
@@ -28,12 +30,19 @@ public class IntakeRun extends Command {
   @Override
   public void execute() {
     IntakeSub.setIntake(speed.getAsDouble());
+
+    if(DriverStation.isTeleopEnabled()){
+      if(DriverStation.getMatchTime() < 30.00){
+        RobotContainer.setRightRumbleOperator(0.25);
+      }
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     IntakeSub.setIntake(0);
+    RobotContainer.setRightRumbleOperator(0);
   }
 
   // Returns true when the command should end.

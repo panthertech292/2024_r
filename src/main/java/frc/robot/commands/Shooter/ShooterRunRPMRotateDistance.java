@@ -58,6 +58,7 @@ public class ShooterRunRPMRotateDistance extends Command {
     setInitalMovingAt = false;
     last10Values[0] = 0;
     last10Values[9] = 1000;
+    System.out.println("ShooterRunRPMRotateDistance: Start Auto Shoot");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
