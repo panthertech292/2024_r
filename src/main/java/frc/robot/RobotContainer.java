@@ -99,6 +99,9 @@ public class RobotContainer {
   public static void setRightRumbleDriver(double rumble){
     io_DriverController.getHID().setRumble(RumbleType.kRightRumble, rumble);
   }
+  public static void setRightRumbleOperator(double rumble){
+    io_OperatorController.getHID().setRumble(RumbleType.kRightRumble, rumble);
+  }
 
   private void configureBindings() {
 

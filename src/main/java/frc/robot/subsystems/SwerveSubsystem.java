@@ -106,28 +106,14 @@ public class SwerveSubsystem extends SubsystemBase {
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX, DoubleSupplier headingY){
     RobotSwerve.setHeadingCorrection(true); // Normally you would want heading correction for this kind of control.
 
-    
-
     return run(() -> {
       double xInput = translationX.getAsDouble();
       double yInput = translationY.getAsDouble();
-
-      var alliance = DriverStation.getAlliance();
-      if(alliance.isPresent()){
-        if(alliance.get() == DriverStation.Alliance.Blue){
-          driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(xInput, yInput, -headingX.getAsDouble(), -headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
-        }else{
-          driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(-xInput, -yInput, headingX.getAsDouble(), headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
-        }
+      if(isAllianceBlue()){
+        driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(xInput, yInput, -headingX.getAsDouble(), -headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
       }else{
-        System.out.println("Warning: Swerve Subsystem: Cannot get alliance from FMS/Driverstation!");
-        driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(xInput, yInput, headingX.getAsDouble(), headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
-    }
-
-
-      
-      // Make the robot move
-      //driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(xInput, yInput, headingX.getAsDouble(), headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
+        driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(-xInput, -yInput, headingX.getAsDouble(), headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
+      }
     });
   }
 
@@ -139,21 +125,13 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return Drive command.
    */
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX){
-    
+    RobotSwerve.setHeadingCorrection(false);
     return run(() -> {
-      RobotSwerve.setHeadingCorrection(false);
-      //TODO: This is frankly awful, but probably works. Fix it later
-      var alliance = DriverStation.getAlliance();
-      if(alliance.isPresent()){
-        if(alliance.get() == DriverStation.Alliance.Blue){
-          RobotSwerve.drive(new Translation2d(translationX.getAsDouble() * RobotSwerve.getMaximumVelocity(), translationY.getAsDouble() * RobotSwerve.getMaximumVelocity()), Math.pow(angularRotationX.getAsDouble(), 3) * RobotSwerve.getMaximumAngularVelocity(),true,false);
-        }else{
-          RobotSwerve.drive(new Translation2d(-translationX.getAsDouble() * RobotSwerve.getMaximumVelocity(), -translationY.getAsDouble() * RobotSwerve.getMaximumVelocity()), Math.pow(angularRotationX.getAsDouble(), 3) * RobotSwerve.getMaximumAngularVelocity(),true,false);
-        }
-      }else{
-        System.out.println("Warning: Swerve Subsystem: Cannot get alliance from FMS/Driverstation!");
+      if(isAllianceBlue()){
         RobotSwerve.drive(new Translation2d(translationX.getAsDouble() * RobotSwerve.getMaximumVelocity(), translationY.getAsDouble() * RobotSwerve.getMaximumVelocity()), Math.pow(angularRotationX.getAsDouble(), 3) * RobotSwerve.getMaximumAngularVelocity(),true,false);
-    }
+      }else{
+        RobotSwerve.drive(new Translation2d(-translationX.getAsDouble() * RobotSwerve.getMaximumVelocity(), -translationY.getAsDouble() * RobotSwerve.getMaximumVelocity()), Math.pow(angularRotationX.getAsDouble(), 3) * RobotSwerve.getMaximumAngularVelocity(),true,false);
+      }
       // Make the robot move
       
     });
@@ -174,19 +152,11 @@ public class SwerveSubsystem extends SubsystemBase {
     double xInput = translationX.getAsDouble();
     double yInput = translationY.getAsDouble();
 
-    // Make the robot move
-    var alliance = DriverStation.getAlliance();
-      if(alliance.isPresent()){
-        if(alliance.get() == DriverStation.Alliance.Blue){
-          driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(xInput, yInput, headingX.getAsDouble(), headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
-        }else{
-          driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(-xInput, -yInput, headingX.getAsDouble(), headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
-        }
-      }else{
-        System.out.println("Warning: Swerve Subsystem: Cannot get alliance from FMS/Driverstation!");
-        driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(xInput, yInput, headingX.getAsDouble(), headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
+    if(isAllianceBlue()){
+      driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(xInput, yInput, headingX.getAsDouble(), headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
+    }else{
+      driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(-xInput, -yInput, headingX.getAsDouble(), headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
     }
-    //driveFieldOriented(RobotSwerve.swerveController.getTargetSpeeds(xInput, yInput, headingX.getAsDouble(), headingY.getAsDouble(), RobotSwerve.getOdometryHeading().getRadians(), RobotSwerve.getMaximumVelocity()));
   }
 
   /**
@@ -293,22 +263,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public double getDistanceFromSpeaker(){
     Translation2d target;
-    var alliance = DriverStation.getAlliance();
-    if(alliance.isPresent()){
-      if(alliance.get() == DriverStation.Alliance.Blue){
-        target = FieldConstants.kSpeakerPositionBLUE;
-      }else{
-        target = FieldConstants.kSpeakerPositionRED;
-      }
-    }else{
-      System.out.println("Warning: Swerve Subsystem: Cannot get alliance from FMS/Driverstation!");
-      return 0;
-    }
-    
+    target = getTargetSpeaker();
     return target.getDistance(RobotSwerve.getPose().getTranslation());
   }
 
-  public boolean isAllianceBlue(){
+  public boolean isAllianceBlue(){ // TODO: This might be system intensive? I don't know. Need to test.
     var alliance = DriverStation.getAlliance();
     if(alliance.isPresent()){
       if(alliance.get() == DriverStation.Alliance.Blue){
@@ -322,12 +281,19 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   }
 
+  public Translation2d getTargetSpeaker(){ 
+    if(isAllianceBlue()){
+      return FieldConstants.kSpeakerPositionBLUE;
+    }else{
+      return FieldConstants.kSpeakerPositionRED;
+    }
+  }
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     updateVisionOdometry();
-    //isAllianceBlue();
     SmartDashboard.putNumber("DISTANCE TO SPEAKER (METERS)" , getDistanceFromSpeaker());
     SmartDashboard.putNumber("Raw Encoder (Back Left): " , RobotSwerve.getModuleMap().get("backleft").getAbsoluteEncoder().getAbsolutePosition());
     SmartDashboard.putNumber("Raw Encoder (Back Right): " , RobotSwerve.getModuleMap().get("backright").getAbsoluteEncoder().getAbsolutePosition());

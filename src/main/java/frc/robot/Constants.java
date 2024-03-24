@@ -42,7 +42,7 @@ public final class Constants {
     //CAN Motor IDs
     public static final int kClimbMotorID = 36;
     //Speeds
-    public static final double kClimbSpeed = 0.40;
+    public static final double kClimbSpeed = 0.80;
   }
 
   public static class IntakeConstants {

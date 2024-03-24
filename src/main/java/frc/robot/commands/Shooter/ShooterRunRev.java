@@ -7,6 +7,7 @@ package frc.robot.commands.Shooter;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -35,8 +36,10 @@ public class ShooterRunRev extends Command {
     //If there is a note loaded and our rev speed is greater than the input speed, run at rev speed
     if(ShooterSub.getFeedBeltSwitch() && (this.shooterSpeed.getAsDouble() < ShooterConstants.kRevSpeed)){
       ShooterSub.setShooter(ShooterConstants.kRevSpeed);
+      RobotContainer.setRightRumbleDriver(0.25);
     }else{
       ShooterSub.setShooter(this.shooterSpeed.getAsDouble());
+      RobotContainer.setRightRumbleDriver(0.0);
     }
     
     //If the override for manual speed operation is greater than the toggle speed

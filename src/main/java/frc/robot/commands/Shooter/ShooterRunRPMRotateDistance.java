@@ -58,6 +58,7 @@ public class ShooterRunRPMRotateDistance extends Command {
     setInitalMovingAt = false;
     last10Values[0] = 0;
     last10Values[9] = 1000;
+    System.out.println("ShooterRunRPMRotateDistance: Start Auto Shoot");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -86,7 +87,7 @@ public class ShooterRunRPMRotateDistance extends Command {
 
       shooterRPM = ShooterSub.getShooterLowEncoderVelocity();
       last10Values[index] = shooterRPM;
-      readyToFire = true;
+      readyToFire = true; //TODO: We might want to set this to false depending on arm angle (In case we are shooting too early).
       for (int i = 0; i < 10; i++){
         if(Math.abs(shooterRPM - last10Values[i]) > 25){
           readyToFire = false;
