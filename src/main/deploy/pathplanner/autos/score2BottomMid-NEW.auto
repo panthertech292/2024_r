@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3381784483283943,
-      "y": 5.537862667174266
+      "x": 0.717334047280707,
+      "y": 4.400478710867333
     },
-    "rotation": 180.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.5
+                  "waitTime": 2.0
                 }
               },
               {
@@ -31,38 +31,32 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "driveToCloseMidNote"
-                }
-              },
               {
                 "type": "named",
                 "data": {
                   "name": "IntakeStore"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "NEW_DriveToBottomMid"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "IntakeStore"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "driveHomeMid"
+                  "pathName": "NEW_DriveToHomeFromBottomMid"
                 }
               },
               {
@@ -81,7 +75,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.0
+                  "waitTime": 0.5
                 }
               },
               {
@@ -94,38 +88,32 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "driveToFarTopNote"
-                }
-              },
               {
                 "type": "named",
                 "data": {
                   "name": "IntakeStore"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "NEW_DriveToSecondBottomFromHome"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "IntakeStore"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "driveHomeFar"
+                  "pathName": "NEW_DriveToHomeFrom2ndBottom"
                 }
               },
               {
@@ -146,6 +134,6 @@
       ]
     }
   },
-  "folder": "BasicAutos",
+  "folder": null,
   "choreoAuto": false
 }
