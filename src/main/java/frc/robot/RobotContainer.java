@@ -71,6 +71,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Rev75Power", new ShooterRev(s_ShooterSubsystem, 0.75));
     NamedCommands.registerCommand("ShootFullPower", z_ShootFullPower);
     NamedCommands.registerCommand("Shoot75Power", z_Shoot75Power);
+    NamedCommands.registerCommand("AutoShoot", new AutoShoot(s_SwerveSubsystem, s_ShooterSubsystem, s_ArmSubsystem, () -> 0, () -> 0));
   }
 
   private void setDefaultCommands(){

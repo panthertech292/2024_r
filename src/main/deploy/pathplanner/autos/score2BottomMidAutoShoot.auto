@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3381784483283943,
-      "y": 5.537862667174266
+      "x": 0.717334047280707,
+      "y": 4.400478710867333
     },
-    "rotation": 180.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.5
+                  "waitTime": 2.0
                 }
               },
               {
@@ -31,38 +31,32 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "driveToCloseMidNote"
-                }
-              },
               {
                 "type": "named",
                 "data": {
                   "name": "IntakeStore"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "NEW_DriveToBottomMid"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "IntakeStore"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "driveHomeMid"
+                  "pathName": "NEW_DriveToShootFromBottomMid"
                 }
               },
               {
@@ -81,22 +75,60 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.0
+                  "waitTime": 1.5
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "ShootFullPower"
+                  "name": "AutoShoot"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "driveToFarTopNote"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeStore"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "NEW_DriveToSecondBottomFromPodium"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "NEW_DriveToShootFrom2ndBottom"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RevFullPower"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
           }
         }
       ]
