@@ -27,7 +27,7 @@ public final class Constants {
     //Speeds
     public static final double kRotationSpeed = 0.40;
     //Encoder Positions
-    public static final double kRotationZeroAngleOffset = 0.3298;
+    public static final double kRotationZeroAngleOffset = 0.3335;
     public static final double kRotationMinAngle = 0.001;
     public static final double kRotationIntakeAngle = 0.002;
     public static final double kRotationMaxAngle = 0.233;
@@ -50,7 +50,7 @@ public final class Constants {
     public static final int kLowIntakeMotorID = 21;
     public static final int kUpIntakeMotorID = 22;
     //Speeds
-    public static final double kIntakeSpeed = 0.50;
+    public static final double kIntakeSpeed = 0.60;
   }
 
   public static class ShooterConstants {
@@ -61,6 +61,7 @@ public final class Constants {
     public static final int kShooterUpMotorID = 32;
     //Limit Switches
     public static final int kFeedBeltSwitchID = 1;
+    public static final int kShooterSwitchID = 9;
     //Speeds
     public static final double kIntakeBeltSpeed = 0.05;
     public static final double kRevSpeed = .30;
@@ -78,7 +79,7 @@ public final class Constants {
   } 
   
   public static class FieldConstants {
-    public static final Translation2d kSpeakerPositionBLUE = new Translation2d(0.076, 5.547868); //TODO: Confirm these
+    public static final Translation2d kSpeakerPositionBLUE = new Translation2d(0.0, 5.547868); //TODO: Confirm these
     public static final Translation2d kSpeakerPositionRED = new Translation2d(16.5410642, 5.547868);
   }
 

@@ -2,15 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Auto;
 
+import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.InterpolationConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class ShooterRunRPMRotateDistance extends Command {
+public class ShooterRunRPMRotateDistanceStop extends Command {
   //Shooting
   private final ShooterSubsystem ShooterSub;
   private double shooterSpeed;
@@ -31,8 +33,12 @@ public class ShooterRunRPMRotateDistance extends Command {
   private SwerveSubsystem SwerveSub;
   private double distance;
   private double angle;
+
+  private boolean finished;
+  //private Timer time;
+  private double noteOutTime;
   /** Creates a new RunShooterRPM. */
-  public ShooterRunRPMRotateDistance(ShooterSubsystem s_ShooterSubsystem, ArmSubsystem s_ArmSubsystem, SwerveSubsystem s_SwerveSubsystem, double shooterSpeed, double beltSpeed, double p, double minSpeed) {
+  public ShooterRunRPMRotateDistanceStop(ShooterSubsystem s_ShooterSubsystem, ArmSubsystem s_ArmSubsystem, SwerveSubsystem s_SwerveSubsystem, double shooterSpeed, double beltSpeed, double p, double minSpeed) {
     ShooterSub = s_ShooterSubsystem;
     ArmSub = s_ArmSubsystem;
     SwerveSub = s_SwerveSubsystem;
@@ -46,6 +52,9 @@ public class ShooterRunRPMRotateDistance extends Command {
     //Rotation
     this.p = p;
     this.minSpeed = minSpeed;
+
+    
+    //time.reset();
     
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_ShooterSubsystem);
@@ -56,6 +65,8 @@ public class ShooterRunRPMRotateDistance extends Command {
   public void initialize() {
     ShooterSub.setShooter(shooterSpeed);
     setInitalMovingAt = false;
+    finished = false;
+    //noteOutTime = 999999999;
     last10Values[0] = 0;
     last10Values[9] = 1000;
     System.out.println("ShooterRunRPMRotateDistance: Start Auto Shoot");
@@ -64,6 +75,7 @@ public class ShooterRunRPMRotateDistance extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //SmartDashboard.putNumber("SHOOTER RPM", angle);
     distance = SwerveSub.getDistanceFromSpeaker();
     angle = InterpolationConstants.angleMap.get(distance);
 
@@ -76,23 +88,20 @@ public class ShooterRunRPMRotateDistance extends Command {
       }
     }
     ArmSub.setArmRotate(error);
-
+    readyToFire = true;
     //Only run below if arm is in position
-    //if(Math.abs(error) < 0.02){
+    if(Math.abs(error) > 0.03){
+      readyToFire = false;
+    }
       /* Basically this creates an array of the last 10 recorded shooter RPMS
         It will only shoot the note once RPMs have stabilized.
         Stabilized means the 10 recorded values are within 25 RPMs of the current shooter RPM
         This really could be acomplished with a PID, but I'm lazy.
       */
-      readyToFire = true;
-    //Only run below if arm is in position
-    if(Math.abs(error) > 0.03){
-      readyToFire = false;
-    }
 
       shooterRPM = ShooterSub.getShooterLowEncoderVelocity();
       last10Values[index] = shooterRPM;
-      //readyToFire = true; //TODO: We might want to set this to false depending on arm angle (In case we are shooting too early).
+      
       for (int i = 0; i < 10; i++){
         if(Math.abs(shooterRPM - last10Values[i]) > 25){
           readyToFire = false;
@@ -107,18 +116,27 @@ public class ShooterRunRPMRotateDistance extends Command {
         ShooterSub.setFeedBelts(beltSpeed);
         if(!setInitalMovingAt){//debug
           setInitalMovingAt = true;
-          System.out.println("ShooterRunRPMRotateDistance: Started advancing belts forward @: " + shooterRPM + " With: Interpolated Angle: " + angle);
+          noteOutTime = Timer.getFPGATimestamp();
+          System.out.println("ShooterRunRPMRotateDistance: Started advancing belts forward @: " + shooterRPM + " With: Interpolated Angle: " + angle + " at time: " + noteOutTime);
+        }
+        
+        if(!ShooterSub.getFeedBeltSwitch()){
+          if(Timer.getFPGATimestamp() > noteOutTime + 0.1){
+            System.out.println("ShooterRunRPMRotateDistance: Finished at time: " + Timer.getFPGATimestamp());
+            finished = true;
+          }
+          
         }
         
       }
       index++;
       index = index % 10;
-    //}
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("ShooterDistance: On the way!");
     ShooterSub.setFeedBelts(0);
     ShooterSub.setShooter(0);
     ArmSub.setArmRotate(0);
@@ -127,6 +145,6 @@ public class ShooterRunRPMRotateDistance extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finished;
   }
 }

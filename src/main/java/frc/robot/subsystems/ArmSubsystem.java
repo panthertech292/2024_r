@@ -23,6 +23,8 @@ public class ArmSubsystem extends SubsystemBase {
   //Distance
   private double LastCommandedLocation; //Last position we were at
 
+  private double shuffleBoardTarget;
+
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
     //Motors
@@ -34,7 +36,7 @@ public class ArmSubsystem extends SubsystemBase {
     RotationDownSwitch = new DigitalInput(ArmConstants.kRotationDownSwitchID);
     //Distances
     LastCommandedLocation = getRotationAngle();
-
+    SmartDashboard.putNumber("Shooter Set Angle", shuffleBoardTarget);
   }
 
   /** @return True: The down limit switch is activated. NOTE: This value is inverted, due to current robot wiring. */
@@ -119,13 +121,16 @@ public class ArmSubsystem extends SubsystemBase {
   public double getLastCommandedLocation(){
     return LastCommandedLocation;
   }
-
+  public double getArmTarget(){
+    return shuffleBoardTarget;
+  }
 
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     //SmartDashboard.putNumber("RAW Arm Position: ", RotationAngleEncoder.getAbsolutePosition());
+    shuffleBoardTarget = SmartDashboard.getNumber("Shooter Set Angle", 0);
     SmartDashboard.putNumber("Arm Position", getRotationAngle());
     SmartDashboard.putBoolean("Arm ready to Intake:", isArmReadyToIntake());
     SmartDashboard.putBoolean("Arm sensor active", getRotationDownSwitch());
