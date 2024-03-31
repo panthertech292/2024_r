@@ -50,6 +50,9 @@ public class IntakeStoreRev extends Command {
       IntakeSub.setIntake(0);
       ShooterSub.setFeedBelts(0);
     }
+    if(ShooterSub.getFeedBeltSwitch()){
+      System.out.println("IntakeStoreRev: Saw feedbelt switch! Ending!");
+    }
   }
 
   // Called once the command ends or is interrupted.

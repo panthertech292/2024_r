@@ -73,6 +73,9 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Feedbelt sensor active", getFeedBeltSwitch());
+    //if(getShooterSwitch()){
+    //  System.out.println("######### SAW NOTE");
+    //}
     SmartDashboard.putBoolean("Shooter sensor active", getShooterSwitch());
   }
 }

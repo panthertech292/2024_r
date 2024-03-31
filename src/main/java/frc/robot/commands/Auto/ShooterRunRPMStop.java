@@ -68,11 +68,15 @@ public class ShooterRunRPMStop extends Command {
     }
     index++;
     index = index % 10;
+    if(ShooterSub.getShooterSwitch()){
+      System.out.println("ShooterRunRPMRotateDistance: Finished due to detecing out note");
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("ShooterRunRPMStop: On the way!");
     ShooterSub.setFeedBelts(0);
     ShooterSub.setShooter(0);
   }

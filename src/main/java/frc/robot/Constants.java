@@ -50,7 +50,7 @@ public final class Constants {
     public static final int kLowIntakeMotorID = 21;
     public static final int kUpIntakeMotorID = 22;
     //Speeds
-    public static final double kIntakeSpeed = 0.60;
+    public static final double kIntakeSpeed = 0.50;
   }
 
   public static class ShooterConstants {
@@ -89,7 +89,9 @@ public final class Constants {
     static {       //Distance //Angle
       angleMap.put(1.44, 0.0);
       angleMap.put(2.27, 0.0438);
-      angleMap.put(3.18, ArmConstants.kShotAnglePodium);
+      angleMap.put(3.02, 0.07); //spot for shooting from top close note
+      angleMap.put(3.12, 0.072);
+      //angleMap.put(3.18, ArmConstants.kShotAnglePodium);
       angleMap.put(4.05, 0.085);
       angleMap.put(4.25, 0.087);
       angleMap.put(5.00, 0.095);

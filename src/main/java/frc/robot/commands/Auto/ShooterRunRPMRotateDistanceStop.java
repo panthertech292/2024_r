@@ -117,11 +117,15 @@ public class ShooterRunRPMRotateDistanceStop extends Command {
         if(!setInitalMovingAt){//debug
           setInitalMovingAt = true;
           noteOutTime = Timer.getFPGATimestamp();
-          System.out.println("ShooterRunRPMRotateDistance: Started advancing belts forward @: " + shooterRPM + " With: Interpolated Angle: " + angle + " at time: " + noteOutTime);
+          System.out.println("ShooterRunRPMRotateDistanceStop: Started advancing belts forward @: " + shooterRPM + " With: Interpolated Angle: " + angle + " at time: " + noteOutTime + " at a distance of " + distance);
+        }
+        if(ShooterSub.getShooterSwitch()){
+          System.out.println("ShooterRunRPMRotateDistance: Finished due to detecing out note");
+          finished = true;
         }
         
         if(!ShooterSub.getFeedBeltSwitch()){
-          if(Timer.getFPGATimestamp() > noteOutTime + 0.1){
+          if(Timer.getFPGATimestamp() > noteOutTime + 0.15){
             System.out.println("ShooterRunRPMRotateDistance: Finished at time: " + Timer.getFPGATimestamp());
             finished = true;
           }

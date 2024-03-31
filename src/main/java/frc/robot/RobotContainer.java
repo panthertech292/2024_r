@@ -76,6 +76,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("AutoShootStop", new AutoShootStop(s_SwerveSubsystem, s_ShooterSubsystem, s_ArmSubsystem, () -> 0, () -> 0));
     NamedCommands.registerCommand("ShootFullPowerStop", new ShooterRunRPMStop(s_ShooterSubsystem, 1, 1));
     NamedCommands.registerCommand("Shoot75PowerStop", new ShooterRunRPMStop(s_ShooterSubsystem, 0.75, 1));
+    NamedCommands.registerCommand("Shoot25Power", new ShooterRunRPM(s_ShooterSubsystem, 0.25, 1));
   }
 
   private void setDefaultCommands(){
@@ -147,8 +148,8 @@ public class RobotContainer {
     io_OperatorController.y().whileTrue(new ClimbRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed)); //Have robot climb up
 
     io_OperatorController.leftBumper().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMaxAngle, 17, 0.01)); //Bring arm to max
-    io_OperatorController.rightBumper().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMinAngle, 17, 0.01)); //Bring arm home
-    //io_OperatorController.rightBumper().whileTrue(new ShooterRunRPMStop(s_ShooterSubsystem, 0.25, 1));
+    //io_OperatorController.rightBumper().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMinAngle, 17, 0.01)); //Bring arm home
+    io_OperatorController.rightBumper().whileTrue(new ArmRotateDashboard(s_ArmSubsystem, 17, 0.01));
 
     io_OperatorController.start().whileTrue(z_ShootFullPower);
     io_OperatorController.back().whileTrue(z_Shoot75Power);

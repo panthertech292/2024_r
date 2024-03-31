@@ -258,6 +258,7 @@ public class SwerveSubsystem extends SubsystemBase {
     LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
     if(limelightMeasurement.tagCount >= 2){
       RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
+      //RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds); //TODO: THIS MIGHT BE WORSE!
     }
   }
 
