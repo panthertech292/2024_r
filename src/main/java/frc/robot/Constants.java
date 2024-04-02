@@ -93,8 +93,13 @@ public final class Constants {
       angleMap.put(3.12, 0.072);
       //angleMap.put(3.18, ArmConstants.kShotAnglePodium);
       angleMap.put(4.05, 0.085);
-      angleMap.put(4.25, 0.087);
-      angleMap.put(5.00, 0.095);
+      angleMap.put(4.25, 0.086);
+      angleMap.put(4.45, 0.090);
+      angleMap.put(4.85, 0.092);
+      angleMap.put(5.00, 0.096);
+      angleMap.put(5.58, 0.097);
+      angleMap.put(5.79, 0.098);
+      angleMap.put(6.16, 0.102);
     }
   }
 

@@ -1,0 +1,50 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3323007439946628,
+      "y": 5.538814201136431
+    },
+    "rotation": -179.84036204135072
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootFullPower"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DrivetoSecondRightnote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeStore"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "BasicAutos",
+  "choreoAuto": false
+}
