@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3381784483283943,
-      "y": 5.537862667174266
+      "x": 1.36,
+      "y": 5.55
     },
     "rotation": 180.0
   },
@@ -75,7 +75,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "driveHomeMid"
+                  "pathName": "driveHomeCloseMidNote"
                 }
               },
               {
@@ -151,7 +151,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "driveHomeBottom"
+                  "pathName": "driveHomeCloseBottomNote"
                 }
               },
               {

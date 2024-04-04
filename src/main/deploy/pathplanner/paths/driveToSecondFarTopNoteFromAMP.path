@@ -12,7 +12,7 @@
         "y": 6.980826883268969
       },
       "isLocked": false,
-      "linkedName": "s5_closeTop"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -41,7 +41,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2ndTopMidField"
+      "linkedName": "far2ndTopNote"
     }
   ],
   "rotationTargets": [
@@ -65,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Far Paths",
   "previewStartingState": {
     "rotation": -165.9113118972803,
     "velocity": 0

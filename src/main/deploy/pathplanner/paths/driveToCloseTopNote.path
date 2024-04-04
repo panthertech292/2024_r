@@ -12,7 +12,7 @@
         "y": 5.5430292057165325
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "homeCenter"
     },
     {
       "anchor": {
@@ -41,7 +41,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "closeTopNote"
     }
   ],
   "rotationTargets": [
@@ -65,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Close Paths",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0
