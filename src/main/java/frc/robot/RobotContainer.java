@@ -9,9 +9,7 @@ import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.Arm.*;
-import frc.robot.commands.Auto.AutoShootStop;
-import frc.robot.commands.Auto.IntakeStoreRev;
-import frc.robot.commands.Auto.ShooterRunRPMStop;
+import frc.robot.commands.Auto.*;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.Swerve.driveAimAtSpeakerPose;
 import frc.robot.subsystems.*;
@@ -148,8 +146,8 @@ public class RobotContainer {
     io_OperatorController.y().whileTrue(new ClimbRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed)); //Have robot climb up
 
     io_OperatorController.leftBumper().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMaxAngle, 17, 0.01)); //Bring arm to max
-    //io_OperatorController.rightBumper().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMinAngle, 17, 0.01)); //Bring arm home
-    io_OperatorController.rightBumper().whileTrue(new ArmRotateDashboard(s_ArmSubsystem, 17, 0.01));
+    io_OperatorController.rightBumper().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMinAngle, 17, 0.01)); //Bring arm home
+    //io_OperatorController.rightBumper().whileTrue(new ArmRotateDashboard(s_ArmSubsystem, 17, 0.01)); //for testing
 
     io_OperatorController.start().whileTrue(z_ShootFullPower);
     io_OperatorController.back().whileTrue(z_Shoot75Power);

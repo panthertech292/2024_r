@@ -20,8 +20,6 @@ public class ArmSubsystem extends SubsystemBase {
   private final DutyCycleEncoder RotationAngleEncoder;
   //Limit Switches
   private final DigitalInput RotationDownSwitch;
-  //Distance
-  private double LastCommandedLocation; //Last position we were at
 
   private double shuffleBoardTarget;
 
@@ -35,7 +33,6 @@ public class ArmSubsystem extends SubsystemBase {
     //Limit Switches
     RotationDownSwitch = new DigitalInput(ArmConstants.kRotationDownSwitchID);
     //Distances
-    LastCommandedLocation = getRotationAngle();
     SmartDashboard.putNumber("Shooter Set Angle", shuffleBoardTarget);
   }
 
@@ -48,6 +45,7 @@ public class ArmSubsystem extends SubsystemBase {
   public double getRotationAngle(){
     return RotationAngleEncoder.get();
   }
+  
   /** @return True: The arm is down at its MIN SAFE position.*/
   public boolean isArmDown(){
     return getRotationDownSwitch() || (getRotationAngle() < ArmConstants.kRotationMinAngle);
@@ -87,44 +85,12 @@ public class ArmSubsystem extends SubsystemBase {
         //System.out.println("Warning: Trying to rotate arm past safe UP limit!");
       }
     }
-    LastCommandedLocation = getRotationAngle();
     RotationMotor.set(rotationSpeed);
   }
 
-  /** Rotates the arm WITH saftey checks to stop the arm from destroying itself. Use this method to run the arm, but not log what the last commanded input was.
-   *  @param speed The speed to set the arm to rotate at */
-  public void setArmRotateWithoutSavingLocation(double speed){
-    double rotationSpeed = speed;
-    //Saftey checks for going down
-    if(speed < 0){
-      if(isArmDown()){ //Arm is down, stop.
-        rotationSpeed = 0;
-        System.out.println("Warning: Trying to rotate arm while arm is down!");
-      }
-      if(getRotationAngle() < ArmConstants.kRotationQuarterSpeedAngle){ //Arm is close to down, slow down
-        rotationSpeed = rotationSpeed/4;
-      }
-      if(getRotationAngle() < ArmConstants.kRotationEighthSpeedAngle){ //Slow down even more, to 1/8 the given speed
-        rotationSpeed = rotationSpeed/2;
-      }
-    }
-    //Saftey check for going up
-    if(speed > 0){
-      if(getRotationAngle() > ArmConstants.kRotationMaxAngle){
-        rotationSpeed = 0;
-        System.out.println("Warning: Trying to rotate arm past safe UP limit!");
-      }
-    }
-    
-    RotationMotor.set(rotationSpeed);
-  }
-  public double getLastCommandedLocation(){
-    return LastCommandedLocation;
-  }
   public double getArmTarget(){
     return shuffleBoardTarget;
   }
-
 
   @Override
   public void periodic() {
