@@ -25,6 +25,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   //Limit Switches
   private final DigitalInput FeedBeltSwitch;
+  private final DigitalInput ShooterSwitch;
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
@@ -39,6 +40,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //Limit Switches
     FeedBeltSwitch = new DigitalInput(ShooterConstants.kFeedBeltSwitchID); //This switch activates when a note is just before the shooter
+    ShooterSwitch = new DigitalInput(ShooterConstants.kShooterSwitchID);
   }
 
   /** @return Returns the RPM of the lower shooter motor */
@@ -49,6 +51,10 @@ public class ShooterSubsystem extends SubsystemBase {
   /** @return True: There is a note(or something) in the belts before the shooter. NOTE: Due to robot wiring, this is inverted! */
   public boolean getFeedBeltSwitch(){
     return !FeedBeltSwitch.get();
+  }
+
+  public boolean getShooterSwitch(){
+    return !ShooterSwitch.get();
   }
 
   /** @param speed The speed to set the shooter to*/
@@ -67,5 +73,9 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Feedbelt sensor active", getFeedBeltSwitch());
+    //if(getShooterSwitch()){
+    //  System.out.println("######### SAW NOTE");
+    //}
+    SmartDashboard.putBoolean("Shooter sensor active", getShooterSwitch());
   }
 }

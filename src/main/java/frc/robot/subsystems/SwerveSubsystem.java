@@ -37,7 +37,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   //Initialize {@link SwerveDrive} with the directory provided. @param directory Directory of swerve drive config files.
   public SwerveSubsystem(File directory) {
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH; // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW; // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
 
     //Create RobotSwerve
     try{
@@ -258,6 +258,7 @@ public class SwerveSubsystem extends SubsystemBase {
     LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
     if(limelightMeasurement.tagCount >= 2){
       RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
+      //RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds); //TODO: THIS MIGHT BE WORSE!
     }
   }
 
@@ -276,7 +277,7 @@ public class SwerveSubsystem extends SubsystemBase {
         return false;
       }
     }else{
-      System.out.println("Warning: Swerve Subsystem: Cannot get alliance from FMS/Driverstation! Defaulting to blue!");
+      //System.out.println("Warning: Swerve Subsystem: Cannot get alliance from FMS/Driverstation! Defaulting to blue!");
       return true;
     }
   }

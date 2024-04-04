@@ -12,7 +12,7 @@
     "data": {
       "commands": [
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -24,14 +24,14 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Shoot75Power"
+                  "name": "Shoot75PowerStop"
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -88,7 +88,7 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -100,14 +100,14 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Shoot75Power"
+                  "name": "Shoot75PowerStop"
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -164,7 +164,7 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -176,32 +176,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Shoot75Power"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "driveToMid2ndBottomFROMCENTER"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeStore"
+                  "name": "Shoot75PowerStop"
                 }
               }
             ]
@@ -212,18 +187,49 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "IntakeStore"
+                  "pathName": "driveToCloseTopNote"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "driveToMid2ndBottomP2"
+                  "name": "IntakeStoreRevFull"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShootStop"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "driveToSecondFarTopNoteFromAMP"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeStoreRevFull"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "driveHomeFrom2ndTopMidfield"
           }
         }
       ]

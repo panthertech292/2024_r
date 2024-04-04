@@ -27,7 +27,7 @@ public final class Constants {
     //Speeds
     public static final double kRotationSpeed = 0.40;
     //Encoder Positions
-    public static final double kRotationZeroAngleOffset = 0.3298;
+    public static final double kRotationZeroAngleOffset = 0.3335;
     public static final double kRotationMinAngle = 0.001;
     public static final double kRotationIntakeAngle = 0.002;
     public static final double kRotationMaxAngle = 0.233;
@@ -61,6 +61,7 @@ public final class Constants {
     public static final int kShooterUpMotorID = 32;
     //Limit Switches
     public static final int kFeedBeltSwitchID = 1;
+    public static final int kShooterSwitchID = 9;
     //Speeds
     public static final double kIntakeBeltSpeed = 0.05;
     public static final double kRevSpeed = .30;
@@ -78,7 +79,7 @@ public final class Constants {
   } 
   
   public static class FieldConstants {
-    public static final Translation2d kSpeakerPositionBLUE = new Translation2d(0.076, 5.547868); //TODO: Confirm these
+    public static final Translation2d kSpeakerPositionBLUE = new Translation2d(0.0, 5.547868); //TODO: Confirm these
     public static final Translation2d kSpeakerPositionRED = new Translation2d(16.5410642, 5.547868);
   }
 
@@ -88,10 +89,17 @@ public final class Constants {
     static {       //Distance //Angle
       angleMap.put(1.44, 0.0);
       angleMap.put(2.27, 0.0438);
-      angleMap.put(3.18, ArmConstants.kShotAnglePodium);
+      angleMap.put(3.02, 0.07); //spot for shooting from top close note
+      angleMap.put(3.12, 0.072);
+      //angleMap.put(3.18, ArmConstants.kShotAnglePodium);
       angleMap.put(4.05, 0.085);
-      angleMap.put(4.25, 0.087);
-      angleMap.put(5.00, 0.095);
+      angleMap.put(4.25, 0.086);
+      angleMap.put(4.45, 0.090);
+      angleMap.put(4.85, 0.092);
+      angleMap.put(5.00, 0.096);
+      angleMap.put(5.58, 0.097);
+      angleMap.put(5.79, 0.098);
+      angleMap.put(6.16, 0.102);
     }
   }
 

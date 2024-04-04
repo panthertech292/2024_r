@@ -9,6 +9,7 @@ import frc.robot.Constants.ClimbConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.Arm.*;
+import frc.robot.commands.Auto.*;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.Swerve.driveAimAtSpeakerPose;
 import frc.robot.subsystems.*;
@@ -65,11 +66,15 @@ public class RobotContainer {
 
   private void registerCommands(){
     NamedCommands.registerCommand("IntakeStore", z_IntakeStore);
+    NamedCommands.registerCommand("IntakeStoreRevFull",  new IntakeStoreRev(s_ShooterSubsystem, s_IntakeSubsystem, s_ArmSubsystem, 1));
     NamedCommands.registerCommand("RevFullPower", new ShooterRev(s_ShooterSubsystem, 1));
     NamedCommands.registerCommand("Rev75Power", new ShooterRev(s_ShooterSubsystem, 0.75));
     NamedCommands.registerCommand("ShootFullPower", z_ShootFullPower);
     NamedCommands.registerCommand("Shoot75Power", z_Shoot75Power);
-    NamedCommands.registerCommand("AutoShoot", new AutoShoot(s_SwerveSubsystem, s_ShooterSubsystem, s_ArmSubsystem, () -> 0, () -> 0));
+    NamedCommands.registerCommand("AutoShootStop", new AutoShootStop(s_SwerveSubsystem, s_ShooterSubsystem, s_ArmSubsystem, () -> 0, () -> 0));
+    NamedCommands.registerCommand("ShootFullPowerStop", new ShooterRunRPMStop(s_ShooterSubsystem, 1, 1));
+    NamedCommands.registerCommand("Shoot75PowerStop", new ShooterRunRPMStop(s_ShooterSubsystem, 0.75, 1));
+    NamedCommands.registerCommand("Shoot25Power", new ShooterRunRPM(s_ShooterSubsystem, 0.25, 1));
   }
 
   private void setDefaultCommands(){
@@ -140,9 +145,10 @@ public class RobotContainer {
     io_OperatorController.b().whileTrue(new ClimbRun(s_ClimbSubsystem, -ClimbConstants.kClimbSpeed)); //Have robot climb down
     io_OperatorController.y().whileTrue(new ClimbRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed)); //Have robot climb up
 
-    io_OperatorController.leftBumper().onTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMaxAngle, 17, 0.01)); //Bring arm to max
-    io_OperatorController.rightBumper().onTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationIntakeAngle, 17, 0.01)); //Bring arm home
-    
+    io_OperatorController.leftBumper().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMaxAngle, 17, 0.01)); //Bring arm to max
+    io_OperatorController.rightBumper().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMinAngle, 17, 0.01)); //Bring arm home
+    //io_OperatorController.rightBumper().whileTrue(new ArmRotateDashboard(s_ArmSubsystem, 17, 0.01)); //for testing
+
     io_OperatorController.start().whileTrue(z_ShootFullPower);
     io_OperatorController.back().whileTrue(z_Shoot75Power);
 

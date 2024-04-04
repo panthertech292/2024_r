@@ -2,15 +2,16 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Auto;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.InterpolationConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class ShooterRunRPMRotateDistance extends Command {
+public class ShooterRunRPMRotateDistanceStop extends Command {
   // Shooting
   private final ShooterSubsystem ShooterSub;
   private double shooterSpeed;
@@ -32,8 +33,11 @@ public class ShooterRunRPMRotateDistance extends Command {
   private double distance;
   private double angle;
 
+  private boolean finished;
+  private double noteOutTime;
+
   /** Creates a new RunShooterRPM. */
-  public ShooterRunRPMRotateDistance(ShooterSubsystem s_ShooterSubsystem, ArmSubsystem s_ArmSubsystem, SwerveSubsystem s_SwerveSubsystem, double shooterSpeed, double beltSpeed, double p, double minSpeed) {
+  public ShooterRunRPMRotateDistanceStop(ShooterSubsystem s_ShooterSubsystem, ArmSubsystem s_ArmSubsystem, SwerveSubsystem s_SwerveSubsystem, double shooterSpeed, double beltSpeed, double p, double minSpeed) {
     ShooterSub = s_ShooterSubsystem;
     ArmSub = s_ArmSubsystem;
     SwerveSub = s_SwerveSubsystem;
@@ -57,9 +61,10 @@ public class ShooterRunRPMRotateDistance extends Command {
   public void initialize() {
     ShooterSub.setShooter(shooterSpeed);
     setInitalMovingAt = false;
+    finished = false;
     last10Values[0] = 0;
     last10Values[9] = 1000;
-    System.out.println("ShooterRunRPMRotateDistance: Start Auto Shoot");
+    System.out.println("ShooterRunRPMRotateDistanceStop: Start Auto Shoot");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -77,13 +82,11 @@ public class ShooterRunRPMRotateDistance extends Command {
       }
     }
     ArmSub.setArmRotate(error);
-
     readyToFire = true;
-    // Only run below if arm is in position
+    // Check to see if arm is in position
     if (Math.abs(error) > 0.03) {
       readyToFire = false;
     }
-
     /*
      * Basically this creates an array of the last 10 recorded shooter RPMS
      * It will only shoot the note once RPMs have stabilized.
@@ -91,9 +94,10 @@ public class ShooterRunRPMRotateDistance extends Command {
      * shooter RPM
      * This really could be acomplished with a PID, but I'm lazy.
      */
-    
+
     shooterRPM = ShooterSub.getShooterLowEncoderVelocity();
     last10Values[index] = shooterRPM;
+
     for (int i = 0; i < 10; i++) {
       if (Math.abs(shooterRPM - last10Values[i]) > 25) {
         readyToFire = false;
@@ -106,20 +110,34 @@ public class ShooterRunRPMRotateDistance extends Command {
 
     if (readyToFire) {
       ShooterSub.setFeedBelts(beltSpeed);
-      if (!setInitalMovingAt) {// debug
+      if (!setInitalMovingAt) {
         setInitalMovingAt = true;
-        System.out.println("ShooterRunRPMRotateDistance: Started advancing belts forward @: " + shooterRPM + " With: Interpolated Angle: " + angle);
+        noteOutTime = Timer.getFPGATimestamp();
+        System.out.println("ShooterRunRPMRotateDistanceStop: Started advancing belts forward @: " + shooterRPM
+            + " With: Interpolated Angle: " + angle + " at time: " + noteOutTime + " at a distance of " + distance);
+      }
+      if (ShooterSub.getShooterSwitch()) {
+        System.out.println("ShooterRunRPMRotateDistanceStop: Finished due to detecing out note");
+        finished = true;
+      }
+
+      if (!ShooterSub.getFeedBeltSwitch()) {
+        if (Timer.getFPGATimestamp() > noteOutTime + 0.15) {
+          System.out.println("ShooterRunRPMRotateDistanceStop: Finished at time: " + Timer.getFPGATimestamp());
+          finished = true;
+        }
+
       }
 
     }
     index++;
     index = index % 10;
-    // }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("ShooterDistance: On the way!");
     ShooterSub.setFeedBelts(0);
     ShooterSub.setShooter(0);
     ArmSub.setArmRotate(0);
@@ -128,6 +146,6 @@ public class ShooterRunRPMRotateDistance extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finished;
   }
 }

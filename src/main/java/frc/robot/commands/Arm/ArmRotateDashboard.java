@@ -4,7 +4,7 @@
 
 package frc.robot.commands.Arm;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
@@ -28,13 +28,13 @@ public class ArmRotateDashboard extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("Shooter Set Angle", target);
+    //SmartDashboard.putNumber("Shooter Set Angle", target);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    target = SmartDashboard.getNumber("Shooter Set Angle", 0);
+    target = ArmSub.getArmTarget();
 
     error = (target - ArmSub.getRotationAngle())*p;
     if (minSpeed > Math.abs(error)){//If we are running too slow, go at a min speed

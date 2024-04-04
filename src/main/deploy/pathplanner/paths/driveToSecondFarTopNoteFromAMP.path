@@ -3,72 +3,72 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.1410183360907262,
-        "y": 3.762594191855051
+        "x": 2.8981397630253705,
+        "y": 6.980826883268969
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5477852757507313,
-        "y": 3.3373378458468634
+        "x": 3.8981397630253705,
+        "y": 6.980826883268969
       },
       "isLocked": false,
-      "linkedName": "ShootSpotPodium"
+      "linkedName": "s5_closeTop"
     },
     {
       "anchor": {
-        "x": 7.318052113581704,
-        "y": 1.5808442427695677
+        "x": 7.19778313665891,
+        "y": 6.707833653196999
       },
       "prevControl": {
-        "x": 5.922101934293959,
-        "y": 0.5824162999677367
+        "x": 6.396386475386273,
+        "y": 7.131984377492064
       },
       "nextControl": {
-        "x": 7.745532756084672,
-        "y": 1.8865919870763255
+        "x": 7.450656780506698,
+        "y": 6.573996635429984
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.62155526112854,
-        "y": 2.7456768427050378
+        "x": 8.621247836319903,
+        "y": 6.015600819800215
       },
       "prevControl": {
-        "x": 8.3534588690799,
-        "y": 2.4960698570045796
+        "x": 8.225257788081493,
+        "y": 6.248289625470934
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2ndBottomMidField"
+      "linkedName": "2ndTopMidField"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -137.86,
+      "rotationDegrees": 153.9704078084865,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -137.86,
+    "rotation": 151.7826441452705,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "2MidfieldNew",
+  "folder": null,
   "previewStartingState": {
-    "rotation": 144.34,
+    "rotation": -165.9113118972803,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
