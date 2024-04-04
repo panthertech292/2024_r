@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Auto;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -15,7 +16,9 @@ public class ShooterRunRPMStop extends Command {
   private double [] last10Values;
   private int index;
   private boolean readyToFire;
-  private boolean setInitalMovingAt; //Used for debug, can be removed if needed
+  private boolean setInitalMovingAt;
+  private double noteOutTime;
+  private boolean finished;
   /** Creates a new RunShooterRPM. */
   public ShooterRunRPMStop(ShooterSubsystem s_ShooterSubsystem, double shooterSpeed, double beltSpeed) {
     ShooterSub = s_ShooterSubsystem;
@@ -33,8 +36,10 @@ public class ShooterRunRPMStop extends Command {
   public void initialize() {
     ShooterSub.setShooter(shooterSpeed);
     setInitalMovingAt = false;
+    finished = false;
     last10Values[0] = 0;
-    last10Values[9] = 1000;
+    last10Values[9] = 1000; 
+    System.out.println("ShooterRunRPMStop: Start Auto Shoot");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -62,15 +67,24 @@ public class ShooterRunRPMStop extends Command {
       ShooterSub.setFeedBelts(beltSpeed);
       if(!setInitalMovingAt){//debug
         setInitalMovingAt = true;
-        System.out.println("RunShooterRPM: Started advancing belts forward @: " + shooterRPM);
+        noteOutTime = Timer.getFPGATimestamp();
+        System.out.println("ShooterRunRPMStop: Started advancing belts forward @: " + shooterRPM);
       }
       
     }
+    if(ShooterSub.getShooterSwitch()){
+      System.out.println("ShooterRunRPMStop: Finished due to detecing out note");
+      finished = true;
+    }
+    if(!ShooterSub.getFeedBeltSwitch()){
+      if(Timer.getFPGATimestamp() > noteOutTime + 0.15){
+        System.out.println("ShooterRunRPMStop: Finished at time: " + Timer.getFPGATimestamp());
+        finished = true;
+      }
+    }
+
     index++;
     index = index % 10;
-    if(ShooterSub.getShooterSwitch()){
-      System.out.println("ShooterRunRPMRotateDistance: Finished due to detecing out note");
-    }
   }
 
   // Called once the command ends or is interrupted.
@@ -84,6 +98,6 @@ public class ShooterRunRPMStop extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ShooterSub.getShooterSwitch();
+    return finished;
   }
 }

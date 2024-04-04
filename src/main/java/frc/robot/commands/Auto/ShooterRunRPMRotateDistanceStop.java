@@ -69,7 +69,7 @@ public class ShooterRunRPMRotateDistanceStop extends Command {
     //noteOutTime = 999999999;
     last10Values[0] = 0;
     last10Values[9] = 1000;
-    System.out.println("ShooterRunRPMRotateDistance: Start Auto Shoot");
+    System.out.println("ShooterRunRPMRotateDistanceStop: Start Auto Shoot");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -120,13 +120,13 @@ public class ShooterRunRPMRotateDistanceStop extends Command {
           System.out.println("ShooterRunRPMRotateDistanceStop: Started advancing belts forward @: " + shooterRPM + " With: Interpolated Angle: " + angle + " at time: " + noteOutTime + " at a distance of " + distance);
         }
         if(ShooterSub.getShooterSwitch()){
-          System.out.println("ShooterRunRPMRotateDistance: Finished due to detecing out note");
+          System.out.println("ShooterRunRPMRotateDistanceStop: Finished due to detecing out note");
           finished = true;
         }
         
         if(!ShooterSub.getFeedBeltSwitch()){
           if(Timer.getFPGATimestamp() > noteOutTime + 0.15){
-            System.out.println("ShooterRunRPMRotateDistance: Finished at time: " + Timer.getFPGATimestamp());
+            System.out.println("ShooterRunRPMRotateDistanceStop: Finished at time: " + Timer.getFPGATimestamp());
             finished = true;
           }
           
