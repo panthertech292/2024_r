@@ -3,16 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.221076550261208,
-        "y": 4.927426791790521
+        "x": 3.6391213875064348,
+        "y": 5.167371854933734
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.099323351799857,
-        "y": 4.4744363362600605
+        "x": 4.517368189045083,
+        "y": 4.7143813994032735
       },
       "isLocked": false,
       "linkedName": "topStage"
+    },
+    {
+      "anchor": {
+        "x": 6.057536286821521,
+        "y": 3.7739414611310877
+      },
+      "prevControl": {
+        "x": 5.2874522379333015,
+        "y": 4.24416143026718
+      },
+      "nextControl": {
+        "x": 6.8276203357097405,
+        "y": 3.3037214919949953
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -28,7 +44,13 @@
       "linkedName": "far2ndBottomNoteFacingStage"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.65,
+      "rotationDegrees": 150.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -43,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Mid Far Paths",
+  "folder": null,
   "previewStartingState": {
     "rotation": 170.64549810036786,
     "velocity": 0

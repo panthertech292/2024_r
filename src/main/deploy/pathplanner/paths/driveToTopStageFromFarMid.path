@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 4.221076550261208,
-        "y": 4.927426791790521
+        "x": 3.6391213875064348,
+        "y": 5.167371854933734
       },
       "prevControl": {
-        "x": 4.960652804188491,
-        "y": 4.243318756907785
+        "x": 4.3786976414337175,
+        "y": 4.483263820050998
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Mid Far Paths",
+  "folder": null,
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

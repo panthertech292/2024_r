@@ -60,7 +60,7 @@ public class LEDSubsystem extends SubsystemBase {
     }
   }
 
-  public void setColorChase(int mainHue, int chaseHue, int pulseSpeed) {
+  public void setColorChase(int mainHue, int chaseHue, double pulseSpeed) {
     int hue = mainHue;
 
     for (var i = 0; i < o_ledBuffer.getLength(); i++) {

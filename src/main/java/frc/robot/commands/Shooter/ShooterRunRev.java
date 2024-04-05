@@ -47,7 +47,12 @@ public class ShooterRunRev extends Command {
     }else{
       ShooterSub.setShooter(this.shooterSpeed.getAsDouble());
       RobotContainer.setRightRumbleDriver(0.0);
-      LEDSub.setColorChase(60, 120, 1);
+      if(SwerveSub.isAllianceBlue()){
+        LEDSub.setColorChase(120, 60, SwerveSub.getVelocity()*5);
+      }else{
+        LEDSub.setColorChase(60, 120, SwerveSub.getVelocity()*5);
+      }
+      
     }
     
     //If the override for manual speed operation is greater than the toggle speed

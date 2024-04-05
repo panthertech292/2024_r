@@ -13,12 +13,13 @@ public class ShooterRunRPMStop extends Command {
   private double shooterSpeed;
   private double beltSpeed;
   private double shooterRPM;
-  private double [] last10Values;
+  private double[] last10Values;
   private int index;
   private boolean readyToFire;
   private boolean setInitalMovingAt;
   private double noteOutTime;
   private boolean finished;
+
   /** Creates a new RunShooterRPM. */
   public ShooterRunRPMStop(ShooterSubsystem s_ShooterSubsystem, double shooterSpeed, double beltSpeed) {
     ShooterSub = s_ShooterSubsystem;
@@ -26,7 +27,7 @@ public class ShooterRunRPMStop extends Command {
     this.beltSpeed = beltSpeed;
     last10Values = new double[10];
     index = 0;
-    
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_ShooterSubsystem);
   }
@@ -38,48 +39,50 @@ public class ShooterRunRPMStop extends Command {
     setInitalMovingAt = false;
     finished = false;
     last10Values[0] = 0;
-    last10Values[9] = 1000; 
+    last10Values[9] = 1000;
     System.out.println("ShooterRunRPMStop: Start Auto Shoot");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    /* Basically this creates an array of the last 10 recorded shooter RPMS
-       It will only shoot the note once RPMs have stabilized.
-       Stabilized means the 10 recorded values are within 25 RPMs of the current shooter RPM
-       This really could be acomplished with a PID, but I'm lazy.
-    */
+    /*
+     * Basically this creates an array of the last 10 recorded shooter RPMS
+     * It will only shoot the note once RPMs have stabilized.
+     * Stabilized means the 10 recorded values are within 25 RPMs of the current
+     * shooter RPM
+     * This really could be acomplished with a PID, but I'm lazy.
+     */
     shooterRPM = ShooterSub.getShooterLowEncoderVelocity();
     last10Values[index] = shooterRPM;
     readyToFire = true;
-    for (int i = 0; i < 10; i++){
-      if(Math.abs(shooterRPM - last10Values[i]) > 25){
+    for (int i = 0; i < 10; i++) {
+      if (Math.abs(shooterRPM - last10Values[i]) > 25) {
         readyToFire = false;
       }
     }
-    //Make sure we don't fire early
-    if(shooterRPM < 1000 & shooterSpeed > 0.49){
+    // Make sure we don't fire early
+    if (shooterRPM < 1000 & shooterSpeed > 0.49) {
       readyToFire = false;
     }
 
-    if(readyToFire){
+    if (readyToFire) {
       ShooterSub.setFeedBelts(beltSpeed);
-      if(!setInitalMovingAt){//debug
+      if (!setInitalMovingAt) {// debug
         setInitalMovingAt = true;
         noteOutTime = Timer.getFPGATimestamp();
         System.out.println("ShooterRunRPMStop: Started advancing belts forward @: " + shooterRPM);
       }
-      
-    }
-    if(ShooterSub.getShooterSwitch()){
-      System.out.println("ShooterRunRPMStop: Finished due to detecing out note");
-      finished = true;
-    }
-    if(!ShooterSub.getFeedBeltSwitch()){
-      if(Timer.getFPGATimestamp() > noteOutTime + 0.15){
-        System.out.println("ShooterRunRPMStop: Finished at time: " + Timer.getFPGATimestamp());
+
+      if (ShooterSub.getShooterSwitch()) {
+        System.out.println("ShooterRunRPMStop: Finished due to detecing out note");
         finished = true;
+      }
+      if (!ShooterSub.getFeedBeltSwitch()) {
+        if (Timer.getFPGATimestamp() > noteOutTime + 0.15) {
+          System.out.println("ShooterRunRPMStop: Finished at time: " + Timer.getFPGATimestamp());
+          finished = true;
+        }
       }
     }
 

@@ -264,12 +264,16 @@ public class SwerveSubsystem extends SubsystemBase {
     //RobotSwerve.getOdometryHeading() could use this instead of getPose if needed
     LimelightHelpers.SetRobotOrientation("limelight",RobotSwerve.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
     LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-    
-    if(Math.abs(pigeonIMU.getRate()) > 720){ // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+    //System.out.println("RATE IS: " + pigeonIMU.getRate());
+    if(Math.abs(pigeonIMU.getRate()) > 360){ // if our angular velocity is greater than 360 degrees per second, ignore vision updates
       doRejectUpdate = true;
     }
-    if(!doRejectUpdate){ //TODO: Check these values
-      RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.5,.5,9999999));
+    //if(Math.abs(pigeonIMU.getRate()) > 1 && limelightMeasurement.tagCount == 1){ // if our angular velocity is greater than 10 degrees per seoncd, with one tag
+    //  doRejectUpdate = true;
+    //  System.out.println("ON THE REJECT!");
+    //}
+    if(!doRejectUpdate && limelightMeasurement.tagCount > 0){ //&& limelightMeasurement.tagCount >= 2){ //TODO: Check these values
+      RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
     }
   }
 
@@ -300,9 +304,9 @@ public class SwerveSubsystem extends SubsystemBase {
       return FieldConstants.kSpeakerPositionRED;
     }
   }
-
+  // This is for lights only, don't use it for actual shit!
   public double getVelocity(){
-    return (RobotSwerve.getRobotVelocity().vxMetersPerSecond + RobotSwerve.getRobotVelocity().vyMetersPerSecond);
+    return (Math.abs(RobotSwerve.getRobotVelocity().vxMetersPerSecond) + Math.abs(RobotSwerve.getRobotVelocity().vyMetersPerSecond));
   }
 
   @Override

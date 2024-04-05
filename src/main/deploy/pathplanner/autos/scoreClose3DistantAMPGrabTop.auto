@@ -246,9 +246,28 @@
           }
         },
         {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "driveBlueLineFromTopNote"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RevFullPower"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "IntakeStore"
+            "name": "AutoShootStop"
           }
         }
       ]
