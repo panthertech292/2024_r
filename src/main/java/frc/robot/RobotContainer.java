@@ -144,15 +144,17 @@ public class RobotContainer {
     ///Operator Controller
     io_OperatorController.a().whileTrue(new ArmRotate(s_ArmSubsystem, -ArmConstants.kRotationSpeed)); //Rotate arm down
     io_OperatorController.x().whileTrue(new ArmRotate(s_ArmSubsystem, ArmConstants.kRotationSpeed)); //Rotate arm up
-    io_OperatorController.b().whileTrue(new ClimbRun(s_ClimbSubsystem, -ClimbConstants.kClimbSpeed)); //Have robot climb down
-    io_OperatorController.y().whileTrue(new ClimbRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed)); //Have robot climb up
+    io_OperatorController.b().whileTrue(new ClimbRun(s_ClimbSubsystem, -ClimbConstants.kClimbSpeed)); //Have aro go down down
+    io_OperatorController.y().whileTrue(new ClimbRun(s_ClimbSubsystem, ClimbConstants.kClimbSpeed)); //Have arm go up
 
     io_OperatorController.leftBumper().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMaxAngle, 17, 0.01)); //Bring arm to max
     io_OperatorController.rightBumper().whileTrue(new ArmRotateToAngle(s_ArmSubsystem, ArmConstants.kRotationMinAngle, 17, 0.01)); //Bring arm home
     //io_OperatorController.rightBumper().whileTrue(new ArmRotateDashboard(s_ArmSubsystem, 17, 0.01)); //for testing
 
-    io_OperatorController.start().whileTrue(z_ShootFullPower);
-    io_OperatorController.back().whileTrue(z_Shoot75Power);
+    //io_OperatorController.start().whileTrue(z_ShootFullPower);
+    //io_OperatorController.back().whileTrue(z_Shoot75Power);
+    io_OperatorController.back().onTrue(new ClimbRotateServo(s_ClimbSubsystem, 0.25)); //release
+    io_OperatorController.start().onTrue(new ClimbRotateServo(s_ClimbSubsystem, 0)); //lock
 
     io_OperatorController.povUp().whileTrue(new ShooterRunRPM(s_ShooterSubsystem, 1.00, 1));
     io_OperatorController.povRight().whileTrue(new ShooterRunRPM(s_ShooterSubsystem, 0.75, 1));

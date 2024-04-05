@@ -79,10 +79,10 @@ public class LEDSubsystem extends SubsystemBase {
       o_ledBuffer.setHSV(i, hue, 255, 128);
     }
     o_led.setData(o_ledBuffer);
-    if (chaseCounter > 10) {
+    if (chaseCounter > 10 - pulseSpeed) {
       for (int i = 0; i < lowerBounds.length; i++) {
-        lowerBounds[i] = lowerBounds[i] + pulseSpeed;
-        upperBounds[i] = upperBounds[i] + pulseSpeed;
+        lowerBounds[i] = lowerBounds[i] + 1;
+        upperBounds[i] = upperBounds[i] + 1;
         // The stand has reached the end of the line, reset
 
         if (upperBounds[i] > 40) {

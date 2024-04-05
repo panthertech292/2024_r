@@ -7,13 +7,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimbSubsystem;
 
-public class ClimbRun extends Command {
+public class ClimbRotateServo extends Command {
   private final ClimbSubsystem ClimbSub;
-  private double speed;
+  private double angle;
   /** Creates a new ClimberRun. */
-  public ClimbRun(ClimbSubsystem s_ClimbSubsystem, double speed) {
+  public ClimbRotateServo(ClimbSubsystem s_ClimbSubsystem, double angle) {
     this.ClimbSub = s_ClimbSubsystem;
-    this.speed = speed;
+    this.angle = angle;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(s_ClimbSubsystem);
   }
@@ -21,17 +21,7 @@ public class ClimbRun extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(speed < 0){
-      ClimbSub.setClimbMotor(speed);
-    }else{
-      if(!ClimbSub.getServoLocked()){ // Only run if not locked
-        ClimbSub.setClimbMotor(speed);
-      }else{
-        ClimbSub.setClimbMotor(0);
-        System.out.println("Error: Can't move arm. Arm is locked!");
-      }
-    }
-    
+    ClimbSub.setServoAngle(angle);;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,9 +30,7 @@ public class ClimbRun extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    ClimbSub.setClimbMotor(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
