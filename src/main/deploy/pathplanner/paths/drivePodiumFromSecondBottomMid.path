@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.649562226017897,
+        "y": 2.7370954939935057
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.541050017457023,
+        "y": 0.866315124286065
+      },
+      "isLocked": false,
+      "linkedName": "far2ndBottomNote"
+    },
+    {
+      "anchor": {
+        "x": 2.537860865516653,
+        "y": 3.6724397900835735
+      },
+      "prevControl": {
+        "x": 3.228047309840822,
+        "y": 1.662473064122561
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "podiumShoot"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 140.96,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Bottom Far Paths",
+  "previewStartingState": {
+    "rotation": -145.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
