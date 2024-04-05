@@ -40,7 +40,7 @@ public class SwerveSubsystem extends SubsystemBase {
   //Initialize {@link SwerveDrive} with the directory provided. @param directory Directory of swerve drive config files.
   public SwerveSubsystem(File directory) {
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW; // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-    
+
     //Create RobotSwerve
     try{
       RobotSwerve = new SwerveParser(directory).createSwerveDrive(SwerveConstants.kMaxSpeed);
@@ -301,6 +301,9 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   }
 
+  public double getVelocity(){
+    return (RobotSwerve.getRobotVelocity().vxMetersPerSecond + RobotSwerve.getRobotVelocity().vyMetersPerSecond);
+  }
 
   @Override
   public void periodic() {

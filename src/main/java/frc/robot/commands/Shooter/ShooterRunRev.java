@@ -9,21 +9,27 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class ShooterRunRev extends Command {
   private final ShooterSubsystem ShooterSub;
+  private final LEDSubsystem LEDSub;
+  private final SwerveSubsystem SwerveSub; //having this in here is absoultely awful!
   private DoubleSupplier shooterSpeed;
   private DoubleSupplier beltSpeed;
   private DoubleSupplier manualBeltSpeed;
   /** Creates a new RunShooterRev. */
-  public ShooterRunRev(ShooterSubsystem s_ShooterSubsystem, DoubleSupplier shooterSpeed, DoubleSupplier beltSpeed, DoubleSupplier manualBeltSpeed) {
+  public ShooterRunRev(ShooterSubsystem s_ShooterSubsystem, LEDSubsystem s_LEDSubsystem, SwerveSubsystem s_SwerveSubsystem, DoubleSupplier shooterSpeed, DoubleSupplier beltSpeed, DoubleSupplier manualBeltSpeed) {
     ShooterSub = s_ShooterSubsystem;
+    LEDSub = s_LEDSubsystem;
+    SwerveSub = s_SwerveSubsystem;
     this.shooterSpeed = shooterSpeed;
     this.beltSpeed = beltSpeed;
     this.manualBeltSpeed = manualBeltSpeed;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(s_ShooterSubsystem);
+    addRequirements(s_ShooterSubsystem, s_LEDSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -37,9 +43,11 @@ public class ShooterRunRev extends Command {
     if(ShooterSub.getFeedBeltSwitch() && (this.shooterSpeed.getAsDouble() < ShooterConstants.kRevSpeed)){
       ShooterSub.setShooter(ShooterConstants.kRevSpeed);
       RobotContainer.setRightRumbleDriver(0.25);
+      LEDSub.blinkSolidColor(0, 255, 0);
     }else{
       ShooterSub.setShooter(this.shooterSpeed.getAsDouble());
       RobotContainer.setRightRumbleDriver(0.0);
+      LEDSub.setColorChase(60, 120, 1);
     }
     
     //If the override for manual speed operation is greater than the toggle speed

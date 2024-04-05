@@ -53,6 +53,10 @@ public final class Constants {
     public static final double kIntakeSpeed = 0.50;
   }
 
+  public static class LEDConstants {
+    public static final int kLEDPort = 0; //PWM
+  }
+
   public static class ShooterConstants {
     //CAN Motor IDs
     public static final int kFeedBeltsLowMotorID = 34;

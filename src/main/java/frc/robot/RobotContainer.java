@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -38,6 +39,7 @@ public class RobotContainer {
   private final ArmSubsystem s_ArmSubsystem = new ArmSubsystem();
   private final ClimbSubsystem s_ClimbSubsystem = new ClimbSubsystem();
   private final IntakeSubsystem s_IntakeSubsystem = new IntakeSubsystem();
+  private final LEDSubsystem s_LEDSubsystem = new LEDSubsystem();
   private final ShooterSubsystem s_ShooterSubsystem = new ShooterSubsystem();
   private final SwerveSubsystem  s_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
@@ -81,7 +83,7 @@ public class RobotContainer {
     //s_ArmSubsystem.setDefaultCommand(new ArmHoldAngle(s_ArmSubsystem, s_SwerveSubsystem, 17, 0.01)); TODO: Figure out if we want this
     //Run intake on operator's right stick
     s_IntakeSubsystem.setDefaultCommand(new IntakeRun(s_IntakeSubsystem, ()-> MathUtil.applyDeadband(-io_OperatorController.getRightY(), OperatorConstants.kDeadband)));
-    s_ShooterSubsystem.setDefaultCommand(new ShooterRunRev(s_ShooterSubsystem, 
+    s_ShooterSubsystem.setDefaultCommand(new ShooterRunRev(s_ShooterSubsystem, s_LEDSubsystem, s_SwerveSubsystem,
     ()-> getGreaterAxis(io_OperatorController.getLeftTriggerAxis(), io_DriverController.getLeftTriggerAxis()),
     ()-> getGreaterAxis(io_OperatorController.getRightTriggerAxis(), io_DriverController.getRightTriggerAxis()), 
     ()-> MathUtil.applyDeadband(-io_OperatorController.getLeftY(), OperatorConstants.kDeadband)));
@@ -163,6 +165,17 @@ public class RobotContainer {
       return axisOne;
     }else{
       return axisTwo;
+    }
+  }
+
+  public void setDisabledLED() {
+    var alliance = DriverStation.getAlliance();
+    if(alliance.isPresent()){
+      if(alliance.get() == DriverStation.Alliance.Blue){
+        s_LEDSubsystem.setSolidColor(0, 0, 128);
+      }else{
+        s_LEDSubsystem.setSolidColor(128, 0, 0);
+      }
     }
   }
 
