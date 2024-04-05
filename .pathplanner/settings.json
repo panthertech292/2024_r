@@ -3,9 +3,10 @@
   "robotLength": 0.914,
   "holonomicMode": true,
   "pathFolders": [
+    "Bottom Far Paths",
     "Close Paths",
     "Far Paths",
-    "Bottom Far Paths"
+    "New Folder"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,
