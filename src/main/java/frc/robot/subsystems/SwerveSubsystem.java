@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
@@ -34,11 +35,12 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase {
   private final SwerveDrive RobotSwerve;
+  private final Pigeon2 pigeonIMU;
 
   //Initialize {@link SwerveDrive} with the directory provided. @param directory Directory of swerve drive config files.
   public SwerveSubsystem(File directory) {
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW; // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-
+    
     //Create RobotSwerve
     try{
       RobotSwerve = new SwerveParser(directory).createSwerveDrive(SwerveConstants.kMaxSpeed);
@@ -48,7 +50,7 @@ public class SwerveSubsystem extends SubsystemBase {
     RobotSwerve.setHeadingCorrection(false);
     RobotSwerve.setCosineCompensator(!SwerveDriveTelemetry.isSimulation);
     setupPathPlanner();
-
+    pigeonIMU = (Pigeon2)RobotSwerve.getGyro().getIMU();
   }
 
   //Setup AutoBuilder for PathPlanner.
@@ -255,10 +257,19 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void updateVisionOdometry(){
-    LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-    if(limelightMeasurement.tagCount >= 2){
-      RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
-      //RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds); //TODO: THIS MIGHT BE WORSE!
+    //if(limelightMeasurement.tagCount >= 2){
+    //  RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
+    //}S
+    boolean doRejectUpdate = false;
+    //RobotSwerve.getOdometryHeading() could use this instead of getPose if needed
+    LimelightHelpers.SetRobotOrientation("limelight",RobotSwerve.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+    
+    if(Math.abs(pigeonIMU.getRate()) > 720){ // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+      doRejectUpdate = true;
+    }
+    if(!doRejectUpdate){ //TODO: Check these values
+      RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.5,.5,9999999));
     }
   }
 

@@ -98,7 +98,7 @@ public final class Constants {
       angleMap.put(4.85, 0.092);
       angleMap.put(5.00, 0.096);
       angleMap.put(5.58, 0.097);
-      angleMap.put(5.79, 0.098);
+      angleMap.put(5.79, 0.098 );
       angleMap.put(6.16, 0.102);
     }
   }
