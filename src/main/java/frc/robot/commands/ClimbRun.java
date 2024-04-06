@@ -22,9 +22,11 @@ public class ClimbRun extends Command {
   @Override
   public void initialize() {
     if(speed < 0){
-      ClimbSub.setClimbMotor(speed);
+      ClimbSub.setClimbMotorCurrentLimit(50);
+      ClimbSub.setClimbMotor(speed); //Going up
     }else{
       if(!ClimbSub.getServoLocked()){ // Only run if not locked
+        ClimbSub.setClimbMotorCurrentLimit(6);
         ClimbSub.setClimbMotor(speed);
       }else{
         ClimbSub.setClimbMotor(0);

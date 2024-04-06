@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.utilities.MotorUtil;
@@ -26,6 +27,14 @@ public class ClimbSubsystem extends SubsystemBase {
 
   public void setClimbMotor(double speed){
     ClimbMotor.set(speed);
+  }
+
+  public double getClimbMotorCurrent(){
+    return ClimbMotor.getOutputCurrent();
+  }
+
+  public void setClimbMotorCurrentLimit(int current){
+    ClimbMotor.setSmartCurrentLimit(current);
   }
   public void setServoAngle(double angle){
     if (angle >= 0 && angle <= 1){
@@ -47,5 +56,6 @@ public class ClimbSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Climb Current (AMPS)", getClimbMotorCurrent());
   }
 }
