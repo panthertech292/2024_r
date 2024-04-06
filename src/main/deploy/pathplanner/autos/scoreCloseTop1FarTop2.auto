@@ -107,6 +107,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AutoShootStop"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [

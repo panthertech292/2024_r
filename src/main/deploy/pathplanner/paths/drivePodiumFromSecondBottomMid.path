@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.70054546759925,
-        "y": 0.721482108047352
+        "x": 5.919731497582653,
+        "y": -0.28065970661855755
       },
       "isLocked": false,
       "linkedName": "far2ndBottomNote"
@@ -20,8 +20,8 @@
         "y": 2.87617867397255
       },
       "prevControl": {
-        "x": 4.126609298349239,
-        "y": 1.1699709860227325
+        "x": 3.4873473735551457,
+        "y": 1.6254874674991522
       },
       "nextControl": null,
       "isLocked": false,

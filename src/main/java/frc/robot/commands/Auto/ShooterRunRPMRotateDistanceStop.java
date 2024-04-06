@@ -71,11 +71,11 @@ public class ShooterRunRPMRotateDistanceStop extends Command {
   @Override
   public void execute() {
     distance = SwerveSub.getDistanceFromSpeaker();
-    if(SwerveSub.isAllianceBlue()){ // BLUE
-      angle = InterpolationConstants.angleMap.get(distance);
-    }else{ //RED
+    //if(SwerveSub.isAllianceBlue()){ // BLUE
+    //  angle = InterpolationConstants.angleMap.get(distance);
+    //}else{ //RED
       angle = InterpolationConstants.angleMapRED.get(distance);
-    }
+    //}
     
 
     error = (angle - ArmSub.getRotationAngle()) * p;

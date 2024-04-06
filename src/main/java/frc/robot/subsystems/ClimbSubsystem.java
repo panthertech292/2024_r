@@ -22,7 +22,7 @@ public class ClimbSubsystem extends SubsystemBase {
     ClimbMotor = MotorUtil.initSparkMax(ClimbConstants.kClimbMotorID, true, true);
     //ClimbMotor.setSmartCurrentLimit(0, 40, 10);
     ClimbServo = new Servo(ClimbConstants.kClimbServoID);
-    setServoAngle(.25); // Release the servo on enable
+    //setServoAngle(.70); // Release the servo on enable. TODO: Make this a constant. We are playing with fire here!
   }
 
   public void setClimbMotor(double speed){
@@ -42,7 +42,7 @@ public class ClimbSubsystem extends SubsystemBase {
     }else{
       System.out.println("Error: Trying to set climb servo out of bounds");
     }
-    if (angle == 0){
+    if (angle == 0.30){
       servoLocked = true;
     }else{
       servoLocked = false;

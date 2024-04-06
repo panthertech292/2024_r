@@ -153,8 +153,8 @@ public class RobotContainer {
 
     //io_OperatorController.start().whileTrue(z_ShootFullPower);
     //io_OperatorController.back().whileTrue(z_Shoot75Power);
-    io_OperatorController.back().onTrue(new ClimbRotateServo(s_ClimbSubsystem, 0.25)); //release
-    io_OperatorController.start().onTrue(new ClimbRotateServo(s_ClimbSubsystem, 0)); //lock
+    io_OperatorController.back().onTrue(new ClimbRotateServo(s_ClimbSubsystem, 0.70)); //release
+    io_OperatorController.start().onTrue(new ClimbRotateServo(s_ClimbSubsystem, 0.30)); //lock
 
     io_OperatorController.povUp().whileTrue(new ShooterRunRPM(s_ShooterSubsystem, 1.00, 1));
     io_OperatorController.povRight().whileTrue(new ShooterRunRPM(s_ShooterSubsystem, 0.75, 1));
