@@ -80,7 +80,7 @@ public final class Constants {
 
   public static class AutoConstants {
     //PIDs
-    public static final PIDConstants kTranslationPID = new PIDConstants(1.5, 0, 0); // was 0.7 before!
+    public static final PIDConstants kTranslationPID = new PIDConstants(1.25, 0, 0); // was 0.7 before!
     public static final PIDConstants kAnglePID   = new PIDConstants(1, 0, 0.01); /// was 0.4 before!
   } 
   
@@ -91,21 +91,35 @@ public final class Constants {
 
   public static class InterpolationConstants {
     public static final InterpolatingDoubleTreeMap angleMap = new InterpolatingDoubleTreeMap();
+    public static final InterpolatingDoubleTreeMap angleMapRED = new InterpolatingDoubleTreeMap();
     //Values for Shooter Distance. Key is distance in meters, value is shooter angle
-    static {       //Distance //Angle
+    static {       //Distance //Angle //RED SIDE
+      angleMapRED.put(1.44, 0.0);
+      angleMapRED.put(2.27, 0.0438);
+      angleMapRED.put(3.02, 0.07); //spot for shooting from top close note
+      angleMapRED.put(3.12, 0.072);
+      angleMapRED.put(4.05, 0.085);
+      angleMapRED.put(4.25, 0.086);
+      angleMapRED.put(4.45, 0.090);
+      angleMapRED.put(4.85, 0.092);
+      angleMapRED.put(5.00, 0.096);
+      angleMapRED.put(5.58, 0.097);
+      angleMapRED.put(5.79, 0.098 );
+      angleMapRED.put(6.16, 0.102);
+    }
+    static {       //Distance //Angle //BLUE SIDE
       angleMap.put(1.44, 0.0);
       angleMap.put(2.27, 0.0438);
       angleMap.put(3.02, 0.07); //spot for shooting from top close note
       angleMap.put(3.12, 0.072);
-      //angleMap.put(3.18, ArmConstants.kShotAnglePodium);
       angleMap.put(4.05, 0.085);
       angleMap.put(4.25, 0.086);
-      angleMap.put(4.45, 0.090);
-      angleMap.put(4.85, 0.092);
-      angleMap.put(5.00, 0.096);
-      angleMap.put(5.58, 0.097);
-      angleMap.put(5.79, 0.098 );
-      angleMap.put(6.16, 0.102);
+      angleMap.put(4.45, 0.092);
+      angleMap.put(4.85, 0.094);
+      angleMap.put(5.00, 0.098);
+      angleMap.put(5.58, 0.099);
+      angleMap.put(5.79, 0.100 );
+      angleMap.put(6.16, 0.104);
     }
   }
 

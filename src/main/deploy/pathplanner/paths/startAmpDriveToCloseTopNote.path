@@ -3,59 +3,59 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.72,
-        "y": 4.4
+        "x": 0.7044441642327478,
+        "y": 6.737082927847566
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7033731725121104,
-        "y": 1.978366479255482
-      },
-      "isLocked": false,
-      "linkedName": "homeBottom"
-    },
-    {
-      "anchor": {
-        "x": 5.940064326684474,
-        "y": 0.7507313826979205
-      },
-      "prevControl": {
-        "x": 5.2932496095598545,
-        "y": 0.7507313826979205
-      },
-      "nextControl": {
-        "x": 6.940064326684457,
-        "y": 0.7507313826979205
+        "x": 1.2699301408104018,
+        "y": 6.90282881753412
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.2468682316282,
-        "y": 0.7507313826979205
+        "x": 1.633474325737251,
+        "y": 7.0
       },
       "prevControl": {
-        "x": 7.7468682316282,
-        "y": 0.7507313826979205
+        "x": 1.4511627199625217,
+        "y": 7.0
+      },
+      "nextControl": {
+        "x": 1.8157859315119804,
+        "y": 7.0
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.888390004808514,
+        "y": 7.000326399702681
+      },
+      "prevControl": {
+        "x": 1.8883900048085138,
+        "y": 7.000326399702681
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "farBottomNote"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
       "rotationDegrees": 180.0,
-      "rotateFast": true
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.5,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -65,10 +65,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Bottom Far Paths",
+  "folder": "AMP Side Paths",
   "previewStartingState": {
-    "rotation": 120.0,
+    "rotation": -120.0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

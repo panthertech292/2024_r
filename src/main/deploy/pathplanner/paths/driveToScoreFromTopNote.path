@@ -3,50 +3,50 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.2468682316282,
-        "y": 0.7507313826979205
+        "x": 8.307235353209444,
+        "y": 7.432741351969191
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.18101358863065,
-        "y": 1.413604802666804
+        "x": 9.307235353209444,
+        "y": 7.432741351969191
       },
       "isLocked": false,
-      "linkedName": "farBottomNote"
+      "linkedName": "farTopNote"
     },
     {
       "anchor": {
-        "x": 3.2783803334827586,
-        "y": 2.87617867397255
+        "x": 2.8792513425482693,
+        "y": 7.004798511021523
       },
       "prevControl": {
-        "x": 4.068110749048106,
-        "y": 2.3301922138286093
+        "x": 1.8792513425482693,
+        "y": 7.004798511021523
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "podiumShoot"
+      "linkedName": "closeTopNote"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.5,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 140.95844757950059,
+    "rotation": -151.528416665255,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Bottom Far Paths",
+  "folder": "AMP Side Paths",
   "previewStartingState": {
     "rotation": 180.0,
-    "velocity": 0.0
+    "velocity": 0
   },
   "useDefaultConstraints": false
 }
