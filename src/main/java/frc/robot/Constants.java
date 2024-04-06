@@ -80,8 +80,8 @@ public final class Constants {
 
   public static class AutoConstants {
     //PIDs
-    public static final PIDConstants kTranslationPID = new PIDConstants(0.7, 0, 0);
-    public static final PIDConstants kAnglePID   = new PIDConstants(0.4, 0, 0.01);
+    public static final PIDConstants kTranslationPID = new PIDConstants(1.5, 0, 0); // was 0.7 before!
+    public static final PIDConstants kAnglePID   = new PIDConstants(1, 0, 0.01); /// was 0.4 before!
   } 
   
   public static class FieldConstants {
