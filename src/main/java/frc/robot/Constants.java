@@ -45,6 +45,12 @@ public final class Constants {
     public static final int kClimbServoID = 1;
     //Speeds
     public static final double kClimbSpeed = 0.80;
+    //Positions
+    public static final double kLockPosition = 0.30;
+    public static final double kReleasePosition = 0.70;
+    //Currents
+    public static final int kUpCurrentLimit = 75;
+    public static final int kDownCurrentLimit = 6;
   }
 
   public static class IntakeConstants {
@@ -90,7 +96,7 @@ public final class Constants {
   }
 
   public static class InterpolationConstants {
-    public static final InterpolatingDoubleTreeMap angleMap = new InterpolatingDoubleTreeMap();
+    //public static final InterpolatingDoubleTreeMap angleMap = new InterpolatingDoubleTreeMap();
     public static final InterpolatingDoubleTreeMap angleMapRED = new InterpolatingDoubleTreeMap();
     //Values for Shooter Distance. Key is distance in meters, value is shooter angle
     static {       //Distance //Angle //RED SIDE
@@ -107,7 +113,7 @@ public final class Constants {
       angleMapRED.put(5.79, 0.098 );
       angleMapRED.put(6.16, 0.102);
     }
-    static {       //Distance //Angle //BLUE SIDE
+    /*static {       //Distance //Angle //BLUE SIDE
       angleMap.put(1.44, 0.0);
       angleMap.put(2.27, 0.0438);
       angleMap.put(3.02, 0.07); //spot for shooting from top close note
@@ -120,7 +126,7 @@ public final class Constants {
       angleMap.put(5.58, 0.098);
       angleMap.put(5.79, 0.099 );
       angleMap.put(6.16, 0.103);
-    }
+    }*/
   }
 
 }

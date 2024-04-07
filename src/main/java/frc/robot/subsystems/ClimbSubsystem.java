@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+///import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.utilities.MotorUtil;
@@ -20,9 +20,7 @@ public class ClimbSubsystem extends SubsystemBase {
   
   public ClimbSubsystem() {
     ClimbMotor = MotorUtil.initSparkMax(ClimbConstants.kClimbMotorID, true, true);
-    //ClimbMotor.setSmartCurrentLimit(0, 40, 10);
     ClimbServo = new Servo(ClimbConstants.kClimbServoID);
-    //setServoAngle(.70); // Release the servo on enable. TODO: Make this a constant. We are playing with fire here!
   }
 
   public void setClimbMotor(double speed){
@@ -42,7 +40,7 @@ public class ClimbSubsystem extends SubsystemBase {
     }else{
       System.out.println("Error: Trying to set climb servo out of bounds");
     }
-    if (angle == 0.30){
+    if (angle == ClimbConstants.kLockPosition){
       servoLocked = true;
     }else{
       servoLocked = false;

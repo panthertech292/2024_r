@@ -46,7 +46,7 @@ public class ShooterRunRPMRotateDistanceStop extends Command {
     last10Values = new double[10];
     index = 0;
     distance = SwerveSub.getDistanceFromSpeaker();
-    angle = InterpolationConstants.angleMap.get(distance);
+    angle = InterpolationConstants.angleMapRED.get(distance);
 
     // Rotation
     this.p = p;

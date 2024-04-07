@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ClimbConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 
 public class ClimbRun extends Command {
@@ -22,11 +23,11 @@ public class ClimbRun extends Command {
   @Override
   public void initialize() {
     if(speed < 0){
-      ClimbSub.setClimbMotorCurrentLimit(75); //TODO: Move this to constants
+      ClimbSub.setClimbMotorCurrentLimit(ClimbConstants.kUpCurrentLimit);
       ClimbSub.setClimbMotor(speed); //Going up
     }else{
       if(!ClimbSub.getServoLocked()){ // Only run if not locked
-        ClimbSub.setClimbMotorCurrentLimit(6);
+        ClimbSub.setClimbMotorCurrentLimit(ClimbConstants.kDownCurrentLimit);
         ClimbSub.setClimbMotor(speed);
       }else{
         ClimbSub.setClimbMotor(0);
