@@ -22,6 +22,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   //Encoders (We only use the encoder from the low motor, but we can add the high one if we need to)
   private RelativeEncoder ShooterLowMotorEncoder;
+  private RelativeEncoder ShooterUpMotorEncoder;
 
   //Limit Switches
   private final DigitalInput FeedBeltSwitch;
@@ -37,6 +38,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //Encoders
     ShooterLowMotorEncoder = ShooterLowMotor.getEncoder();
+    ShooterUpMotorEncoder = ShooterUpMotor.getEncoder();
 
     //Limit Switches
     FeedBeltSwitch = new DigitalInput(ShooterConstants.kFeedBeltSwitchID); //This switch activates when a note is just before the shooter
@@ -46,6 +48,10 @@ public class ShooterSubsystem extends SubsystemBase {
   /** @return Returns the RPM of the lower shooter motor */
   public double getShooterLowEncoderVelocity(){
     return ShooterLowMotorEncoder.getVelocity();
+  }
+
+  public double getShooterUpEncoderVelocity(){
+    return ShooterUpMotorEncoder.getVelocity();
   }
 
   /** @return True: There is a note(or something) in the belts before the shooter. NOTE: Due to robot wiring, this is inverted! */
@@ -77,5 +83,7 @@ public class ShooterSubsystem extends SubsystemBase {
     //  System.out.println("######### SAW NOTE");
     //}
     SmartDashboard.putBoolean("Shooter sensor active", getShooterSwitch());
+    SmartDashboard.putNumber("Low Shooter RPM", getShooterLowEncoderVelocity());
+    SmartDashboard.putNumber("Up Shooter RPM", getShooterUpEncoderVelocity());
   }
 }
