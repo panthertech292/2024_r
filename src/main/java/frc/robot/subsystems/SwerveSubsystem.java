@@ -257,22 +257,16 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void updateVisionOdometry(){
-    //if(limelightMeasurement.tagCount >= 2){
-    //  RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
-    //}S
-    boolean doRejectUpdate = false;
-    //RobotSwerve.getOdometryHeading() could use this instead of getPose if needed
+    boolean rejectUpdate = false;
     LimelightHelpers.SetRobotOrientation("limelight",RobotSwerve.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
     LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-    //System.out.println("RATE IS: " + pigeonIMU.getRate());
     if(Math.abs(pigeonIMU.getRate()) > 360){ // if our angular velocity is greater than 360 degrees per second, ignore vision updates
-      doRejectUpdate = true;
+      rejectUpdate = true;
     }
-    //if(Math.abs(pigeonIMU.getRate()) > 1 && limelightMeasurement.tagCount == 1){ // if our angular velocity is greater than 10 degrees per seoncd, with one tag
-    //  doRejectUpdate = true;
-    //  System.out.println("ON THE REJECT!");
-    //}
-    if(!doRejectUpdate && limelightMeasurement.tagCount > 0){ //&& limelightMeasurement.tagCount >= 2){ //TODO: Check these values
+    if(limelightMeasurement.tagCount == 0){
+      rejectUpdate = true;
+    }
+    if(!rejectUpdate){
       RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
     }
   }
