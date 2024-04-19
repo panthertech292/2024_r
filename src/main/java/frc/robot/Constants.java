@@ -50,7 +50,7 @@ public final class Constants {
     public static final double kReleasePosition = 0.70;
     //Currents
     public static final int kUpCurrentLimit = 75;
-    public static final int kDownCurrentLimit = 6;
+    public static final int kDownCurrentLimit = 9;
   }
 
   public static class IntakeConstants {
